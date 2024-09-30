@@ -1,0 +1,181 @@
+.home-section {
+  color: black;
+  display: flex;
+  flex-direction: row;
+  /* gap: 1rem; */
+  margin-right: 1rem;
+
+  height: auto;
+}
+.space {
+  position: relative;
+  flex: 60%;
+  padding: 1rem;
+  padding-left: 0; /*kiss the left wall*/
+  /* border: 1px solid black; */
+}
+
+.space-image {
+  height: 20rem;
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  overflow: hidden;
+}
+.space-image img:first-child {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.space-image img:nth-child(2) {
+  position: absolute;
+  top: 18rem;
+  left: 2rem;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.space .sapce-snippet {
+  margin-top: 5rem;
+  margin-left: 2rem;
+}
+
+.space .sapce-snippet h1 {
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.space .sapce-snippet .space-account {
+  display: flex;
+  align-items: center;
+}
+.space .sapce-snippet .space-desc {
+  color: grey;
+}
+.space .sapce-snippet .space-connection {
+  color: lightgrey;
+}
+
+.space .sapce-snippet h3 {
+  margin-top: 1.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: grey;
+}
+
+.space .sapce-snippet .tag {
+  background-color: grey;
+  color: white;
+  border-radius: 0.2rem;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  margin-right: 0.25rem;
+}
+.sapce-snippet .space-call-to-action {
+  margin-top: 2rem;
+}
+
+.sapce-snippet .space-call-to-action .follow-button {
+  display: flex;
+  align-items: center;
+  background-color: black;
+  color: white;
+  border-radius: 0.5rem;
+  padding: 1rem 5rem;
+  margin-right: 0.25rem;
+}
+
+.map {
+  flex: 40%;
+  padding: 1rem;
+  /* border: 1px solid black; */
+}
+
+.map .map-image {
+  height: 20rem;
+  border-radius: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.map .map-image img:first-child {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  -webkit-filter: brightness(0.95);
+}
+
+.map .map-image .chip {
+  display: flex;
+  border-radius: 3rem;
+  padding: 1rem 1.75rem;
+  position: absolute;
+  top: 14rem;
+  left: 1.5rem;
+  background-color: white;
+  align-items: center;
+  width: auto;
+}
+
+.map .map-image .chip img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 1rem;
+}
+
+.map .map-image .chip .chip-content h1 {
+  font-size: 1rem;
+  font-weight: 700;
+}
+.map .map-snippet {
+  margin-top: 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.map .map-snippet .address,
+.map .map-snippet .website,
+.map .map-snippet .registration-date,
+.map .map-snippet .space-owner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.map .map-snippet .registration-date b,
+.map .map-snippet .space-owner b {
+  margin-right: 0.5rem;
+}
+.map .map-snippet .space-owner .tag {
+  background-color: #e2e2ea;
+  color: #727a90;
+  font-size: 0.75rem;
+  padding: 0.25rem 1rem;
+  margin-left: 0.5rem;
+  border-radius: 1rem;
+  align-items: center;
+}
+
+.map .map-call-to-action {
+  margin-top: 4rem;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+.map .map-call-to-action .become-steward-button {
+  background-color: black;
+  color: white;
+  border-radius: 0.5rem;
+  padding: 1rem 2rem;
+  margin-right: 0.25rem;
+}
+
+.map .map-call-to-action .browse-rules-button {
+  background-color: #3dd598;
+  border-radius: 0.5rem;
+  padding: 1rem 2rem;
+  margin-right: 0.25rem;
+}

@@ -1,9 +1,16 @@
+import { useState } from "react";
 import "../assets/css/Home.css";
 import { Button } from "@headlessui/react";
 import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
+} from "@headlessui/react";
+import {
+  Listbox,
+  ListboxButton,
+  ListboxOptions,
+  ListboxOption,
 } from "@headlessui/react";
 import { UserIcon } from "@heroicons/react/solid";
 import { PlusIcon } from "@heroicons/react/solid";
@@ -16,7 +23,16 @@ import { CogIcon } from "@heroicons/react/outline";
 import { ClockIcon } from "@heroicons/react/outline";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 
+const people = [
+  { id: 1, name: "Durward Reynolds", unavailable: false },
+  { id: 2, name: "Kenton Towne", unavailable: false },
+  { id: 3, name: "Therese Wunsch", unavailable: false },
+  { id: 4, name: "Benedict Kessler", unavailable: true },
+  { id: 5, name: "Katelyn Rohan", unavailable: false },
+];
+
 export default function Home() {
+  const [selectedPerson, setSelectedPerson] = useState(people[0]);
   return (
     <>
       <section className="home-header">
@@ -99,47 +115,49 @@ export default function Home() {
             </div>
           </div>
           <div className="todays-event">
-            <Disclosure>
-              <DisclosureButton className="group header">
-                <div className="title">Today&#39;s events</div>
-                <div className="chev">
-                  <ChevronDownIcon className="w-5 group-data-[open]:rotate-180"></ChevronDownIcon>
-                </div>
-              </DisclosureButton>
-              <DisclosurePanel className="panel">
-                <div className="title">04 September 2024</div>
-                <div className="card">
-                  <div className="header">
-                    <div className="title">Cooking class</div>
-                    <CogIcon className="h-5 w-5 white mr-1 text-gray-400"></CogIcon>
+            <div className="disclosure">
+              <Disclosure>
+                <DisclosureButton className="group header">
+                  <div className="title">Today&#39;s events</div>
+                  <div className="chev">
+                    <ChevronDownIcon className="w-5 group-data-[open]:rotate-180"></ChevronDownIcon>
                   </div>
-                  <div className="content">
-                    <div className="flex">
-                      <ClockIcon className="h-5 w-5 white mr-1 text-gray-400"></ClockIcon>
-                      <div className="time">11:00-14:00</div>
+                </DisclosureButton>
+                <DisclosurePanel className="panel">
+                  <div className="title">04 September 2024</div>
+                  <div className="card">
+                    <div className="header">
+                      <div className="title">Cooking class</div>
+                      <CogIcon className="h-5 w-5 white mr-1 text-gray-400"></CogIcon>
                     </div>
-                    <div className="participants">
-                      <UserCircleIcon className="h-5 w-5 white mr-1 text-gray-400"></UserCircleIcon>
-                    </div>
-                  </div>
-                </div>
-                <div className="card">
-                  <div className="header">
-                    <div className="title">Dm book club</div>
-                    <CogIcon className="h-5 w-5 white mr-1 text-gray-400"></CogIcon>
-                  </div>
-                  <div className="content">
-                    <div className="flex">
-                      <ClockIcon className="h-5 w-5 white mr-1 text-gray-400"></ClockIcon>
-                      <div className="time">11:00-14:00</div>
-                    </div>
-                    <div className="participants">
-                      <UserCircleIcon className="h-5 w-5 white mr-1 text-gray-400"></UserCircleIcon>
+                    <div className="content">
+                      <div className="flex">
+                        <ClockIcon className="h-5 w-5 white mr-1 text-gray-400"></ClockIcon>
+                        <div className="time">11:00-14:00</div>
+                      </div>
+                      <div className="participants">
+                        <UserCircleIcon className="h-5 w-5 white mr-1 text-gray-400"></UserCircleIcon>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </DisclosurePanel>
-            </Disclosure>
+                  <div className="card">
+                    <div className="header">
+                      <div className="title">Dm book club</div>
+                      <CogIcon className="h-5 w-5 white mr-1 text-gray-400"></CogIcon>
+                    </div>
+                    <div className="content">
+                      <div className="flex">
+                        <ClockIcon className="h-5 w-5 white mr-1 text-gray-400"></ClockIcon>
+                        <div className="time">11:00-14:00</div>
+                      </div>
+                      <div className="participants">
+                        <UserCircleIcon className="h-5 w-5 white mr-1 text-gray-400"></UserCircleIcon>
+                      </div>
+                    </div>
+                  </div>
+                </DisclosurePanel>
+              </Disclosure>
+            </div>
           </div>
         </div>
         <div className="activity">
@@ -250,6 +268,157 @@ export default function Home() {
                 <div className="card-date">2024.8.12</div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+      <section className="home-report">
+        <Listbox value={selectedPerson} onChange={setSelectedPerson}>
+          <ListboxButton>{selectedPerson.name}</ListboxButton>
+          <ListboxOptions>
+            {people.map((person) => (
+              <ListboxOption
+                key={person.id}
+                value={person}
+                disabled={person.unavailable}
+              >
+                {person.name}
+              </ListboxOption>
+            ))}
+          </ListboxOptions>
+        </Listbox>
+        <div className="damage-report">
+          <div className="disclosure">
+            <Disclosure>
+              <DisclosureButton className="group header">
+                <div className="title">Damage Report</div>
+                <div className="chev">
+                  <ChevronDownIcon className="w-5 group-data-[open]:rotate-180"></ChevronDownIcon>
+                </div>
+              </DisclosureButton>
+              <DisclosurePanel className="panel">
+                <div className="title">04 September 2024</div>
+                <div className="card">
+                  <div className="header">
+                    <div className="title">Cooking class</div>
+                    <CogIcon className="h-5 w-5 white mr-1 text-gray-400"></CogIcon>
+                  </div>
+                  <div className="content">
+                    <div className="flex">
+                      <ClockIcon className="h-5 w-5 white mr-1 text-gray-400"></ClockIcon>
+                      <div className="time">11:00-14:00</div>
+                    </div>
+                    <div className="participants">
+                      <UserCircleIcon className="h-5 w-5 white mr-1 text-gray-400"></UserCircleIcon>
+                    </div>
+                  </div>
+                </div>
+                <div className="card">
+                  <div className="header">
+                    <div className="title">Dm book club</div>
+                    <CogIcon className="h-5 w-5 white mr-1 text-gray-400"></CogIcon>
+                  </div>
+                  <div className="content">
+                    <div className="flex">
+                      <ClockIcon className="h-5 w-5 white mr-1 text-gray-400"></ClockIcon>
+                      <div className="time">11:00-14:00</div>
+                    </div>
+                    <div className="participants">
+                      <UserCircleIcon className="h-5 w-5 white mr-1 text-gray-400"></UserCircleIcon>
+                    </div>
+                  </div>
+                </div>
+              </DisclosurePanel>
+            </Disclosure>
+          </div>
+        </div>
+        <div className="permission-statistics">
+          <div className="disclosure">
+            <Disclosure>
+              <DisclosureButton className="group header">
+                <div className="title">Permission Statistics</div>
+                <div className="chev">
+                  <ChevronDownIcon className="w-5 group-data-[open]:rotate-180"></ChevronDownIcon>
+                </div>
+              </DisclosureButton>
+              <DisclosurePanel className="panel">
+                <div className="title">04 September 2024</div>
+                <div className="card">
+                  <div className="header">
+                    <div className="title">Cooking class</div>
+                    <CogIcon className="h-5 w-5 white mr-1 text-gray-400"></CogIcon>
+                  </div>
+                  <div className="content">
+                    <div className="flex">
+                      <ClockIcon className="h-5 w-5 white mr-1 text-gray-400"></ClockIcon>
+                      <div className="time">11:00-14:00</div>
+                    </div>
+                    <div className="participants">
+                      <UserCircleIcon className="h-5 w-5 white mr-1 text-gray-400"></UserCircleIcon>
+                    </div>
+                  </div>
+                </div>
+                <div className="card">
+                  <div className="header">
+                    <div className="title">Dm book club</div>
+                    <CogIcon className="h-5 w-5 white mr-1 text-gray-400"></CogIcon>
+                  </div>
+                  <div className="content">
+                    <div className="flex">
+                      <ClockIcon className="h-5 w-5 white mr-1 text-gray-400"></ClockIcon>
+                      <div className="time">11:00-14:00</div>
+                    </div>
+                    <div className="participants">
+                      <UserCircleIcon className="h-5 w-5 white mr-1 text-gray-400"></UserCircleIcon>
+                    </div>
+                  </div>
+                </div>
+              </DisclosurePanel>
+            </Disclosure>
+          </div>
+        </div>
+        <div className="interest-category">
+          <div className="disclosure">
+            <Disclosure>
+              <DisclosureButton className="group header">
+                <div className="title">Interest Category</div>
+                <div className="chev">
+                  <ChevronDownIcon className="w-5 group-data-[open]:rotate-180"></ChevronDownIcon>
+                </div>
+              </DisclosureButton>
+              <DisclosurePanel className="panel">
+                <div className="title">04 September 2024</div>
+                <div className="card">
+                  <div className="header">
+                    <div className="title">Cooking class</div>
+                    <CogIcon className="h-5 w-5 white mr-1 text-gray-400"></CogIcon>
+                  </div>
+                  <div className="content">
+                    <div className="flex">
+                      <ClockIcon className="h-5 w-5 white mr-1 text-gray-400"></ClockIcon>
+                      <div className="time">11:00-14:00</div>
+                    </div>
+                    <div className="participants">
+                      <UserCircleIcon className="h-5 w-5 white mr-1 text-gray-400"></UserCircleIcon>
+                    </div>
+                  </div>
+                </div>
+                <div className="card">
+                  <div className="header">
+                    <div className="title">Dm book club</div>
+                    <CogIcon className="h-5 w-5 white mr-1 text-gray-400"></CogIcon>
+                  </div>
+                  <div className="content">
+                    <div className="flex">
+                      <ClockIcon className="h-5 w-5 white mr-1 text-gray-400"></ClockIcon>
+                      <div className="time">11:00-14:00</div>
+                    </div>
+                    <div className="participants">
+                      <UserCircleIcon className="h-5 w-5 white mr-1 text-gray-400"></UserCircleIcon>
+                    </div>
+                  </div>
+                </div>
+              </DisclosurePanel>
+            </Disclosure>
           </div>
         </div>
       </section>

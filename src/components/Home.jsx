@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "../assets/css/Home.css";
 import { Button } from "@headlessui/react";
 import {
@@ -23,16 +22,17 @@ import { CogIcon } from "@heroicons/react/outline";
 import { ClockIcon } from "@heroicons/react/outline";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 
-const people = [
-  { id: 1, name: "Durward Reynolds", unavailable: false },
-  { id: 2, name: "Kenton Towne", unavailable: false },
-  { id: 3, name: "Therese Wunsch", unavailable: false },
-  { id: 4, name: "Benedict Kessler", unavailable: true },
-  { id: 5, name: "Katelyn Rohan", unavailable: false },
+const interests = [
+  { id: 1, name: "Music", frequency: 12, members: 113 },
+  { id: 2, name: "Books", frequency: 90, members: 76 },
+  { id: 3, name: "Cooking", frequency: 23, members: 87 },
+  { id: 4, name: "Party", frequency: 4, members: 43 },
+  { id: 5, name: "Meditation", frequency: 11, members: 99 },
+  { id: 5, name: "Lecture", frequency: 36, members: 135 },
+  { id: 5, name: "DIY", frequency: 17, members: 155 },
 ];
 
 export default function Home() {
-  const [selectedPerson, setSelectedPerson] = useState(people[0]);
   return (
     <>
       <section className="home-header">
@@ -272,20 +272,6 @@ export default function Home() {
         </div>
       </section>
       <section className="home-report">
-        <Listbox value={selectedPerson} onChange={setSelectedPerson}>
-          <ListboxButton>{selectedPerson.name}</ListboxButton>
-          <ListboxOptions>
-            {people.map((person) => (
-              <ListboxOption
-                key={person.id}
-                value={person}
-                disabled={person.unavailable}
-              >
-                {person.name}
-              </ListboxOption>
-            ))}
-          </ListboxOptions>
-        </Listbox>
         <div className="damage-report">
           <div className="disclosure">
             <Disclosure>
@@ -377,48 +363,17 @@ export default function Home() {
           </div>
         </div>
         <div className="interest-category">
-          <div className="disclosure">
-            <Disclosure>
-              <DisclosureButton className="group header">
-                <div className="title">Interest Category</div>
-                <div className="chev">
-                  <ChevronDownIcon className="w-5 group-data-[open]:rotate-180"></ChevronDownIcon>
-                </div>
-              </DisclosureButton>
-              <DisclosurePanel className="panel">
-                <div className="title">04 September 2024</div>
-                <div className="card">
-                  <div className="header">
-                    <div className="title">Cooking class</div>
-                    <CogIcon className="h-5 w-5 white mr-1 text-gray-400"></CogIcon>
-                  </div>
-                  <div className="content">
-                    <div className="flex">
-                      <ClockIcon className="h-5 w-5 white mr-1 text-gray-400"></ClockIcon>
-                      <div className="time">11:00-14:00</div>
-                    </div>
-                    <div className="participants">
-                      <UserCircleIcon className="h-5 w-5 white mr-1 text-gray-400"></UserCircleIcon>
-                    </div>
-                  </div>
-                </div>
-                <div className="card">
-                  <div className="header">
-                    <div className="title">Dm book club</div>
-                    <CogIcon className="h-5 w-5 white mr-1 text-gray-400"></CogIcon>
-                  </div>
-                  <div className="content">
-                    <div className="flex">
-                      <ClockIcon className="h-5 w-5 white mr-1 text-gray-400"></ClockIcon>
-                      <div className="time">11:00-14:00</div>
-                    </div>
-                    <div className="participants">
-                      <UserCircleIcon className="h-5 w-5 white mr-1 text-gray-400"></UserCircleIcon>
-                    </div>
-                  </div>
-                </div>
-              </DisclosurePanel>
-            </Disclosure>
+          <div className="listbox">
+            <Listbox>
+              <ListboxButton className="header">Title</ListboxButton>
+              <ListboxOptions className="panel">
+                {interests.map((interest) => (
+                  <ListboxOption key={interest.id} value={interest.name}>
+                    {interest.name}
+                  </ListboxOption>
+                ))}
+              </ListboxOptions>
+            </Listbox>
           </div>
         </div>
       </section>

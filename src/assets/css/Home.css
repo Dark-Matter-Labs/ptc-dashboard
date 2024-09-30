@@ -232,14 +232,18 @@
   padding: 0.5rem 3rem;
 }
 
+.listbox,
 .disclosure {
   margin-top: 1rem;
   background-color: white;
   border: 1px solid #e9eaea;
   border-radius: 1.25rem;
   padding: 1rem;
+
+  height: auto;
 }
 
+.listbox .header,
 .disclosure .header {
   width: 100%;
   font-size: 1.25rem;
@@ -252,8 +256,8 @@
   border-bottom: 1px solid #e9eaea;
 }
 
-.todays-event .panel,
-.damage-report .panel {
+.listbox .panel,
+.disclosure .panel {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -368,6 +372,15 @@
   flex: 30%;
   border: 1px brown solid;
   /* height: 200px; */
+}
+.permission-statistics {
+  flex: 30%;
+  border: 1px orange solid;
+}
+
+.interest-category {
+  flex: 30%;
+  border: 1px green solid;
 }
 
 @media screen and (max-width: 768px) {

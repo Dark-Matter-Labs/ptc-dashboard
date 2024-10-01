@@ -5,12 +5,12 @@ import {
   DisclosureButton,
   DisclosurePanel,
 } from "@headlessui/react";
-import {
-  Listbox,
-  ListboxButton,
-  ListboxOptions,
-  ListboxOption,
-} from "@headlessui/react";
+// import {
+//   Listbox,
+//   ListboxButton,
+//   ListboxOptions,
+//   ListboxOption,
+// } from "@headlessui/react";
 import { UserIcon } from "@heroicons/react/solid";
 import { PlusIcon } from "@heroicons/react/solid";
 import { LinkIcon } from "@heroicons/react/solid";
@@ -21,16 +21,22 @@ import { UserCircleIcon } from "@heroicons/react/outline";
 import { CogIcon } from "@heroicons/react/outline";
 import { ClockIcon } from "@heroicons/react/outline";
 import { ChevronDownIcon } from "@heroicons/react/solid";
+import { BellIcon } from "@heroicons/react/solid";
+import { MusicNoteIcon } from "@heroicons/react/solid";
+import { BookOpenIcon } from "@heroicons/react/solid";
+import { FireIcon } from "@heroicons/react/solid";
+import { SparklesIcon } from "@heroicons/react/solid";
+import { SunIcon } from "@heroicons/react/solid";
 
-const interests = [
-  { id: 1, name: "Music", frequency: 12, members: 113 },
-  { id: 2, name: "Books", frequency: 90, members: 76 },
-  { id: 3, name: "Cooking", frequency: 23, members: 87 },
-  { id: 4, name: "Party", frequency: 4, members: 43 },
-  { id: 5, name: "Meditation", frequency: 11, members: 99 },
-  { id: 5, name: "Lecture", frequency: 36, members: 135 },
-  { id: 5, name: "DIY", frequency: 17, members: 155 },
-];
+// const interests = [
+//   { id: 1, name: "Music", frequency: 12, members: 113 },
+//   { id: 2, name: "Books", frequency: 90, members: 76 },
+//   { id: 3, name: "Cooking", frequency: 23, members: 87 },
+//   { id: 4, name: "Party", frequency: 4, members: 43 },
+//   { id: 5, name: "Meditation", frequency: 11, members: 99 },
+//   { id: 5, name: "Lecture", frequency: 36, members: 135 },
+//   { id: 5, name: "DIY", frequency: 17, members: 155 },
+// ];
 
 export default function Home() {
   return (
@@ -282,37 +288,39 @@ export default function Home() {
                 </div>
               </DisclosureButton>
               <DisclosurePanel className="panel">
-                <div className="title">04 September 2024</div>
                 <div className="card">
-                  <div className="header">
-                    <div className="title">Cooking class</div>
-                    <CogIcon className="h-5 w-5 white mr-1 text-gray-400"></CogIcon>
+                  <div className="card-header">
+                    <BellIcon className="h-6 w-6"></BellIcon>
                   </div>
-                  <div className="content">
-                    <div className="flex">
-                      <ClockIcon className="h-5 w-5 white mr-1 text-gray-400"></ClockIcon>
-                      <div className="time">11:00-14:00</div>
-                    </div>
-                    <div className="participants">
-                      <UserCircleIcon className="h-5 w-5 white mr-1 text-gray-400"></UserCircleIcon>
-                    </div>
+                  <div className="card-content">
+                    <div className="content-title">Toilet</div>
+                    <div className="content-description">7 days estimated</div>
                   </div>
+                  <div className="card-tail">Under repairing</div>
                 </div>
                 <div className="card">
-                  <div className="header">
-                    <div className="title">Dm book club</div>
-                    <CogIcon className="h-5 w-5 white mr-1 text-gray-400"></CogIcon>
+                  <div className="card-header">
+                    <BellIcon className="h-6 w-6"></BellIcon>
                   </div>
-                  <div className="content">
-                    <div className="flex">
-                      <ClockIcon className="h-5 w-5 white mr-1 text-gray-400"></ClockIcon>
-                      <div className="time">11:00-14:00</div>
-                    </div>
-                    <div className="participants">
-                      <UserCircleIcon className="h-5 w-5 white mr-1 text-gray-400"></UserCircleIcon>
-                    </div>
+                  <div className="card-content">
+                    <div className="content-title">Keyboard</div>
+                    <div className="content-description">5 days estimated</div>
                   </div>
+                  <div className="card-tail">Under repairing</div>
                 </div>
+                <div className="card">
+                  <div className="card-header">
+                    <BellIcon className="h-6 w-6"></BellIcon>
+                  </div>
+                  <div className="card-content">
+                    <div className="content-title">Controller</div>
+                    <div className="content-description">3 days estimated</div>
+                  </div>
+                  <div className="card-tail">Under repairing</div>
+                </div>
+                <Button className="damage-report-button">
+                  Report an issue
+                </Button>
               </DisclosurePanel>
             </Disclosure>
           </div>
@@ -327,35 +335,26 @@ export default function Home() {
                 </div>
               </DisclosureButton>
               <DisclosurePanel className="panel">
-                <div className="title">04 September 2024</div>
-                <div className="card">
-                  <div className="header">
-                    <div className="title">Cooking class</div>
-                    <CogIcon className="h-5 w-5 white mr-1 text-gray-400"></CogIcon>
+                <div className="title">Number of permissions</div>
+                <div className="flex space-x-1">
+                  <div className="card bg-emerald-400">
+                    <div className="card-header">Permissions granted</div>
+                    <div className="card-content">25</div>
                   </div>
-                  <div className="content">
-                    <div className="flex">
-                      <ClockIcon className="h-5 w-5 white mr-1 text-gray-400"></ClockIcon>
-                      <div className="time">11:00-14:00</div>
-                    </div>
-                    <div className="participants">
-                      <UserCircleIcon className="h-5 w-5 white mr-1 text-gray-400"></UserCircleIcon>
-                    </div>
+                  <div className="card bg-slate-300">
+                    <div className="card-header">Permissions requested</div>
+                    <div className="card-content">49</div>
                   </div>
                 </div>
-                <div className="card">
-                  <div className="header">
-                    <div className="title">Dm book club</div>
-                    <CogIcon className="h-5 w-5 white mr-1 text-gray-400"></CogIcon>
+                <div className="title">Permissioning group</div>
+                <div className="flex">
+                  <div className="card bg-slate-300">
+                    <div className="card-header">Permissions granted</div>
+                    <div className="card-content">25</div>
                   </div>
-                  <div className="content">
-                    <div className="flex">
-                      <ClockIcon className="h-5 w-5 white mr-1 text-gray-400"></ClockIcon>
-                      <div className="time">11:00-14:00</div>
-                    </div>
-                    <div className="participants">
-                      <UserCircleIcon className="h-5 w-5 white mr-1 text-gray-400"></UserCircleIcon>
-                    </div>
+                  <div className="card bg-emerald-400">
+                    <div className="card-header">Permissions requested</div>
+                    <div className="card-content">49</div>
                   </div>
                 </div>
               </DisclosurePanel>
@@ -363,17 +362,67 @@ export default function Home() {
           </div>
         </div>
         <div className="interest-category">
-          <div className="listbox">
-            <Listbox>
-              <ListboxButton className="header">Title</ListboxButton>
-              <ListboxOptions className="panel">
-                {interests.map((interest) => (
-                  <ListboxOption key={interest.id} value={interest.name}>
-                    {interest.name}
-                  </ListboxOption>
-                ))}
-              </ListboxOptions>
-            </Listbox>
+          <div className="disclosure">
+            <Disclosure>
+              <DisclosureButton className="group header">
+                <div className="title">Interest Category</div>
+                <div className="chev">
+                  <ChevronDownIcon className="w-5 group-data-[open]:rotate-180"></ChevronDownIcon>
+                </div>
+              </DisclosureButton>
+              <DisclosurePanel className="panel">
+                <div className="card">
+                  <div className="card-header bg-purple-200">
+                    <MusicNoteIcon className="h-6 w-6 text-purple-600"></MusicNoteIcon>
+                  </div>
+                  <div className="card-content">
+                    <div className="content-title">Music</div>
+                    <div className="content-description">35 Times</div>
+                  </div>
+                  <div className="card-tail">205 members</div>
+                </div>
+                <div className="card">
+                  <div className="card-header bg-orange-200">
+                    <BookOpenIcon className="h-6 w-6 text-orange-600"></BookOpenIcon>
+                  </div>
+                  <div className="card-content">
+                    <div className="content-title">Books</div>
+                    <div className="content-description">27 Times</div>
+                  </div>
+                  <div className="card-tail">131 members</div>
+                </div>
+                <div className="card">
+                  <div className="card-header bg-green-200">
+                    <FireIcon className="h-6 w-6 text-green-600"></FireIcon>
+                  </div>
+                  <div className="card-content">
+                    <div className="content-title">Cooking</div>
+                    <div className="content-description">19 Times</div>
+                  </div>
+                  <div className="card-tail">120 members</div>
+                </div>
+                <div className="card">
+                  <div className="card-header bg-pink-200">
+                    <SparklesIcon className="h-6 w-6 text-pink-600"></SparklesIcon>
+                  </div>
+                  <div className="card-content">
+                    <div className="content-title">Party</div>
+                    <div className="content-description">12 Times</div>
+                  </div>
+                  <div className="card-tail">92 members</div>
+                </div>
+                <div className="card">
+                  <div className="card-header bg-blue-200">
+                    <SunIcon className="h-6 w-6 text-blue-600"></SunIcon>
+                  </div>
+                  <div className="card-content">
+                    <div className="content-title">Meditation</div>
+                    <div className="content-description">8 Times</div>
+                  </div>
+                  <div className="card-tail">76 members</div>
+                </div>
+              </DisclosurePanel>
+            </Disclosure>
           </div>
         </div>
       </section>

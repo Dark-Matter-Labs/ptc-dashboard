@@ -1,0 +1,117 @@
+.damage-report .panel,
+.interest-category .panel {
+  padding: 1rem;
+}
+
+.damage-report .panel .card,
+.interest-category .panel .card {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  font-size: 1rem;
+  font-weight: 600;
+
+  justify-content: space-between;
+  padding: 0.2rem;
+}
+
+.damage-report .panel .card .card-header {
+  background-color: #c1c1c1;
+  color: #8a8a8a;
+  border-radius: 20rem;
+  margin: auto;
+  padding: 0.5rem;
+}
+
+.interest-category .panel .card .card-header {
+  border-radius: 20rem;
+  margin: auto;
+  padding: 0.5rem;
+}
+
+.damage-report .panel .card .card-content,
+.interest-category .panel .card .card-content {
+  flex: 70%;
+  display: flex;
+  flex-direction: column;
+  margin-left: 1rem;
+}
+
+.damage-report .panel .card .card-content .content-description,
+.interest-category .panel .card .card-content .content-description {
+  color: #8a8a8a;
+  font-weight: 400;
+}
+
+.damage-report .panel .card .card-tail {
+  border: 1px solid red;
+  flex: 40%;
+  text-align: center;
+  width: fit-content;
+  background-color: #facdc3;
+  color: #f05d3d;
+  border: 1px solid #f05d3d;
+  font-weight: 400;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.3rem;
+  border-radius: 2rem;
+  margin: auto;
+}
+.interest-category .panel .card .card-tail {
+  color: black;
+  font-weight: 400;
+}
+.disclosure .damage-report-button {
+  background-color: #92929d;
+  color: white;
+  border-radius: 0.5rem;
+  padding: 1rem 5rem;
+  width: 100%;
+}
+
+.home-report {
+  border-top: 1px solid #e9eaea;
+  margin: 2rem;
+  padding-top: 2rem;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+.damage-report {
+  flex: 40%;
+  /* border: 1px brown solid; */
+  /* height: 200px; */
+}
+.permission-statistics {
+  flex: 20%;
+}
+
+.permission-statistics .disclosure .panel .card {
+  margin: 0.5rem;
+
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+.permission-statistics .disclosure .panel .card .card-header {
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+.permission-statistics .disclosure .panel .card .card-content {
+  margin-top: 2rem;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.interest-category {
+  flex: 30%;
+  /* border: 1px green solid; */
+}
+
+@media screen and (max-width: 768px) {
+  .home-report {
+    flex-direction: column;
+  }
+}

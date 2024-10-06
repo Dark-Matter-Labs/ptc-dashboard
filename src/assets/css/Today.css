@@ -1,0 +1,33 @@
+.todays-event {
+  padding: 0rem;
+}
+
+.todays-event .panel .card {
+  width: 100%;
+  height: auto;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 1px solid #e9eaea;
+  border-radius: 1rem;
+}
+
+.todays-event .panel .card > .header {
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem;
+  border-bottom: 0px;
+}
+
+.todays-event .panel .card > .content {
+  font-size: 0.9rem;
+  font-weight: 400;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem;
+  padding-top: 0;
+  align-items: center;
+}

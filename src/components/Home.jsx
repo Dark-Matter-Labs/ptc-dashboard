@@ -18,9 +18,7 @@ import { LinkIcon } from "@heroicons/react/solid";
 import { LocationMarkerIcon } from "@heroicons/react/outline";
 import { CalendarIcon } from "@heroicons/react/outline";
 import { UsersIcon } from "@heroicons/react/outline";
-import { UserCircleIcon } from "@heroicons/react/outline";
-import { CogIcon } from "@heroicons/react/outline";
-import { ClockIcon } from "@heroicons/react/outline";
+
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { BellIcon } from "@heroicons/react/solid";
 import { MusicNoteIcon } from "@heroicons/react/solid";
@@ -28,6 +26,7 @@ import { BookOpenIcon } from "@heroicons/react/solid";
 import { FireIcon } from "@heroicons/react/solid";
 import { SparklesIcon } from "@heroicons/react/solid";
 import { SunIcon } from "@heroicons/react/solid";
+import Today from "./Today";
 
 // const interests = [
 //   { id: 1, name: "Music", frequency: 12, members: 113 },
@@ -133,51 +132,7 @@ export default function Home() {
               <Button className="get-permission-button">Get permission</Button>
             </div>
           </div>
-          <div className="todays-event">
-            <div className="disclosure">
-              <Disclosure>
-                <DisclosureButton className="group header">
-                  <div className="title">Today&#39;s events</div>
-                  <div className="chev">
-                    <ChevronDownIcon className="w-5 group-data-[open]:rotate-180"></ChevronDownIcon>
-                  </div>
-                </DisclosureButton>
-                <DisclosurePanel className="panel">
-                  <div className="title">04 September 2024</div>
-                  <div className="card">
-                    <div className="header">
-                      <div className="title">Cooking class</div>
-                      <CogIcon className="h-5 w-5 white mr-1 text-gray-400"></CogIcon>
-                    </div>
-                    <div className="content">
-                      <div className="flex">
-                        <ClockIcon className="h-5 w-5 white mr-1 text-gray-400"></ClockIcon>
-                        <div className="time">11:00-14:00</div>
-                      </div>
-                      <div className="participants">
-                        <UserCircleIcon className="h-5 w-5 white mr-1 text-gray-400"></UserCircleIcon>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="card">
-                    <div className="header">
-                      <div className="title">Dm book club</div>
-                      <CogIcon className="h-5 w-5 white mr-1 text-gray-400"></CogIcon>
-                    </div>
-                    <div className="content">
-                      <div className="flex">
-                        <ClockIcon className="h-5 w-5 white mr-1 text-gray-400"></ClockIcon>
-                        <div className="time">11:00-14:00</div>
-                      </div>
-                      <div className="participants">
-                        <UserCircleIcon className="h-5 w-5 white mr-1 text-gray-400"></UserCircleIcon>
-                      </div>
-                    </div>
-                  </div>
-                </DisclosurePanel>
-              </Disclosure>
-            </div>
-          </div>
+          <Today></Today>
         </div>
         <div className="activity">
           <div className="upcoming-activity">

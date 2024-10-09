@@ -8,28 +8,12 @@ export default function Navbar() {
     window.location.href = "/api/v1/auth/google";
   };
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-
-    if (token) {
-      // Fetch user info from the backend using the token
-      fetch("/api/v1/auth/profile", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((response) => {
-          console.log("response, ", response.json());
-          // response.json();
-        })
-        .then((data) => {
-          setUser(data); // Assuming 'data' contains the user's info
-          console.log("data, ", data);
-          localStorage.setItem("user", JSON.stringify(data)); // Optional: Store user info in localStorage
-        })
-        .catch((error) => {
-          console.error("Error fetching user info:", error);
-        });
-    }
+    fetch("/api/v1/auth/profile")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("data,", data);
+        setUser(data);
+      });
   }, []);
   return (
     <div className="w-full h-16 flex items-center justify-between px-8 border-b bg-white">

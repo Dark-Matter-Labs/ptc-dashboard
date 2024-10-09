@@ -9,7 +9,7 @@ export default function Activity() {
     fetch("https://jsonplaceholder.typicode.com/users")
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setEvents(data);
       });
   }, []);

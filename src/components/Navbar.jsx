@@ -5,9 +5,11 @@ import { Button } from "@headlessui/react";
 export default function Navbar() {
   const [user, setUser] = useState(null);
   const handleLogin = () => {
+    console.log("call handleLogin");
     window.location.href = "/api/v1/auth/google";
   };
   const handleFetchProfile = () => {
+    console.log("call hanldeFetchProfile");
     fetch("/api/v1/auth/profile")
       .then((response) => response.json())
       .then((data) => {
@@ -19,26 +21,8 @@ export default function Navbar() {
       });
   };
   useEffect(() => {
-    // const token = getCookie("accessToken");
-    // if (token) {
-    //   console.log("Token found in cookie:", token);
-    //   // Fetch user info from the backend using the token
-    //   fetch("https://engine.permissioning.city/api/v1/auth/profile", {
-    //     headers: {
-    //       Authorization: `Bearer ${token}`,
-    //     },
-    //   })
-    //     .then((response) => response.json())
-    //     .then((data) => {
-    //       console.log("profile, ", data);
-    //       setUser(data); // Assuming 'data' contains the user's info
-    //     })
-    //     .catch((error) => {
-    //       console.error("Error fetching user info:", error);
-    //     });
-    // } else {
-    //   console.log("No accessToken cookie found");
-    // }
+    console.log("call hanldeFetchProfile when first load/call back");
+    handleFetchProfile();
   }, []);
   return (
     <div className="w-full h-16 flex items-center justify-between px-8 border-b bg-white">

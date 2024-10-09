@@ -5,15 +5,31 @@ import { Button } from "@headlessui/react";
 export default function Navbar() {
   const [user, setUser] = useState(null);
   const handleLogin = () => {
-    window.location.href = "/api/v1/auth/google";
+    window.location.href =
+      "https://engine.permissioning.city/api/v1/auth/google";
   };
   useEffect(() => {
-    fetch("/api/v1/auth/profile")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("data,", data);
-        setUser(data);
-      });
+    const token = getCookie("accessToken");
+
+    if (token) {
+      console.log("Token found in cookie:", token);
+      // Fetch user info from the backend using the token
+      fetch("/api/v1/auth/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        // .then((response) => response.json())
+        .then((data) => {
+          console.log("profile, ", data);
+          setUser(data); // Assuming 'data' contains the user's info
+        })
+        .catch((error) => {
+          console.error("Error fetching user info:", error);
+        });
+    } else {
+      console.log("No accessToken cookie found");
+    }
   }, []);
   return (
     <div className="w-full h-16 flex items-center justify-between px-8 border-b bg-white">
@@ -31,10 +47,10 @@ export default function Navbar() {
                   />
                   <div className="text-left">
                     <p className="text-sm leading-6 text-gray-900">
-                      Berry Garden
+                      Berry Garden {user.email}
                     </p>
                     <p className="text-xs leading-5 text-gray-500">
-                      Space owner
+                      Space owner {user.name}
                     </p>
                   </div>
                 </div>
@@ -87,4 +103,11 @@ export default function Navbar() {
       </ul>
     </div>
   );
+}
+
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(";").shift();
+  return null; // Return null if the cookie is not found
 }

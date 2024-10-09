@@ -8,10 +8,28 @@ export default function Navbar() {
     console.log("call handleLogin");
     window.location.href = "/api/v1/auth/google";
   };
-  const handleLogout = () => {
+  const handleLogout = async () => {
     console.log("call handleLogout");
-    window.location.href = "/api/v1/auth/logout";
+
+    try {
+      const response = await fetch("/api/v1/auth/logout", {
+        method: "POST",
+        headers: {
+          Accept: "*/*",
+        },
+      });
+
+      if (response.ok) {
+        console.log("Logout successful");
+        window.location.href = "/";
+      } else {
+        console.error("Logout failed:", response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
   };
+
   const handleFetchProfile = () => {
     console.log("call hanldeFetchProfile");
     fetch("/api/v1/auth/profile")

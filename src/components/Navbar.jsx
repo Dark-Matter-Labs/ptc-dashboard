@@ -5,8 +5,7 @@ import { Button } from "@headlessui/react";
 export default function Navbar() {
   const [user, setUser] = useState(null);
   const handleLogin = () => {
-    window.location.href =
-      "https://engine.permissioning.city/api/v1/auth/google";
+    window.location.href = "/api/v1/auth/google";
   };
   useEffect(() => {
     const token = getCookie("accessToken");
@@ -19,7 +18,7 @@ export default function Navbar() {
           Authorization: `Bearer ${token}`,
         },
       })
-        // .then((response) => response.json())
+        .then((response) => response.json())
         .then((data) => {
           console.log("profile, ", data);
           setUser(data); // Assuming 'data' contains the user's info

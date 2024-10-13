@@ -37,7 +37,13 @@ export default function Navbar() {
       .then((response) => response.json())
       .then((data) => {
         console.log("direct fetching profile, ", data);
-        setUser(data);
+        setUser({
+          email: data.email,
+          firstname: data.firstName,
+          lastname: data.lastName,
+          picture: data.picture,
+          name: data.name,
+        });
       })
       .catch((error) => {
         console.error("Error fetching profile info:", error);

@@ -44,10 +44,13 @@ export default function Navbar() {
       });
   };
   useEffect(() => {
-    console.log("user: ", user);
     console.log("call hanldeFetchProfile when first load/call back");
     handleFetchProfile();
   }, []);
+
+  useEffect(() => {
+    console.log("user: ", user);
+  }, [user]);
   return (
     <div className="w-full h-16 flex items-center justify-between px-8 border-b bg-white">
       <h1 className="text-2xl font-bold text-black">PtC</h1>

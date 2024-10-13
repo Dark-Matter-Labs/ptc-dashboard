@@ -4,7 +4,13 @@ import { ChevronDownIcon } from "@heroicons/react/solid";
 import { Button } from "@headlessui/react";
 
 export default function Navbar() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({
+    email: "",
+    firstname: "",
+    lastname: "",
+    picture: "",
+    name: "",
+  });
   const handleLogin = () => {
     console.log("call handleLogin");
     window.location.href = "/api/v1/auth/google";
@@ -37,7 +43,7 @@ export default function Navbar() {
       .then((response) => response.json())
       .then((data) => {
         console.log("direct fetching profile, ", data);
-        setUser(data.name); // Assuming 'data' contains the user's info
+        setUser(data);
       })
       .catch((error) => {
         console.error("Error fetching profile info:", error);
@@ -58,15 +64,15 @@ export default function Navbar() {
                 <div className="flex min-w-0 gap-x-4">
                   <img
                     alt=""
-                    src="https://s3-alpha-sig.figma.com/img/ba8a/3aab/5d9e1731d686fd3622cb996db5c3c48b?Expires=1728259200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=Yx3GsrCMXsSl8ydytQXapRCga2Sx473AdY0pWFXbPKjYAur7rhJ~c5kiJ1cjbc~AKlKdzkBhUiY0eqRix8OALYzdd5lNcD~1SrxQPDc6fMBwx-07DkYRpUU2CDutLUU3NVkkA0JJxnTsBbLCvZuuTJFCK7xxmsR-p1r24tk3a~n4afS69o2LAI9q7tyHeRF106zLGlW4gzh86GgiIw0A52-SNXm56wNHu~2JzsZP3Z7kDhmmuAl-ixHteP7hbiWiXdr0n5BSUAJJ4NybQ4c877pxLGVYtHKEmrK0ORFTd-5DVmlro1L7GQyB5eWmE2mE-DM6a8D-0U62-QJzeqkKrA__"
+                    src={user.picture}
                     className="h-12 w-12 flex-none rounded-full bg-gray-50"
                   />
                   <div className="text-left">
                     <p className="text-sm leading-6 text-gray-900">
-                      Berry Garden {user}
+                      {user.firstname}
                     </p>
                     <p className="text-xs leading-5 text-gray-500">
-                      Space owner
+                      {user.email}
                     </p>
                   </div>
                 </div>

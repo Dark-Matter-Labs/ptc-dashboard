@@ -2,17 +2,18 @@ import { useState, useEffect } from "react";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { Button } from "@headlessui/react";
+// const url = "http://localhost";
 export default function Navbar() {
   const [user, setUser] = useState(null);
   const handleLogin = () => {
     console.log("call handleLogin");
-    window.location.href = "/api/v1/auth/google";
+    window.location.href = "http://localhost/api/v1/auth/google";
   };
   const handleLogout = async () => {
     console.log("call handleLogout");
 
     try {
-      const response = await fetch("/api/v1/auth/logout", {
+      const response = await fetch("http://localhost/api/v1/auth/logout", {
         method: "POST",
         headers: {
           Accept: "*/*",
@@ -32,7 +33,7 @@ export default function Navbar() {
 
   const handleFetchProfile = () => {
     console.log("call hanldeFetchProfile");
-    fetch("/api/v1/auth/profile")
+    fetch("http://localhost/api/v1/auth/profile")
       .then((response) => response.json())
       .then((data) => {
         console.log("direct fetching profile, ", data);

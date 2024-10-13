@@ -44,6 +44,7 @@ export default function Navbar() {
       });
   };
   useEffect(() => {
+    console.log("user: ", user);
     console.log("call hanldeFetchProfile when first load/call back");
     handleFetchProfile();
   }, []);

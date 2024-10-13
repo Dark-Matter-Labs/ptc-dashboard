@@ -4,20 +4,14 @@ import { ChevronDownIcon } from "@heroicons/react/solid";
 import { Button } from "@headlessui/react";
 
 export default function Navbar() {
-  const [user, setUser] = useState({
-    email: "",
-    firstname: "",
-    lastname: "",
-    picture: "",
-    name: "",
-  });
+  const [user, setUser] = useState(null);
   const handleLogin = () => {
     console.log("call handleLogin");
     window.location.href = "/api/v1/auth/google";
   };
   const handleLogout = async () => {
     console.log("call handleLogout");
-
+    setUser(null);
     try {
       const response = await fetch("/api/v1/auth/logout", {
         method: "POST",

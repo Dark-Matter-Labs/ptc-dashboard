@@ -12,9 +12,9 @@ export default function Space() {
       <div className="space-data">
         <div className="space-image">
           {/* First, space image */}
-          <img src="https://s3-alpha-sig.figma.com/img/7a69/ccc2/c686d8b80b324a7e8036f5672361145e?Expires=1728259200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=Bnq-lg9xa8u-g0AZ~DV3Oq~6lOE1Fgm6peov2QRgkKmRWDieoOLSgapHhNtlz7bwTqE9B9-i6OsO2W-e~PHOw0ne4qjxQ-tlbQ1fra-So4zjHDA9xsXAzafCaZjlgyZq4cx-Y-cMjL0Vwn3GWRaaLQDy7oTjzXMPazrCQ-UBZwOQJ4nVmdxonumfwLeVyXmNQTPFWsVGZUwdeshNX~anhXZ8fzZrvNfopglTuAW5XNwe5w-VvUjWil3GuuNI-9hfwqnPfAVCbuVLzMQSmpOsSIxXY7sgXnw6DioDHJMvEuh48zpC-Kj96mesRJHVEI12y44hr8tArFv5RDbltdYDXw__"></img>
+          <img src="https://plus.unsplash.com/premium_photo-1670315264879-59cc6b15db5f?q=80&w=2342&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"></img>
           {/* Second, profile image */}
-          <img src="https://s3-alpha-sig.figma.com/img/ba8a/3aab/5d9e1731d686fd3622cb996db5c3c48b?Expires=1728259200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=Yx3GsrCMXsSl8ydytQXapRCga2Sx473AdY0pWFXbPKjYAur7rhJ~c5kiJ1cjbc~AKlKdzkBhUiY0eqRix8OALYzdd5lNcD~1SrxQPDc6fMBwx-07DkYRpUU2CDutLUU3NVkkA0JJxnTsBbLCvZuuTJFCK7xxmsR-p1r24tk3a~n4afS69o2LAI9q7tyHeRF106zLGlW4gzh86GgiIw0A52-SNXm56wNHu~2JzsZP3Z7kDhmmuAl-ixHteP7hbiWiXdr0n5BSUAJJ4NybQ4c877pxLGVYtHKEmrK0ORFTd-5DVmlro1L7GQyB5eWmE2mE-DM6a8D-0U62-QJzeqkKrA__"></img>
+          <img src="https://images.unsplash.com/uploads/1411901100260f56b39b9/ab70b250?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"></img>
         </div>
         <div className="space-snippet">
           <h1>Berry Garden</h1>

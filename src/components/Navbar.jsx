@@ -3,19 +3,17 @@ import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { Button } from "@headlessui/react";
 
-const url = "https://engine.permissioning.city/";
-
 export default function Navbar() {
   const [user, setUser] = useState(null);
   const handleLogin = () => {
     console.log("call handleLogin");
-    window.location.href = url + "/api/v1/auth/google";
+    window.location.href = "/api/v1/auth/google";
   };
   const handleLogout = async () => {
     console.log("call handleLogout");
     setUser(null);
     try {
-      const response = await fetch(url + "/api/v1/auth/logout", {
+      const response = await fetch("/api/v1/auth/logout", {
         method: "POST",
         headers: {
           Accept: "*/*",
@@ -35,7 +33,7 @@ export default function Navbar() {
 
   const handleFetchProfile = async () => {
     console.log("call hanldeFetchProfile");
-    await fetch(url + "/api/v1/auth/profile")
+    await fetch("/api/v1/auth/profile")
       .then((response) => response.json())
       .then((data) => {
         console.log("direct fetching profile, ", data);

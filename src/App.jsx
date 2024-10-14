@@ -1,16 +1,19 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
-import About from "./components/About";
+import Profile from "./components/Profile";
 import Navbar from "./components/Navbar";
+import { UserProvider } from "./UserContext";
 
 function App() {
   return (
     <div>
-      <Navbar></Navbar>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-      </Routes>
+      <UserProvider>
+        <Navbar></Navbar>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
+      </UserProvider>
     </div>
   );
 }

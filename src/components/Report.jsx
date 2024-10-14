@@ -4,7 +4,7 @@ import {
   DisclosureButton,
   DisclosurePanel,
 } from "@headlessui/react";
-
+import "../assets/css/Report.css";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { BellIcon } from "@heroicons/react/solid";
 import { MusicNoteIcon } from "@heroicons/react/solid";

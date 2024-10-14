@@ -3,17 +3,19 @@ import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { Button } from "@headlessui/react";
 
+const url = "https://engine.permissioning.city/";
+
 export default function Navbar() {
   const [user, setUser] = useState(null);
   const handleLogin = () => {
     console.log("call handleLogin");
-    window.location.href = "/api/v1/auth/google";
+    window.location.href = url + "/api/v1/auth/google";
   };
   const handleLogout = async () => {
     console.log("call handleLogout");
     setUser(null);
     try {
-      const response = await fetch("/api/v1/auth/logout", {
+      const response = await fetch(url + "/api/v1/auth/logout", {
         method: "POST",
         headers: {
           Accept: "*/*",
@@ -31,24 +33,27 @@ export default function Navbar() {
     }
   };
 
-  const handleFetchProfile = () => {
+  const handleFetchProfile = async () => {
     console.log("call hanldeFetchProfile");
-    fetch("/api/v1/auth/profile")
+    await fetch(url + "/api/v1/auth/profile")
       .then((response) => response.json())
       .then((data) => {
         console.log("direct fetching profile, ", data);
-        setUser({
-          email: data.email,
-          firstname: data.firstName,
-          lastname: data.lastName,
-          picture: data.picture,
-          name: data.name,
-        });
+        if (data.email) {
+          setUser({
+            email: data.email,
+            firstname: data.firstName ? data.firstName : "",
+            lastname: data.lastName ? data.lastName : "",
+            picture: data.picture ? data.picture : "",
+            name: data.name ? data.name : "",
+          });
+        }
       })
       .catch((error) => {
         console.error("Error fetching profile info:", error);
       });
   };
+
   useEffect(() => {
     console.log("call hanldeFetchProfile when first load/call back");
     handleFetchProfile();
@@ -57,6 +62,7 @@ export default function Navbar() {
   useEffect(() => {
     console.log("user: ", user);
   }, [user]);
+
   return (
     <div className="w-full h-16 flex items-center justify-between px-8 border-b bg-white">
       <h1 className="text-2xl font-bold text-black">PtC</h1>
@@ -68,7 +74,11 @@ export default function Navbar() {
                 <div className="flex min-w-0 gap-x-4">
                   <img
                     alt=""
-                    src={user.picture}
+                    src={
+                      user.picture
+                        ? user.picture
+                        : "./assets/image/user-profile.png"
+                    }
                     className="h-12 w-12 flex-none rounded-full bg-gray-50"
                   />
                   <div className="text-left">

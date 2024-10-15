@@ -1,13 +1,23 @@
 import { useUser } from "../UserContext";
+import Stepper from "./Stepper";
 // import { useState, useEffect } from "react";
 export default function CreateEvent() {
   const { user } = useUser();
+  const steps = 5; // number of steps
+  const content = [
+    "Content for Step 1",
+    "Content for Step 2",
+    "Content for Step 3",
+    "Content for Step 4",
+    "Content for Step 5",
+  ];
 
   return (
-    <div className="px-8 pt-8">
-      <h1 className="text-2xl font-bold text-black">Create Event</h1>
+    <div className="pt-8">
       {user ? (
-        <>hi {user.name}</>
+        <div>
+          <Stepper numSteps={steps} stepContents={content} />
+        </div>
       ) : (
         // user is not logged in
         <p>Please log in.</p>

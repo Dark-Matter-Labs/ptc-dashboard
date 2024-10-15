@@ -1,5 +1,5 @@
 import { useUser } from "../UserContext";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { Button } from "@headlessui/react";
@@ -68,15 +68,15 @@ export default function Navbar() {
   }, []);
 
   return (
-    <div className="w-full h-16 flex items-center justify-between px-8 border-b bg-white">
+    <div className="w-full h-24 lg:h-20 flex items-center justify-between px-8 border-b bg-white">
       <h1 className="text-2xl font-bold text-black">
         <a href="/">PtC</a>
       </h1>
       <ul className="flex items-center">
-        <li className="p-4">
+        <li className="lg:p-4">
           {user ? (
             <Menu as="div" className="relative inline-block text-left">
-              <MenuButton className="inline-flex w-full justify-center items-center  gap-x-1.5 rounded-md bg-white  py-2 text-sm  text-gray-900 hover:bg-gray-50">
+              <MenuButton className="inline-flex w-full justify-center items-center gap-x-1  lg:gap-x-1.5 rounded-md bg-white  py-1 text-sm  text-gray-900 hover:bg-gray-50">
                 <div className="flex min-w-0 gap-x-4">
                   <img
                     alt="user picture"
@@ -87,7 +87,7 @@ export default function Navbar() {
                     }
                     className="h-12 w-12 flex-none rounded-full bg-gray-50"
                   />
-                  <div className="text-left">
+                  <div className="text-left hidden lg:block md:block">
                     <p className="text-sm leading-6 text-gray-900">
                       {user.name}
                     </p>
@@ -98,7 +98,7 @@ export default function Navbar() {
                 </div>
                 <ChevronDownIcon
                   aria-hidden="true"
-                  className="ml-3 h-4 text-gray-600"
+                  className="lg:ml-3 h-4 text-gray-600 "
                 />
               </MenuButton>
               <MenuItems

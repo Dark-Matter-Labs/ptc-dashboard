@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import "../assets/css/Activity.css";
 import { Button } from "@headlessui/react";
+import { useNavigate } from "react-router-dom";
 import Today from "./Today";
+
 export default function Activity() {
   const [events, setEvents] = useState([]);
+  let navigate = useNavigate();
 
   useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/users")
@@ -13,6 +16,10 @@ export default function Activity() {
         setEvents(data);
       });
   }, []);
+
+  const gotoCreateEvent = (path) => {
+    navigate(path);
+  };
   return (
     <section className="home-availability">
       <div className="availability">
@@ -21,7 +28,12 @@ export default function Activity() {
           <div className="permissioning">
             <h1>Availability</h1>
             <div>Available to register for activities</div>
-            <Button className="get-permission-button">Get permission</Button>
+            <Button
+              onClick={() => gotoCreateEvent("/event/new")}
+              className="get-permission-button"
+            >
+              Get permission
+            </Button>
           </div>
         </div>
         <Today></Today>

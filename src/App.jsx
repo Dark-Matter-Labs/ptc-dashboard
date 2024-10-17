@@ -1,12 +1,13 @@
 import { Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
+import { UserProvider } from "./UserProvider";
+import { useTranslation } from "react-i18next";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
 import Navbar from "./components/Navbar";
 import CreateEvent from "./components/CreateEvent";
 import DisplayEvents from "./components/DisplayEvents";
-import { UserProvider } from "./UserContext";
-import { useTranslation } from "react-i18next";
+
 import i18n from "./i18n";
 
 function App() {

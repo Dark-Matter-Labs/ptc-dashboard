@@ -1,4 +1,4 @@
-import { useUser } from "../UserContext";
+import { useUser } from "../useUser";
 import { useEffect } from "react";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/solid";
@@ -65,6 +65,7 @@ export default function Navbar() {
 
   useEffect(() => {
     handleFetchProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

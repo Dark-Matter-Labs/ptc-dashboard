@@ -1,4 +1,4 @@
-import { useUser } from "../UserContext";
+import { useUser } from "../useUser";
 import Stepper from "./Stepper";
 // import { useState, useEffect } from "react";
 export default function CreateEvent() {

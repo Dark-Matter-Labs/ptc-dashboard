@@ -1,10 +1,9 @@
-import { createContext, useState, useContext } from "react";
+// UserProvider.jsx
+import { createContext, useState } from "react";
+import PropTypes from "prop-types";
 
 // Create the context
-const UserContext = createContext();
-
-// Custom hook to use the UserContext in any component
-export const useUser = () => useContext(UserContext);
+export const UserContext = createContext();
 
 // Context provider component
 export const UserProvider = ({ children }) => {
@@ -15,4 +14,8 @@ export const UserProvider = ({ children }) => {
       {children}
     </UserContext.Provider>
   );
+};
+
+UserProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };

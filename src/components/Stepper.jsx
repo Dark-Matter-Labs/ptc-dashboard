@@ -1,6 +1,9 @@
 import { Tab } from "@headlessui/react";
+import { TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
+
 function Stepper({ numSteps, stepContents }) {
   let navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
@@ -13,9 +16,9 @@ function Stepper({ numSteps, stepContents }) {
 
   return (
     <div className="w-full max-w-md mx-auto p-4 bg-white">
-      <Tab.Group selectedIndex={currentStep} onChange={setCurrentStep}>
+      <TabGroup selectedIndex={currentStep} onChange={setCurrentStep}>
         {/* Step Dots */}
-        <Tab.List className="flex justify-center items-center mb-8 gap-x-2">
+        <TabList className="flex justify-center items-center mb-8 gap-x-2">
           {Array.from({ length: numSteps }, (_, index) => (
             <Tab
               key={index}
@@ -28,17 +31,17 @@ function Stepper({ numSteps, stepContents }) {
               <span className="sr-only">Step {index + 1}</span>
             </Tab>
           ))}
-        </Tab.List>
+        </TabList>
 
         {/* Step Content */}
-        <Tab.Panels className="min-h-96">
+        <TabPanels className="min-h-96">
           {stepContents.map((content, index) => (
-            <Tab.Panel key={index}>
+            <TabPanel key={index}>
               <p>{content}</p>
-            </Tab.Panel>
+            </TabPanel>
           ))}
-        </Tab.Panels>
-      </Tab.Group>
+        </TabPanels>
+      </TabGroup>
 
       {/* Next Button */}
       <div className="fixed bottom-0 left-0 w-full bg-gray-100 shadow-lg p-4">
@@ -63,3 +66,8 @@ function Stepper({ numSteps, stepContents }) {
 }
 
 export default Stepper;
+
+Stepper.propTypes = {
+  numSteps: PropTypes.number,
+  stepContents: PropTypes.object,
+};

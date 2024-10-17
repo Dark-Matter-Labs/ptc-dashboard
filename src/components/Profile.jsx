@@ -1,7 +1,8 @@
-import { useUser } from "../UserContext";
+import { useUser } from "../useUser";
+
 export default function Profile() {
   const { user } = useUser();
-  console.log(user);
+  console.log("user: ", user);
   return (
     <div className="px-8 pt-8">
       <h1 className="text-2xl font-bold text-black">Profile Page</h1>

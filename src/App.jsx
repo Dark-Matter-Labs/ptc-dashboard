@@ -26,8 +26,8 @@ function App() {
     <div>
       <UserProvider>
         <Navbar></Navbar>
-        <h1>{t("welcome")}</h1>
-        <p>{t("description")}</p>
+        <h1>{t("home.follow-button")}</h1>
+        <p>{t("home.availability")}</p>
         {/* <button
           className="p-4 m-2 bg-slate-300"
           onClick={() => handleChangeLanguage("en")}

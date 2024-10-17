@@ -1,4 +1,14 @@
 {
-  "welcome": "환영합니다",
-  "description": "이것은 한국어 설명입니다."
+  "home": {
+    "follow-button": "팔로우",
+    "availability": "이용 가능성",
+    "upcoming events": "다가오는 이벤트",
+    "past events": "지난 이벤트"
+  },
+  "profile": {
+    "title": "프로필 페이지"
+  },
+  "events": {
+    "title": "이벤트 페이지"
+  }
 }

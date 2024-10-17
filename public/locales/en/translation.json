@@ -1,4 +1,14 @@
 {
-  "welcome": "Welcome",
-  "description": "This is an English description."
+  "home": {
+    "follow-button": "follow",
+    "availability": "Availability",
+    "upcoming-events": "Upcoming events",
+    "past-events": "Past events"
+  },
+  "profile": {
+    "title": "Profile Page"
+  },
+  "events": {
+    "title": "Event Page"
+  }
 }

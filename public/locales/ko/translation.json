@@ -1,4 +1,7 @@
 {
+  "navigation": {
+    "ptc": "도시의 허가"
+  },
   "home": {
     "follow-button": "팔로우",
     "availability": "이용 가능성",

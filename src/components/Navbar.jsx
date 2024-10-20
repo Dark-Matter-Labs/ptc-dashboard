@@ -1,11 +1,23 @@
 import { useUser } from "../useUser";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { Button } from "@headlessui/react";
+import i18n from "../i18n";
+import { useTranslation } from "react-i18next";
 
 export default function Navbar() {
   const { user, setUser } = useUser();
+  const { t } = useTranslation();
+  const [currentLanguage, setCurrentLanguage] = useState();
+  useEffect(() => {
+    if (!i18n) {
+      console.error("i18n is not initialized");
+    } else {
+      // Access the current language and set to currentLanguage
+      setCurrentLanguage(i18n.language);
+    }
+  }, []);
 
   console.log("context: ", useUser());
   const handleLogin = () => {
@@ -46,13 +58,15 @@ export default function Navbar() {
           console.log("User not logged in.");
         }
         if (data.email) {
-          setUser({
+          const newUser = {
             email: data.email,
             firstname: data.firstName || "",
             lastname: data.lastName || "",
             picture: data.picture || "",
             name: data.name || "",
-          });
+          };
+          setUser(newUser);
+          console.log("Fetched user:", newUser);
         }
       })
       .catch((error) => {
@@ -67,11 +81,23 @@ export default function Navbar() {
     handleFetchProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const handleChangeLanguage = (lng) => {
+    console.log("calling handleChangeLanguage");
+    if (lng === "en") {
+      setCurrentLanguage("en");
+    }
+
+    if (lng === "ko") {
+      setCurrentLanguage("ko");
+    }
+
+    i18n.changeLanguage(lng);
+  };
 
   return (
     <div className="w-full h-24 lg:h-20 flex items-center justify-between px-8 border-b bg-white">
       <h1 className="text-2xl font-bold text-black">
-        <a href="/">PtC</a>
+        <a href="/">{t("navigation.ptc")}</a>
       </h1>
       <ul className="flex items-center">
         <li className="lg:p-4">
@@ -81,12 +107,14 @@ export default function Navbar() {
                 <div className="flex min-w-0 gap-x-4">
                   <img
                     alt="user picture"
-                    src={
-                      user.picture
-                        ? user.picture
-                        : "https://github.com/Dark-Matter-Labs/ptc-dashboard/blob/main/src/assets/image/user-profile.png?raw=true"
-                    }
+                    src={user?.picture ? user.picture : ""}
                     className="h-12 w-12 flex-none rounded-full bg-gray-50"
+                    onError={(e) => {
+                      console.log("picture error: ", e);
+                      // Fallback image if the user picture fails to load
+                      e.target.src =
+                        "https://raw.githubusercontent.com/Dark-Matter-Labs/ptc-dashboard/main/src/assets/image/user-profile.png";
+                    }}
                   />
                   <div className="text-left hidden lg:block md:block">
                     <p className="text-sm leading-6 text-gray-900">
@@ -114,6 +142,36 @@ export default function Navbar() {
                     >
                       Profile
                     </a>
+                  </MenuItem>
+                  <MenuItem>
+                    <Button
+                      onClick={() =>
+                        handleChangeLanguage(
+                          currentLanguage == "en" ? "ko" : "en"
+                        )
+                      }
+                      className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+                    >
+                      {currentLanguage === "en" ? (
+                        <div className="flex gap-2 items-center">
+                          <div>Switch to Korean</div>
+                          <img
+                            className="w-8 h-8"
+                            alt="KO"
+                            src="http://purecatamphetamine.github.io/country-flag-icons/3x2/KR.svg"
+                          />{" "}
+                        </div>
+                      ) : (
+                        <div className="flex gap-2 items-center">
+                          <div>Switch to English</div>
+                          <img
+                            className="w-6 h-6 "
+                            alt="EN"
+                            src="http://purecatamphetamine.github.io/country-flag-icons/3x2/GB.svg"
+                          />
+                        </div>
+                      )}
+                    </Button>
                   </MenuItem>
                   <MenuItem>
                     <Button

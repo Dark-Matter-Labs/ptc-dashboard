@@ -1,4 +1,7 @@
 {
+  "navigation": {
+    "ptc": "PtC"
+  },
   "home": {
     "follow-button": "follow",
     "availability": "Availability",

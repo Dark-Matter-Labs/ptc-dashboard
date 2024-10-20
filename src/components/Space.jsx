@@ -41,10 +41,10 @@ export default function Space() {
       <div className="space-map">
         <div className="map-image">
           {/* Background, map image */}
-          <img src="https://s3-alpha-sig.figma.com/img/aaec/7450/6dd7ef8fa20171555328653494da5e14?Expires=1728864000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=P7kFn4DeKTu8Ft6yOgVMitDlTlA83IJG1QBU89rqqK11uNePJSpYOQDj4mpv54OrA4TBjdefI-A7H48iQ8yUIXt-HgzZCCmlr1OwQAbrcdYNzV-UkXYINhZvDhJO9Eco7ruwOyowPJNFlcaIwvCcF9TKe4ikG2kR1jUdpr2-mWtHjNVnif-6UPN2DmcetacCRgTmzSscxfWmXM8nTGitBnzVXPKUuN6z3YwXZciEAM~kUzOtQ5bjJIwCj7ubH5jXKUxI6Oh7ppLHPuKi7CV9FR6z6jH7VnfDHIDzk-~fYednks2cpaReAuJMIuKBP4eI9KS4-TLJbM~ATwWH5jALmA__"></img>
+          <img src="https://s3-alpha-sig.figma.com/img/aaec/7450/6dd7ef8fa20171555328653494da5e14?Expires=1730073600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=btHxusetm2Fg2yTwrdUWn6XglslLCHwnL-Kg7mwGes5DQHmFYCZ1MECN0YZXBEwdneoB5prpqOQGDqh~PQHGM02KYTfzZJcTalmAvBne4qVyO59TgmMavRt5GoJyB9HA~O6pSEdwBE8xqZzZabHZ9DQL-CMajGPIsHyyQRsPVzodoTjNQrV8Jy67ihZmS5nAsu4Nz1~UVGOfUTmN4riPApLm7kNT~~8IgEt9KILFpDsX~EXQQ9uuEELW22NfTUih0V7yqk4RifsRfGXwxZURVOv32-I8t8vB6uqEbXWI3qP0BshQfnKsjBsKvZJxflDLcgCW7B~Kqie1GHN6DKgPoA__"></img>
           <div className="chip">
             {/* Forground, profile image */}
-            <img src="https://s3-alpha-sig.figma.com/img/ba8a/3aab/5d9e1731d686fd3622cb996db5c3c48b?Expires=1728259200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=Yx3GsrCMXsSl8ydytQXapRCga2Sx473AdY0pWFXbPKjYAur7rhJ~c5kiJ1cjbc~AKlKdzkBhUiY0eqRix8OALYzdd5lNcD~1SrxQPDc6fMBwx-07DkYRpUU2CDutLUU3NVkkA0JJxnTsBbLCvZuuTJFCK7xxmsR-p1r24tk3a~n4afS69o2LAI9q7tyHeRF106zLGlW4gzh86GgiIw0A52-SNXm56wNHu~2JzsZP3Z7kDhmmuAl-ixHteP7hbiWiXdr0n5BSUAJJ4NybQ4c877pxLGVYtHKEmrK0ORFTd-5DVmlro1L7GQyB5eWmE2mE-DM6a8D-0U62-QJzeqkKrA__"></img>
+            <img src="https://s3-alpha-sig.figma.com/img/ba8a/3aab/5d9e1731d686fd3622cb996db5c3c48b?Expires=1730073600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=BSBnXmh1oH6qQA7RvaEQpv5zfSRyodNU0CxOXhWZrfP~KlOJ3ld1h1fsQBNMqkkYZUn0To2OrMNSSVCe0YtUX70vDxCR4EZdtS-BCJyH-uIlCXoW~zi7Q7y2WRFKXXoM-C8a~NXhIjxTi6FtO-0NCbyCeceofPJGkGWguTX~xQj4Duy3sNP3k2xfmfp1UA0B9agSZs42euNOVN6U4WgvE-RCz~hIY766duBkGl35AH51-tJJSIagc12-H8J-x4kRYQdjZW-GOYbN3yC4p2PupR-e79qepQcrjMZjS6KiDa0-U3fon4rLIcMwZUDgxRaMjzWpG9F0Aype79UPHFR5mg__"></img>
             <div className="chip-content">
               <h1>berrygarden</h1>
               <div>88, Gongpyeong-ro, Jung-gu, Daegu</div>

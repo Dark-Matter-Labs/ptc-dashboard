@@ -2,6 +2,7 @@ import { useUser } from "../useUser";
 import Step1 from "./Step1";
 import Step2 from "./Step2";
 import Step3 from "./Step3";
+import Step4 from "./Step4";
 import Stepper from "./Stepper";
 
 // import { useState, useEffect } from "react";
@@ -12,7 +13,7 @@ export default function CreateEvent() {
     <Step1 key={1} />,
     <Step2 key={2} />,
     <Step3 key={3} />,
-    "Content for Step 4",
+    <Step4 key={4} />,
     "Content for Step 5",
   ];
 

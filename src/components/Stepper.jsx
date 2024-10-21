@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 
 function Stepper({ numSteps, stepContents }) {
   let navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState(2);
+  const [currentStep, setCurrentStep] = useState(3);
   const sendRequest = (path) => {
     navigate(path);
   };

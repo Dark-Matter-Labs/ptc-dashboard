@@ -1,5 +1,6 @@
 import { useUser } from "../useUser";
 import Step1 from "./Step1";
+import Step2 from "./Step2";
 import Stepper from "./Stepper";
 
 // import { useState, useEffect } from "react";
@@ -8,7 +9,7 @@ export default function CreateEvent() {
   const steps = 5; // number of steps
   const content = [
     <Step1 key={1} />,
-    "Content for Step 2",
+    <Step2 key={2} />,
     "Content for Step 3",
     "Content for Step 4",
     "Content for Step 5",
@@ -17,14 +18,12 @@ export default function CreateEvent() {
   return (
     <div className="text-center pt-2">
       <h1 className="text-2xl m-4 font-bold">Propose an event</h1>
-      <div className="">
+      <div>
         {user ? (
-          <div>
-            <Stepper numSteps={steps} stepContents={content} />
-          </div>
+          <Stepper numSteps={steps} stepContents={content} />
         ) : (
           // user is not logged in
-          <p>Please log in.</p>
+          <div>Please log in.</div>
         )}
       </div>
     </div>

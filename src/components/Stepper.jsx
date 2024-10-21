@@ -37,7 +37,7 @@ function Stepper({ numSteps, stepContents }) {
         <TabPanels className="min-h-96">
           {stepContents.map((content, index) => (
             <TabPanel key={index}>
-              <p>{content}</p>
+              <div>{content}</div>
             </TabPanel>
           ))}
         </TabPanels>
@@ -69,5 +69,5 @@ export default Stepper;
 
 Stepper.propTypes = {
   numSteps: PropTypes.number,
-  stepContents: PropTypes.object,
+  stepContents: PropTypes.array,
 };

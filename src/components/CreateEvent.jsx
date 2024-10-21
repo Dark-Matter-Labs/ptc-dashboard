@@ -3,18 +3,21 @@ import Step1 from "./Step1";
 import Step2 from "./Step2";
 import Step3 from "./Step3";
 import Step4 from "./Step4";
+import Step5 from "./Step5";
+import Step6 from "./Step6";
 import Stepper from "./Stepper";
 
 // import { useState, useEffect } from "react";
 export default function CreateEvent() {
   const { user } = useUser();
-  const steps = 5; // number of steps
+  const steps = 6; // number of steps
   const content = [
     <Step1 key={1} />,
     <Step2 key={2} />,
     <Step3 key={3} />,
     <Step4 key={4} />,
-    "Content for Step 5",
+    <Step5 key={5} />,
+    <Step6 key={6} />,
   ];
 
   return (

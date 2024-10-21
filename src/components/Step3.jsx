@@ -95,7 +95,7 @@ const Step3 = () => {
                   className="w-full border border-gray-700 rounded-[80px] sm:rounded-[60px] p-3 text-center lg:text-left lg:rounded-sm"
                 >
                   <div className="font-bold mb-1">{content.title}</div>
-                  <div className="font-sm text-gray-700">
+                  <div className="font-sm text-gray-700 px-2.5">
                     {content.description}
                   </div>
                 </div>

@@ -15,7 +15,7 @@ function Stepper({ numSteps, stepContents }) {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto p-4 bg-white">
+    <div className="w-full lg:w-3/4 mx-auto p-4 bg-white mb-24">
       <TabGroup selectedIndex={currentStep} onChange={setCurrentStep}>
         {/* Step Dots */}
         <TabList className="flex justify-center items-center mb-8 gap-x-2">

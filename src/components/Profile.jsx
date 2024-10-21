@@ -14,9 +14,7 @@ export default function Profile() {
 
   return (
     <div className="px-8 pt-8">
-      <h1>{t("home.follow-button")}</h1>
-      <p>{t("home.availability")}</p>
-      <h1 className="text-2xl font-bold text-black">Profile Page</h1>
+      <h1 className="text-2xl font-bold text-black">{t("profile.title")}</h1>
       {user ? (
         <>
           <img

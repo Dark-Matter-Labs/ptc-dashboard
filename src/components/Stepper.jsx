@@ -4,19 +4,30 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
-function Stepper({ numSteps, stepContents }) {
+function Stepper({ numSteps, stepContents, setNavTitle }) {
   let navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const sendRequest = (path) => {
     navigate(path);
   };
   const nextStep = () => {
-    setCurrentStep((prev) => (prev < numSteps - 1 ? prev + 1 : prev));
+    const nextCurrentStep = currentStep + 1;
+    if (nextCurrentStep < numSteps) {
+      setCurrentStep(nextCurrentStep);
+      console.log("curr: ", nextCurrentStep);
+      setNavTitle(`Step ${nextCurrentStep + 1}`);
+    }
   };
 
   return (
     <div className="w-full lg:w-3/4 mx-auto p-4 bg-white mb-24">
-      <TabGroup selectedIndex={currentStep} onChange={setCurrentStep}>
+      <TabGroup
+        selectedIndex={currentStep}
+        onChange={(index) => {
+          setCurrentStep(index);
+          setNavTitle(`Step ${index + 1}`); // Update the title when tabs are clicked directly
+        }}
+      >
         {/* Step Dots */}
         <TabList className="flex justify-center items-center mb-8 gap-x-2">
           {Array.from({ length: numSteps }, (_, index) => (
@@ -70,4 +81,5 @@ export default Stepper;
 Stepper.propTypes = {
   numSteps: PropTypes.number,
   stepContents: PropTypes.array,
+  setNavTitle: PropTypes.func,
 };

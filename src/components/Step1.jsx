@@ -19,6 +19,7 @@ const Step1 = () => {
     e.preventDefault();
     console.log("form submission.");
   };
+
   return (
     <div>
       <form onSubmit={handleSubmit} className="p-4 space-y-4 text-left">

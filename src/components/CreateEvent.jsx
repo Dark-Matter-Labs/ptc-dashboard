@@ -6,31 +6,37 @@ import Step4 from "./Step4";
 import Step5 from "./Step5";
 import Step6 from "./Step6";
 import Stepper from "./Stepper";
+import PropTypes from "prop-types";
 
-// import { useState, useEffect } from "react";
-export default function CreateEvent() {
+export default function CreateEvent({ setNavTitle }) {
   const { user } = useUser();
   const steps = 6; // number of steps
   const content = [
-    <Step1 key={1} />,
-    <Step2 key={2} />,
-    <Step3 key={3} />,
-    <Step4 key={4} />,
-    <Step5 key={5} />,
-    <Step6 key={6} />,
+    <Step1 key={1} setNavTitle={setNavTitle} />,
+    <Step2 key={2} setNavTitle={setNavTitle} />,
+    <Step3 key={3} setNavTitle={setNavTitle} />,
+    <Step4 key={4} setNavTitle={setNavTitle} />,
+    <Step5 key={5} setNavTitle={setNavTitle} />,
+    <Step6 key={6} setNavTitle={setNavTitle} />,
   ];
 
   return (
     <div className="text-center pt-2">
-      <h1 className="text-2xl m-4 font-bold">Propose an event</h1>
       <div>
         {user ? (
-          <Stepper numSteps={steps} stepContents={content} />
+          <Stepper
+            numSteps={steps}
+            stepContents={content}
+            setNavTitle={setNavTitle}
+          />
         ) : (
           // user is not logged in
-          <div>Please log in.</div>
+          <div className="mt-2">Please log in.</div>
         )}
       </div>
     </div>
   );
 }
+CreateEvent.propTypes = {
+  setNavTitle: PropTypes.func,
+};

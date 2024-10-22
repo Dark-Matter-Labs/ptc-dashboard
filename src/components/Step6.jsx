@@ -38,7 +38,7 @@ const Step6 = () => {
           id="insurabce-information"
           className="text-2xl block mb-2 font-semibold "
         >
-          Insurabce Information
+          Insurance Information
         </div>
         <p className="mb-4">Upload proof of insurance</p>
         <Button className="border p-4 rounded-full w-full">File upload</Button>

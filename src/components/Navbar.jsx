@@ -1,25 +1,33 @@
 import { useUser } from "../useUser";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { Button } from "@headlessui/react";
-import i18n from "../i18n";
 import { useTranslation } from "react-i18next";
+import i18n from "../i18n";
+import PropTypes from "prop-types";
 
-export default function Navbar() {
+export default function Navbar({
+  navTitle,
+
+  currentLanguage,
+  handleChangeLanguage,
+}) {
   const { user, setUser } = useUser();
   const { t } = useTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState();
+  const [dynamicTitle, setDynamicTitle] = useState(navTitle);
+
   useEffect(() => {
     if (!i18n) {
       console.error("i18n is not initialized");
-    } else {
-      // Access the current language and set to currentLanguage
-      setCurrentLanguage(i18n.language);
     }
+    console.log("in Navbar: ", { navTitle });
   }, []);
 
-  console.log("context: ", useUser());
+  useEffect(() => {
+    setDynamicTitle(navTitle);
+  }, [navTitle, currentLanguage, t]);
+
   const handleLogin = () => {
     console.log("call handleLogin");
     window.location.href = "/api/v1/auth/google";
@@ -73,31 +81,16 @@ export default function Navbar() {
         console.error("Error fetching profile info:", error);
       });
   };
-  useEffect(() => {
-    console.log("user: ", user);
-  }, [user]);
 
   useEffect(() => {
     handleFetchProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const handleChangeLanguage = (lng) => {
-    console.log("calling handleChangeLanguage");
-    if (lng === "en") {
-      setCurrentLanguage("en");
-    }
-
-    if (lng === "ko") {
-      setCurrentLanguage("ko");
-    }
-
-    i18n.changeLanguage(lng);
-  };
 
   return (
     <div className="w-full h-24 lg:h-20 flex items-center justify-between px-8 border-b bg-white">
       <h1 className="text-2xl font-bold text-black">
-        <a href="/">{t("navigation.ptc")}</a>
+        <a href="/">{dynamicTitle}</a>
       </h1>
       <ul className="flex items-center">
         <li className="lg:p-4">
@@ -140,7 +133,7 @@ export default function Navbar() {
                       href="/profile"
                       className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
                     >
-                      Profile
+                      Profile {t("navigation.body")}
                     </a>
                   </MenuItem>
                   <MenuItem>
@@ -197,3 +190,9 @@ export default function Navbar() {
     </div>
   );
 }
+
+Navbar.propTypes = {
+  navTitle: PropTypes.string,
+  currentLanguage: PropTypes.string,
+  handleChangeLanguage: PropTypes.func,
+};

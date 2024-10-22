@@ -1,6 +1,7 @@
 {
   "navigation": {
-    "ptc": "도시의 허가"
+    "navigation-title": "도시의 허가",
+    "body": "허가"
   },
   "home": {
     "follow-button": "팔로우",
@@ -13,5 +14,8 @@
   },
   "events": {
     "title": "이벤트 페이지"
+  },
+  "create-event": {
+    "navigation-title": "이벤트 제안"
   }
 }

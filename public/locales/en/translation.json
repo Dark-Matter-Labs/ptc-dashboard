@@ -1,6 +1,7 @@
 {
   "navigation": {
-    "ptc": "PtC"
+    "navigation-title": "PtC",
+    "body": "body"
   },
   "home": {
     "follow-button": "follow",
@@ -13,5 +14,8 @@
   },
   "events": {
     "title": "Event Page"
+  },
+  "create-event": {
+    "navigation-title": "Propose an event"
   }
 }

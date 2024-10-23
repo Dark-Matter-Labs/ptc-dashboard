@@ -1,14 +1,6 @@
 import { useState } from "react";
 import { Input } from "@headlessui/react";
 
-import {
-  Listbox,
-  ListboxButton,
-  ListboxOptions,
-  ListboxOption,
-} from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/solid";
-
 const eventTypes = [
   {
     title: "Public Free Event",
@@ -36,19 +28,9 @@ const eventTypes = [
   },
 ];
 
-const nationalCodes = [
-  { name: "United Kingdom", code: "+44" },
-  { name: "Korea", code: "+82" },
-  { name: "United States", code: "+1" },
-  { name: "Australia", code: "+61" },
-  { name: "India", code: "+91" },
-  // Add more national codes as needed
-];
-
 const Step2 = () => {
   const [organizerName, setOrganizerName] = useState("");
-  const [selectedCode, setSelectedCode] = useState(nationalCodes[0]);
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [emailAddress, setEmailAddress] = useState("");
   const [expectedAttendees, setExpectedAttendees] = useState(50);
   const [selectedEventType, setSelectedEventType] = useState(null);
 
@@ -76,46 +58,17 @@ const Step2 = () => {
         ></input>
         <div className="my-6" />
         {/* Event description */}
-        <div htmlFor="contact-information" className="block mb-2 font-semibold">
-          Contact information
+        <div htmlFor="email-adress" className="block mb-2 font-semibold">
+          Email address
         </div>
-        <div id="contact-information" className="flex flex-row">
-          <Listbox
-            value={selectedCode}
-            onChange={setSelectedCode}
-            className="flex-1"
-          >
-            <div className="relative">
-              <ListboxButton className="w-full border rounded p-2 flex justify-between items-center">
-                <span>{selectedCode.code}</span>
-                <ChevronDownIcon className="h-5 w-5 text-gray-500" />
-              </ListboxButton>
-              <ListboxOptions className="absolute z-10 mt-1 w-max bg-white origin- border rounded shadow-lg">
-                {nationalCodes.map((code) => (
-                  <ListboxOption
-                    key={`${code.name} ${code.code}`}
-                    value={code}
-                    className={({ active, selected }) => `
-                  cursor-pointer select-none relative px-4 py-2 ${
-                    active ? "bg-blue-600 text-gray-600" : "text-gray-600"
-                  }
-                  ${selected ? "font-semibold bg-slate-100" : "font-normal"}
-                `}
-                  >
-                    {code.name} ({code.code})
-                  </ListboxOption>
-                ))}
-              </ListboxOptions>
-            </div>
-          </Listbox>
-          <Input
-            id="phone-number"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-            className="flex-4 w-full border rounded p-2 min-h-3"
-            placeholder="1234-5678"
-          ></Input>
-        </div>
+
+        <Input
+          id="email-adress"
+          value={emailAddress}
+          onChange={(e) => setEmailAddress(e.target.value)}
+          className="flex-4 w-full border rounded p-2 min-h-3"
+          placeholder="Valid email address"
+        ></Input>
 
         <hr className="my-6" />
         {/* Select topic */}

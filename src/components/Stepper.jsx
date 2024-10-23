@@ -14,7 +14,6 @@ function Stepper({ numSteps, stepContents, setNavTitle }) {
     const nextCurrentStep = currentStep + 1;
     if (nextCurrentStep < numSteps) {
       setCurrentStep(nextCurrentStep);
-      console.log("curr: ", nextCurrentStep);
       setNavTitle(`Step ${nextCurrentStep + 1}`);
     }
   };

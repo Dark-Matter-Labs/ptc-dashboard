@@ -88,11 +88,12 @@ export default function Navbar({
   }, []);
 
   return (
-    <div className="w-full h-24 lg:h-20 flex items-center justify-between px-8 border-b bg-white">
-      <h1 className="text-2xl font-bold text-black">
+    <div className="w-full h-24 lg:h-20 flex items-center justify-between px-8 border-b bg-white ">
+      {/* Title */}
+      <h1 className="text-2xl font-bold text-black lg:order-1 order-2">
         <a href="/">{dynamicTitle}</a>
       </h1>
-      <ul className="flex items-center">
+      <ul className="flex items-center order-1 lg:order-2">
         <li className="lg:p-4">
           {user ? (
             <Menu as="div" className="relative inline-block text-left">
@@ -125,7 +126,7 @@ export default function Navbar({
               </MenuButton>
               <MenuItems
                 transition
-                className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                className="absolute lg:right-0 z-10 mt-2 w-56 origin-top-left lg:origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
               >
                 <div className="py-1">
                   <MenuItem>

@@ -1,11 +1,11 @@
-import { useUser } from "../useUser";
+import { useUser } from "../../../useUser";
 import Step1 from "./Step1";
 import Step2 from "./Step2";
 import Step3 from "./Step3";
 import Step4 from "./Step4";
 import Step5 from "./Step5";
 import Step6 from "./Step6";
-import Stepper from "./Stepper";
+import Stepper from "../../../components//Common/Stepper";
 import PropTypes from "prop-types";
 
 export default function CreateEvent({ setNavTitle }) {

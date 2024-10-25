@@ -17,7 +17,8 @@ const Step1 = () => {
   const [description, setDescription] = useState("");
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("form submission.");
+    // post event to backend, assign event status:
+    console.log("form submission: step 1.");
   };
 
   return (

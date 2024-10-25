@@ -1,10 +1,10 @@
-import { useUser } from "../useUser";
+import { useUser } from "../../useUser";
 import { useEffect, useState } from "react";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { Button } from "@headlessui/react";
 import { useTranslation } from "react-i18next";
-import i18n from "../i18n";
+import i18n from "../../i18n";
 import PropTypes from "prop-types";
 
 export default function Navbar({
@@ -133,7 +133,7 @@ export default function Navbar({
                       href="/profile"
                       className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
                     >
-                      Profile {t("navigation.body")}
+                      Profile
                     </a>
                   </MenuItem>
                   <MenuItem>

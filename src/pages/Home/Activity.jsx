@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "../assets/css/Activity.css";
+import "../../assets/css/Activity.css";
 import { Button } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
 import Today from "./Today";

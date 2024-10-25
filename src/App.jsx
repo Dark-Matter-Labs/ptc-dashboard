@@ -3,11 +3,11 @@ import { UserProvider } from "./UserProvider";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import i18n from "./i18n";
-import Home from "./components/Home";
-import Profile from "./components/Profile";
-import Navbar from "./components/Navbar";
-import CreateEvent from "./components/CreateEvent";
-import DisplayEvents from "./components/DisplayEvents";
+import Home from "./pages/Home/Home";
+import Profile from "./pages/Profile/Profile";
+import Navbar from "./components/Common/Navbar";
+import CreateEvent from "./pages/Event/Create/CreateEvent";
+import DisplayEvents from "./pages/Event/Display/DisplayEvents";
 
 function App() {
   const { t } = useTranslation();

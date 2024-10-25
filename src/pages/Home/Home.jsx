@@ -1,4 +1,4 @@
-import "../assets/css/Home.css";
+import "../../assets/css/Home.css";
 import Activity from "./Activity";
 import Space from "./Space";
 import Report from "./Report";

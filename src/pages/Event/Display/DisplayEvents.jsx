@@ -1,4 +1,4 @@
-import { useUser } from "../useUser";
+import { useUser } from "../../../useUser";
 import { useState, useEffect } from "react";
 export default function DisplayEvents() {
   const [events, setEvents] = useState([]);

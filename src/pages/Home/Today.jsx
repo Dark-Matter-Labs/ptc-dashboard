@@ -3,7 +3,7 @@ import {
   DisclosureButton,
   DisclosurePanel,
 } from "@headlessui/react";
-import "../assets/css/Today.css";
+import "../../assets/css/Today.css";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { UserCircleIcon } from "@heroicons/react/outline";
 import { CogIcon } from "@heroicons/react/outline";

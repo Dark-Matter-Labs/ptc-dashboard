@@ -5,7 +5,7 @@ import { LocationMarkerIcon } from "@heroicons/react/outline";
 import { CalendarIcon } from "@heroicons/react/outline";
 import { UsersIcon } from "@heroicons/react/outline";
 import { Button } from "@headlessui/react";
-import "../assets/css/Space.css";
+import "../../assets/css/Space.css";
 export default function Space() {
   return (
     <section className="space">

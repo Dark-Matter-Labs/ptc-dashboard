@@ -1,6 +1,6 @@
-import { useUser } from "../useUser";
+import { useUser } from "../../useUser";
 import { useEffect } from "react";
-import i18n from "../i18n";
+import i18n from "../../i18n";
 import { useTranslation } from "react-i18next";
 export default function Profile() {
   const { user } = useUser();

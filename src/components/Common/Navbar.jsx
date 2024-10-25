@@ -1,7 +1,7 @@
 import { useUser } from "../../useUser";
 import { useEffect, useState } from "react";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/solid";
+import { ChevronDownIcon, XIcon } from "@heroicons/react/solid";
 import { Button } from "@headlessui/react";
 import { useTranslation } from "react-i18next";
 import i18n from "../../i18n";
@@ -9,7 +9,6 @@ import PropTypes from "prop-types";
 
 export default function Navbar({
   navTitle,
-
   currentLanguage,
   handleChangeLanguage,
 }) {
@@ -89,11 +88,10 @@ export default function Navbar({
 
   return (
     <div className="w-full h-24 lg:h-20 flex items-center justify-between px-8 border-b bg-white ">
-      {/* Title */}
-      <h1 className="text-2xl font-bold text-black lg:order-1 order-2">
-        <a href="/">{dynamicTitle}</a>
-      </h1>
-      <ul className="flex items-center order-1 lg:order-2">
+      {/* Dropdown Menu  */}
+      <ul
+        className={`flex items-center  border-blue-600 border-0 ${navTitle == "PtC" ? "order-1 lg:order-2" : "order-1"}`}
+      >
         <li className="lg:p-4">
           {user ? (
             <Menu as="div" className="relative inline-block text-left">
@@ -188,6 +186,23 @@ export default function Navbar({
           )}
         </li>
       </ul>
+      {/* Title */}
+      <h1
+        className={`text-2xl font-bold text-black ${
+          navTitle == "PtC" ? "lg:order-1 order-2" : "order-2"
+        }`}
+      >
+        <a href="/">{dynamicTitle}</a>
+      </h1>
+      {/* Close Button for smaller screens */}
+      {navTitle !== "PtC" && (
+        <button
+          onClick={() => (window.location.href = "/")}
+          className=" text-gray-700 p-2 order-3"
+        >
+          <XIcon className="h-6 w-6" aria-hidden="true" />
+        </button>
+      )}
     </div>
   );
 }

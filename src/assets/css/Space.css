@@ -93,6 +93,7 @@
 .space-map {
   flex: 40%;
   padding-top: 1rem;
+  padding: 1rem;
   padding-right: 0;
   /* border: 1px solid black; */
 }
@@ -201,5 +202,21 @@
     height: 20rem;
     border-radius: 0;
     overflow: hidden;
+  }
+  .space-map {
+    padding: 1rem;
+  }
+
+  .space-map .map-image .chip {
+    display: flex;
+    border-radius: 3rem;
+    padding: 1rem;
+    position: absolute;
+    top: 14rem;
+    left: 1rem;
+    background-color: white;
+    align-items: center;
+    width: auto;
+    max-width: max-content;
   }
 }

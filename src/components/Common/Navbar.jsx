@@ -87,16 +87,16 @@ export default function Navbar({
   }, []);
 
   return (
-    <div className="w-full h-24 lg:h-20 flex items-center justify-between px-8 border-b bg-white ">
+    <div className="w-full h-24 lg:h-20 flex items-center justify-between px-6 bg-white ">
       {/* Dropdown Menu  */}
       <ul
-        className={`flex items-center  border-blue-600 border-0 ${navTitle == "PtC" ? "order-1 lg:order-2" : "order-1"}`}
+        className={`flex items-center ${navTitle == t("navigation.navigation-title") ? "order-1 lg:order-2" : "order-1"}`}
       >
-        <li className="lg:p-4">
+        <li>
           {user ? (
             <Menu as="div" className="relative inline-block text-left">
-              <MenuButton className="inline-flex w-full justify-center items-center gap-x-1  lg:gap-x-1.5 rounded-md bg-white  py-1 text-sm  text-gray-900 hover:bg-gray-50">
-                <div className="flex min-w-0 gap-x-4">
+              <MenuButton className="inline-flex w-full justify-center items-center gap-x-1 lg:gap-x-1.5 rounded-md bg-white  py-1 text-sm  text-gray-900 hover:bg-gray-50">
+                <div className="flex min-w-0 gap-x-4 ">
                   <img
                     alt="user picture"
                     src={user?.picture ? user.picture : ""}
@@ -119,7 +119,7 @@ export default function Navbar({
                 </div>
                 <ChevronDownIcon
                   aria-hidden="true"
-                  className="lg:ml-3 h-4 text-gray-600 "
+                  className="lg:ml-3 h-4 w-4  text-gray-600 "
                 />
               </MenuButton>
               <MenuItems
@@ -189,18 +189,20 @@ export default function Navbar({
       {/* Title */}
       <h1
         className={`text-2xl font-bold text-black ${
-          navTitle == "PtC" ? "lg:order-1 order-2" : "order-2"
+          navTitle == t("navigation.navigation-title")
+            ? "lg:order-1 order-2"
+            : "order-2"
         }`}
       >
         <a href="/">{dynamicTitle}</a>
       </h1>
       {/* Close Button for smaller screens */}
-      {navTitle !== "PtC" && (
+      {navTitle !== t("navigation.navigation-title") && (
         <button
           onClick={() => (window.location.href = "/")}
-          className=" text-gray-700 p-2 order-3"
+          className=" text-gray-700 order-3"
         >
-          <XIcon className="h-6 w-6" aria-hidden="true" />
+          <XIcon className="h-4 w-4 text-gray-600" aria-hidden="true" />
         </button>
       )}
     </div>

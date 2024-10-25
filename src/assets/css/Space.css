@@ -38,7 +38,7 @@
 
 .space-data .space-snippet {
   margin-top: 5rem;
-  margin-left: 2rem;
+  padding: 1.5rem;
 }
 
 .space-data .space-snippet h1 {
@@ -92,7 +92,8 @@
 
 .space-map {
   flex: 40%;
-  padding: 1rem;
+  padding-top: 1rem;
+  padding-right: 0;
   /* border: 1px solid black; */
 }
 

@@ -1,8 +1,15 @@
 {
   "navigation": {
-    "navigation-title": "PtC",
-    "body": "body"
+    "navigation-title": "Space dashboard",
+    "profile": "Profile",
+    "notifications": "Notifications",
+    "my-events": "My events",
+    "my-community": "My community",
+    "my-space": "My space",
+    "language": "Language",
+    "logout": "Log Out"
   },
+
   "home": {
     "follow-button": "follow",
     "availability": "Availability",

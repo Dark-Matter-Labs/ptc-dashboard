@@ -1,8 +1,22 @@
 import { useUser } from "../../useUser";
 import { useEffect, useState } from "react";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
-import { ChevronDownIcon, XIcon } from "@heroicons/react/solid";
+import { ChevronDownIcon, XIcon, MenuIcon } from "@heroicons/react/solid";
+import {
+  MapIcon,
+  UserIcon,
+  BellIcon,
+  CalendarIcon,
+  UserGroupIcon,
+  GlobeAltIcon,
+  ArrowLeftIcon,
+} from "@heroicons/react/outline";
 import { Button } from "@headlessui/react";
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from "@headlessui/react";
 import { useTranslation } from "react-i18next";
 import i18n from "../../i18n";
 import PropTypes from "prop-types";
@@ -15,13 +29,7 @@ export default function Navbar({
   const { user, setUser } = useUser();
   const { t } = useTranslation();
   const [dynamicTitle, setDynamicTitle] = useState(navTitle);
-
-  useEffect(() => {
-    if (!i18n) {
-      console.error("i18n is not initialized");
-    }
-    console.log("in Navbar: ", { navTitle });
-  }, []);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     setDynamicTitle(navTitle);
@@ -83,11 +91,15 @@ export default function Navbar({
 
   useEffect(() => {
     handleFetchProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
+    if (!i18n) {
+      console.error("i18n is not initialized");
+    }
+    console.log("in Navbar: ", { navTitle }); // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
   return (
-    <div className="w-full h-24 lg:h-20 flex items-center justify-between px-6 bg-white ">
+    <div className="w-full h-24 lg:h-20 flex items-center justify-between px-8 bg-white ">
       {/* Dropdown Menu  */}
       <ul
         className={`flex items-center ${navTitle == t("navigation.navigation-title") ? "order-1 lg:order-2" : "order-1"}`}
@@ -95,12 +107,19 @@ export default function Navbar({
         <li>
           {user ? (
             <Menu as="div" className="relative inline-block text-left">
+              {/* Menu button */}
               <MenuButton className="inline-flex w-full justify-center items-center gap-x-1 lg:gap-x-1.5 rounded-md bg-white  py-1 text-sm  text-gray-900 hover:bg-gray-50">
                 <div className="flex min-w-0 gap-x-4 ">
+                  <div
+                    onClick={toggleSidebar}
+                    className="lg:hidden rounded focus:outline-none"
+                  >
+                    <MenuIcon className="h-8 w-8 p-0  text-gray-900 md:hidden " />
+                  </div>
                   <img
                     alt="user picture"
                     src={user?.picture ? user.picture : ""}
-                    className="h-12 w-12 flex-none rounded-full bg-gray-50"
+                    className="hidden md:block h-12 w-12 flex-none rounded-full bg-gray-50"
                     onError={(e) => {
                       console.log("picture error: ", e);
                       // Fallback image if the user picture fails to load
@@ -119,12 +138,146 @@ export default function Navbar({
                 </div>
                 <ChevronDownIcon
                   aria-hidden="true"
-                  className="lg:ml-3 h-4 w-4  text-gray-600 "
+                  className="lg:ml-3 h-4 w-4  text-gray-600 hidden md:block  "
                 />
               </MenuButton>
+
+              {/* Overlay with Transition */}
+              {sidebarOpen && (
+                <div
+                  className="fixed inset-0 bg-[#FAFAFB] transition-all duration-1000  z-10 opacity-85"
+                  onClick={toggleSidebar}
+                />
+              )}
+
+              {/* Sidebar */}
+              <div
+                className={`fixed flex inset-0 lg:hidden transform ${
+                  sidebarOpen ? "translate-x-0" : "-translate-x-full"
+                } transition-transform z-50 `}
+                onClick={toggleSidebar}
+              >
+                <div
+                  className="w-5/6 bg-white h-full shadow-lg py-6"
+                  onClick={(e) => e.stopPropagation()} // Prevent close on sidebar click
+                >
+                  {/* Profile Info */}
+                  <div className="flex items-center gap-4 mb-4 pl-8">
+                    <img
+                      alt="User"
+                      src={
+                        user?.picture ||
+                        "https://raw.githubusercontent.com/Dark-Matter-Labs/ptc-dashboard/main/src/assets/image/user-profile.png"
+                      }
+                      className="h-16 w-16 rounded-full bg-gray-100"
+                    />
+                    <div>
+                      <p className="text-sm font-medium">
+                        {user?.name || "Guest"}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {user?.email || ""}
+                      </p>
+                    </div>
+                  </div>
+                  <hr className="my-4" />
+                  {/* Sidebar Links */}
+                  <div className="pl-8">
+                    <a
+                      href="/profile"
+                      className="space-y-8 flex items-center gap-3 text-gray-900"
+                    >
+                      <UserIcon className="w-4 h-4 text-gray-400 "></UserIcon>
+                      {t("navigation.profile")}
+                    </a>
+                    <a
+                      href="/notifications"
+                      className="mt-8 flex items-center gap-3 text-gray-900"
+                    >
+                      <BellIcon className="w-4 h-4 text-gray-400 "></BellIcon>
+                      {t("navigation.notifications")}
+                    </a>
+                    <a
+                      href="/events"
+                      className="mt-8 space-y-8 flex items-center gap-3 text-gray-900"
+                    >
+                      <CalendarIcon className="w-4 h-4 text-gray-400 "></CalendarIcon>
+                      {t("navigation.my-events")}
+                    </a>
+                    <a
+                      href="/community"
+                      className="mt-8 flex items-center gap-3 text-gray-900"
+                    >
+                      <UserGroupIcon className="w-4 h-4 text-gray-400 "></UserGroupIcon>
+                      {t("navigation.my-community")}
+                    </a>
+
+                    <a
+                      href="/community"
+                      className="mt-8 flex items-center gap-3 text-gray-900"
+                    >
+                      <MapIcon className="w-4 h-4 text-gray-400 "></MapIcon>
+                      {t("navigation.my-space")}
+                    </a>
+
+                    {/* Language Disclosure */}
+                    <Disclosure>
+                      {({ open }) => (
+                        <>
+                          <DisclosureButton className="mt-8 flex items-center justify-between w-full text-left pr-8 text-gray-700 hover:text-gray-900">
+                            <div className="flex items-center gap-3 text-gray-900">
+                              <GlobeAltIcon className="w-4 h-4 text-gray-400 "></GlobeAltIcon>
+                              <span>{t("navigation.language")}</span>
+                            </div>
+                            <ChevronDownIcon
+                              className={`w-4 h-4 text-gray-400 transform ${open ? "rotate-180" : ""}`}
+                            />
+                          </DisclosureButton>
+                          <DisclosurePanel className="ml-8">
+                            <button
+                              onClick={() => handleChangeLanguage("en")}
+                              className={`block w-full text-left  mt-2 ${
+                                currentLanguage === "en"
+                                  ? "text-gray-800 "
+                                  : "text-gray-400"
+                              } hover:bg-gray-100 rounded-md`}
+                            >
+                              English
+                            </button>
+                            <button
+                              onClick={() => handleChangeLanguage("ko")}
+                              className={`block w-full text-left  mt-2 ${
+                                currentLanguage === "ko"
+                                  ? "text-gray-800 "
+                                  : "text-gray-400"
+                              } hover:bg-gray-100 rounded-md`}
+                            >
+                              Korean
+                            </button>
+                          </DisclosurePanel>
+                        </>
+                      )}
+                    </Disclosure>
+                  </div>
+                  <hr className="my-4 " />
+                  <Button
+                    onClick={handleLogout}
+                    className="pl-8 flex items-center gap-3 text-red-500 hover:text-red-700"
+                  >
+                    <ArrowLeftIcon className="w-4 h-4 text-gray-400 transform" />
+                    {t("navigation.logout")}
+                  </Button>
+                </div>
+                <XIcon
+                  className="m-4 p-2 h-12 w-12 text-gray-800 "
+                  onClick={toggleSidebar}
+                ></XIcon>
+              </div>
+
+              {/* Menu Items */}
               <MenuItems
                 transition
-                className="absolute lg:right-0 z-10 mt-2 w-56 origin-top-left lg:origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                className="hidden lg:block absolute lg:right-0 z-10 mt-2 w-56 origin-top-left lg:origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
               >
                 <div className="py-1">
                   <MenuItem>

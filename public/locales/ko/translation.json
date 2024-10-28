@@ -1,8 +1,15 @@
 {
   "navigation": {
-    "navigation-title": "도시의 허가",
-    "body": "허가"
+    "navigation-title": "스페이스 대시보드",
+    "profile": "프로",
+    "notifications": "공고",
+    "my-events": "나의 이벤트",
+    "my-community": "내 커뮤니티",
+    "my-space": "내 공간",
+    "language": "언어",
+    "logout": "로그아"
   },
+
   "home": {
     "follow-button": "팔로우",
     "availability": "이용 가능성",

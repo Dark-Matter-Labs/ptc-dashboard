@@ -3,13 +3,15 @@ import { useEffect, useState } from "react";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import { ChevronDownIcon, XIcon, MenuIcon } from "@heroicons/react/solid";
 import {
-  MapIcon,
   UserIcon,
   BellIcon,
   CalendarIcon,
   UserGroupIcon,
   GlobeAltIcon,
   ArrowLeftIcon,
+  LocationMarkerIcon,
+  ExternalLinkIcon,
+  PlusCircleIcon,
 } from "@heroicons/react/outline";
 import { Button } from "@headlessui/react";
 import {
@@ -99,7 +101,7 @@ export default function Navbar({
   }, []);
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
   return (
-    <div className="w-full h-24 lg:h-20 flex items-center justify-between px-8 bg-white ">
+    <div className="w-full h-24 lg:h-20 flex items-center justify-between px-6 bg-white ">
       {/* Dropdown Menu  */}
       <ul
         className={`flex items-center ${navTitle == t("navigation.navigation-title") ? "order-1 lg:order-2" : "order-1"}`}
@@ -108,13 +110,13 @@ export default function Navbar({
           {user ? (
             <Menu as="div" className="relative inline-block text-left">
               {/* Menu button */}
-              <MenuButton className="inline-flex w-full justify-center items-center gap-x-1 lg:gap-x-1.5 rounded-md bg-white  py-1 text-sm  text-gray-900 hover:bg-gray-50">
+              <MenuButton className="inline-flex w-full justify-center items-center gap-x-1 lg:gap-x-1.5 rounded-md bg-white py-1 text-xs  text-gray-700 hover:bg-gray-50">
                 <div className="flex min-w-0 gap-x-4 ">
                   <div
                     onClick={toggleSidebar}
                     className="lg:hidden rounded focus:outline-none"
                   >
-                    <MenuIcon className="h-8 w-8 p-0  text-gray-900 md:hidden " />
+                    <MenuIcon className=" w-6 h-6 text-gray-700 md:hidden " />
                   </div>
                   <img
                     alt="user picture"
@@ -216,7 +218,7 @@ export default function Navbar({
                       href="/community"
                       className="mt-8 flex items-center gap-3 text-gray-900"
                     >
-                      <MapIcon className="w-4 h-4 text-gray-400 "></MapIcon>
+                      <LocationMarkerIcon className="w-4 h-4 text-gray-400 "></LocationMarkerIcon>
                       {t("navigation.my-space")}
                     </a>
 
@@ -236,23 +238,33 @@ export default function Navbar({
                           <DisclosurePanel className="ml-8">
                             <button
                               onClick={() => handleChangeLanguage("en")}
-                              className={`block w-full text-left  mt-2 ${
+                              className={`flex gap-4 w-full text-left mt-4 ${
                                 currentLanguage === "en"
                                   ? "text-gray-800 "
                                   : "text-gray-400"
                               } hover:bg-gray-100 rounded-md`}
                             >
                               English
+                              <img
+                                className={`w-6 h-6 ${currentLanguage === "en" ? "opacity-100" : "opacity-50"}`}
+                                alt="EN"
+                                src="http://purecatamphetamine.github.io/country-flag-icons/3x2/GB.svg"
+                              />
                             </button>
                             <button
                               onClick={() => handleChangeLanguage("ko")}
-                              className={`block w-full text-left  mt-2 ${
+                              className={`flex gap-4 w-full text-left mt-4 ${
                                 currentLanguage === "ko"
                                   ? "text-gray-800 "
                                   : "text-gray-400"
                               } hover:bg-gray-100 rounded-md`}
                             >
                               Korean
+                              <img
+                                className={`w-6 h-6 ${currentLanguage === "ko" ? "opacity-100" : "opacity-50"}`}
+                                alt="KO"
+                                src="http://purecatamphetamine.github.io/country-flag-icons/3x2/KR.svg"
+                              />{" "}
                             </button>
                           </DisclosurePanel>
                         </>
@@ -260,6 +272,23 @@ export default function Navbar({
                     </Disclosure>
                   </div>
                   <hr className="my-4 " />
+                  <h1 className="ml-8">Links</h1>
+                  <a
+                    href="/"
+                    className="mt-8 ml-8 flex items-center gap-3 text-gray-900"
+                  >
+                    <ExternalLinkIcon className="w-4 h-4 text-gray-400 "></ExternalLinkIcon>
+                    {t("navigation.view-calendar")}
+                  </a>
+                  <a
+                    href="/"
+                    className="mt-8 ml-8 flex items-center gap-3 text-gray-900"
+                  >
+                    <PlusCircleIcon className="w-4 h-4 text-gray-400 "></PlusCircleIcon>
+                    {t("navigation.propose-event")}
+                  </a>
+
+                  <hr className="my-4 font-semibold" />
                   <Button
                     onClick={handleLogout}
                     className="pl-8 flex items-center gap-3 text-red-500 hover:text-red-700"
@@ -268,10 +297,9 @@ export default function Navbar({
                     {t("navigation.logout")}
                   </Button>
                 </div>
-                <XIcon
-                  className="m-4 p-2 h-12 w-12 text-gray-800 "
-                  onClick={toggleSidebar}
-                ></XIcon>
+                <Button onClick={toggleSidebar} className="h-fit mt-4 ml-2">
+                  <XIcon className="p-2 h-10 w-10 text-gray-800 "></XIcon>
+                </Button>
               </div>
 
               {/* Menu Items */}

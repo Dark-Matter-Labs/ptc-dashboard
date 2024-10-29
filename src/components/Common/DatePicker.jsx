@@ -8,10 +8,10 @@ import {
   endOfMonth,
   eachDayOfInterval,
 } from "date-fns";
-
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/outline";
+import PropTypes from "prop-types";
 
-const SimpleDatePicker = () => {
+const SimpleDatePicker = ({ onDateChange }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date()); // Default to the current month
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
@@ -36,10 +36,16 @@ const SimpleDatePicker = () => {
   ]; // Example dates
 
   // Function to go to the next month
-  const handleNextMonth = () => setCurrentMonth(addMonths(currentMonth, 1));
+  const handleNextMonth = (e) => {
+    e.preventDefault();
+    setCurrentMonth(addMonths(currentMonth, 1));
+  };
 
   // Function to go to the previous month
-  const handlePrevMonth = () => setCurrentMonth(subMonths(currentMonth, 1));
+  const handlePrevMonth = (e) => {
+    e.preventDefault();
+    setCurrentMonth(subMonths(currentMonth, 1));
+  };
 
   // Get all the days in the current month
   const daysInMonth = eachDayOfInterval({
@@ -66,7 +72,29 @@ const SimpleDatePicker = () => {
 
   // Handle date click
   const handleDateClick = (date) => {
-    setSelectedDate(format(date, "yyyy-MM-dd"));
+    console.log("Selected Date:", date);
+    const formattedDate = format(date, "yyyy-MM-dd");
+    console.log("formattedDate:", formattedDate);
+    setSelectedDate(formattedDate);
+    if (formattedDate && selectedTime) {
+      notifyParent(formattedDate, selectedTime); // Update the parent with the date and time
+    }
+  };
+
+  const handleTimeSlotClick = (slot) => {
+    console.log("Selected Time Slot:", slot);
+    setSelectedTime(slot);
+    if (selectedDate && slot) {
+      notifyParent(selectedDate, slot); // Update the parent with the date and time
+    }
+  };
+
+  const notifyParent = (date, time) => {
+    if (date && time) {
+      //   console.log("Parent notified with date and time:", date, time);
+      console.log("time, slot:", `${date}T${time.split("-")[0]}:00.000Z`);
+      onDateChange(`${date}T${time.split("-")[0]}:00.000Z`); // Format as ISO string
+    }
   };
 
   return (
@@ -164,7 +192,7 @@ const SimpleDatePicker = () => {
               className={`border p-2 rounded-full min-w-[140px] w-auto text-center ${
                 isSelected ? "bg-[#5570F1] text-white" : "bg-white text-black"
               }`}
-              onClick={() => setSelectedTime(slot)}
+              onClick={() => handleTimeSlotClick(slot)}
             >
               {slot}
             </button>
@@ -176,3 +204,7 @@ const SimpleDatePicker = () => {
 };
 
 export default SimpleDatePicker;
+
+SimpleDatePicker.propTypes = {
+  onDateChange: PropTypes.func.isRequired, // Required
+};

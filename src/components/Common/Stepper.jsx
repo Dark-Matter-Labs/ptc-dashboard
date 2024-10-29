@@ -10,11 +10,10 @@ function Stepper({ numSteps, stepContents, setNavTitle }) {
   const sendRequest = (path) => {
     navigate(path);
   };
-  const nextStep = () => {
+  const nextStep = async () => {
     const nextCurrentStep = currentStep + 1;
     if (nextCurrentStep < numSteps) {
       setCurrentStep(nextCurrentStep);
-      setNavTitle(`Step ${nextCurrentStep + 1}`);
     }
   };
 
@@ -81,4 +80,5 @@ Stepper.propTypes = {
   numSteps: PropTypes.number,
   stepContents: PropTypes.array,
   setNavTitle: PropTypes.func,
+  handleSubmit: PropTypes.func,
 };

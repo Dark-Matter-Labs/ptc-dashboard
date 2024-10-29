@@ -30,16 +30,26 @@ export default function DisplayEvents() {
       {user ? (
         <>
           <p> Here are all events:</p>
-          {events.map((event) => (
-            <>
-              <p>
-                <b>Event name</b> {event.name}
-              </p>
-              <p>
-                <b>Event status</b> {event.details}
-              </p>
-            </>
-          ))}
+          <div className="mt-8 flex flex-col gap-4 ">
+            {events.map((event, key) => (
+              <div key={key} className="border p-4">
+                <div className="gap-4">
+                  <b>Event name</b> {event.name}
+                </div>
+                <hr />{" "}
+                <div className="gap-4">
+                  <b>Event time</b> {event.startsAt}
+                </div>
+                <div className="gap-4">
+                  <b>Event duration</b> {event.duration}
+                </div>
+                <hr />
+                <div className="gap-4">
+                  <b>Event status</b> {event.details}
+                </div>
+              </div>
+            ))}
+          </div>
         </>
       ) : (
         // user is not logged in

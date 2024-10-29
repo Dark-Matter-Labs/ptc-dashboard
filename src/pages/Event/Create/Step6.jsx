@@ -1,11 +1,17 @@
 import { Button, Textarea } from "@headlessui/react";
-import { useState } from "react";
-const Step6 = () => {
+import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
+const Step6 = ({ setNavTitle }) => {
+  const { t } = useTranslation();
   const [riskAssessmentContent, setRiskAssessmentContent] = useState("");
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("form submission.");
+    console.log("form submission step 6.");
   };
+  useEffect(() => {
+    setNavTitle(t("create-event.self-risk-assessment"));
+  });
 
   return (
     <div>
@@ -48,3 +54,7 @@ const Step6 = () => {
 };
 
 export default Step6;
+
+Step6.propTypes = {
+  setNavTitle: PropTypes.func.isRequired, // Required
+};

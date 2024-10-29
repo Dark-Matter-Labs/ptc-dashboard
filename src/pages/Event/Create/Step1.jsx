@@ -1,9 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RadioGroup, Radio, Textarea } from "@headlessui/react";
-import { UsersIcon } from "@heroicons/react/outline";
-import { CalendarIcon } from "@heroicons/react/outline";
-import { LocationMarkerIcon } from "@heroicons/react/outline";
 import SimpleDatePicker from "../../../components/Common/DatePicker";
+import {
+  CalendarIcon,
+  UsersIcon,
+  LocationMarkerIcon,
+} from "@heroicons/react/outline";
+import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
+
 const topics = [
   { name: "Technology", icon: UsersIcon },
   { name: "Health", icon: CalendarIcon },
@@ -12,7 +17,8 @@ const topics = [
   { name: "Art", icon: UsersIcon },
 ];
 
-const Step1 = () => {
+const Step1 = ({ setNavTitle }) => {
+  const { t } = useTranslation();
   const [title, setTitle] = useState("");
   const [selectedTopic, setSelectedTopic] = useState(topics[0]);
   const [description, setDescription] = useState("");
@@ -21,6 +27,10 @@ const Step1 = () => {
     // post event to backend, assign event status:
     console.log("form submission: step 1.");
   };
+
+  useEffect(() => {
+    setNavTitle(t("create-event.navigation-title"));
+  });
 
   return (
     <div>
@@ -99,3 +109,7 @@ const Step1 = () => {
 };
 
 export default Step1;
+
+Step1.propTypes = {
+  setNavTitle: PropTypes.func.isRequired, // Required
+};

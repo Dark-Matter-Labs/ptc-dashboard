@@ -25,6 +25,9 @@
     "title": "이벤트 페이지"
   },
   "create-event": {
-    "navigation-title": "이벤트 제안"
+    "navigation-title": "이벤트 제안",
+    "an-example-template-title": "예시 템플릿 제목",
+    "self-risk-assessment": "자기 위험 평가",
+    "proposal-final-review": "제안 최종 검토"
   }
 }

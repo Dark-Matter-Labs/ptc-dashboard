@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { SearchIcon } from "@heroicons/react/outline";
-import { PlusIcon } from "@heroicons/react/outline";
+import { useState, useEffect } from "react";
+import { SearchIcon, PlusIcon } from "@heroicons/react/outline";
+import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 const templateOfRules_relevant = [
   {
@@ -54,12 +55,14 @@ const templateOfRules_popular = [
     exceptionAdded: false,
   },
 ];
-const Step4 = () => {
+const Step4 = ({ setNavTitle }) => {
+  const { t } = useTranslation();
+
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("form submission.");
+    console.log("form submission step 4.");
   };
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value.toLowerCase());
@@ -71,7 +74,9 @@ const Step4 = () => {
   const handleCreateNewTemplate = (e) => {
     console.log(e);
   };
-
+  useEffect(() => {
+    setNavTitle(t("create-event.navigation-title"));
+  });
   return (
     <div>
       <form onSubmit={handleSubmit} className="p-4 space-y-4 text-left">
@@ -196,3 +201,6 @@ const Step4 = () => {
 };
 
 export default Step4;
+Step4.propTypes = {
+  setNavTitle: PropTypes.func.isRequired, // Required
+};

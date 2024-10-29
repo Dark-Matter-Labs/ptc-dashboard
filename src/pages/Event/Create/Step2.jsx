@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@headlessui/react";
+import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 const eventTypes = [
   {
@@ -28,7 +30,9 @@ const eventTypes = [
   },
 ];
 
-const Step2 = () => {
+const Step2 = ({ setNavTitle }) => {
+  const { t } = useTranslation();
+
   const [organizerName, setOrganizerName] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
   const [expectedAttendees, setExpectedAttendees] = useState(50);
@@ -39,8 +43,13 @@ const Step2 = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("form submission.");
+    console.log("form submission step 2.");
   };
+
+  useEffect(() => {
+    setNavTitle(t("create-event.navigation-title"));
+  });
+
   return (
     <form onSubmit={handleSubmit} className="p-4 space-y-4  ">
       <div className="text-left">
@@ -138,3 +147,7 @@ const Step2 = () => {
 };
 
 export default Step2;
+
+Step2.propTypes = {
+  setNavTitle: PropTypes.func.isRequired, // Required
+};

@@ -25,6 +25,9 @@
     "title": "Event Page"
   },
   "create-event": {
-    "navigation-title": "Propose an event"
+    "navigation-title": "Propose an event",
+    "an-example-template-title": "An Example Template Title",
+    "self-risk-assessment": "Self-risk assessment",
+    "proposal-final-review": "Proposal final review"
   }
 }

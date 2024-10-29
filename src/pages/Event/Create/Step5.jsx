@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 const template_terms = [
   {
     id: 0,
@@ -61,11 +64,15 @@ const template_terms = [
   },
 ];
 
-const Step5 = () => {
+const Step5 = ({ setNavTitle }) => {
+  const { t } = useTranslation();
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("form submission.");
+    console.log("form submission step 5.");
   };
+  useEffect(() => {
+    setNavTitle(t("create-event.an-example-template-title"));
+  });
 
   return (
     <div>
@@ -102,3 +109,6 @@ const Step5 = () => {
 };
 
 export default Step5;
+Step5.propTypes = {
+  setNavTitle: PropTypes.func.isRequired, // Required
+};

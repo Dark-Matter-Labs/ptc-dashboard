@@ -161,7 +161,7 @@ const SimpleDatePicker = () => {
             <button
               key={index}
               type="button"
-              className={`border p-2 rounded rounded-full min-w-[140px] w-auto text-center ${
+              className={`border p-2 rounded-full min-w-[140px] w-auto text-center ${
                 isSelected ? "bg-[#5570F1] text-white" : "bg-white text-black"
               }`}
               onClick={() => setSelectedTime(slot)}

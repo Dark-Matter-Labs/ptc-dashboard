@@ -1,9 +1,13 @@
-import { useState } from "react";
-import { BellIcon } from "@heroicons/react/outline";
-import { PresentationChartBarIcon } from "@heroicons/react/outline";
-import { SearchIcon } from "@heroicons/react/outline";
-import { HandIcon } from "@heroicons/react/outline";
+import { useState, useEffect } from "react";
+import {
+  BellIcon,
+  SearchIcon,
+  PresentationChartBarIcon,
+  HandIcon,
+} from "@heroicons/react/outline";
 import { Button } from "@headlessui/react";
+import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 const noiseLevel = [
   {
@@ -28,7 +32,8 @@ const equipmentOptions = {
   projector: ["Projector and Screen", "Lighting (adjustable color)", "Pointer"],
 };
 
-const Step3 = () => {
+const Step3 = ({ setNavTitle }) => {
+  const { t } = useTranslation();
   const [audioEquipment, setAudioEquipment] = useState([]);
   const [projectorEquipment, setProjectorEquipment] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -73,8 +78,11 @@ const Step3 = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("form submission.");
+    console.log("form submission step 3.");
   };
+  useEffect(() => {
+    setNavTitle(t("create-event.navigation-title"));
+  });
 
   return (
     <div>
@@ -222,3 +230,7 @@ const Step3 = () => {
   );
 };
 export default Step3;
+
+Step3.propTypes = {
+  setNavTitle: PropTypes.func.isRequired, // Required
+};

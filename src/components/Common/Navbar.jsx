@@ -281,7 +281,7 @@ export default function Navbar({
                     {t("navigation.view-calendar")}
                   </a>
                   <a
-                    href="/"
+                    href="/event/new"
                     className="mt-8 ml-8 flex items-center gap-3 text-gray-900"
                   >
                     <PlusCircleIcon className="w-4 h-4 text-gray-400 "></PlusCircleIcon>
@@ -375,7 +375,11 @@ export default function Navbar({
             : "order-2"
         }`}
       >
-        <a href="/">{dynamicTitle}</a>
+        {dynamicTitle === t("navigation.navigation-title") ? (
+          <a href="/">{dynamicTitle}</a>
+        ) : (
+          <>{dynamicTitle}</> //deactive link to home
+        )}
       </h1>
       {/* Close Button for smaller screens */}
       {navTitle !== t("navigation.navigation-title") && (

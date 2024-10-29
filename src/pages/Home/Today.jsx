@@ -10,7 +10,7 @@ import { CogIcon } from "@heroicons/react/outline";
 import { ClockIcon } from "@heroicons/react/outline";
 export default function Today() {
   return (
-    <div className="todays-event">
+    <div className="todaysEvent">
       <div className="disclosure">
         <Disclosure>
           <DisclosureButton className="group header">

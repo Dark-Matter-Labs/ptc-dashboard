@@ -3,6 +3,7 @@ import { RadioGroup, Radio, Textarea } from "@headlessui/react";
 import { UsersIcon } from "@heroicons/react/outline";
 import { CalendarIcon } from "@heroicons/react/outline";
 import { LocationMarkerIcon } from "@heroicons/react/outline";
+import SimpleDatePicker from "../../../components/Common/DatePicker";
 const topics = [
   { name: "Technology", icon: UsersIcon },
   { name: "Health", icon: CalendarIcon },
@@ -41,11 +42,11 @@ const Step1 = () => {
         </div>
         {/* Select topic */}
         <div>
-          <div htmlFor="event-topic" className="block mb-2 font-semibold ">
-            Event topic
+          <div htmlFor="themes" className="block mb-2 font-semibold ">
+            Themes
           </div>
           <RadioGroup
-            id="event-topic"
+            id="themes"
             className="mb-2"
             value={selectedTopic}
             onChange={setSelectedTopic}
@@ -74,6 +75,9 @@ const Step1 = () => {
           </RadioGroup>
           <hr className="my-6" />
         </div>
+        {/* Date Picker */}
+        <SimpleDatePicker></SimpleDatePicker>
+        <hr className="my-6" />
         {/* Event description */}
         <div>
           <label

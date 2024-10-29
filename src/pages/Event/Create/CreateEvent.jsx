@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 
 export default function CreateEvent({ setNavTitle }) {
   const { user } = useUser();
+  // const user = { name: "Shu", email: "shu@example.com" };
   const steps = 6; // number of steps
   const content = [
     <Step1 key={1} setNavTitle={setNavTitle} />,

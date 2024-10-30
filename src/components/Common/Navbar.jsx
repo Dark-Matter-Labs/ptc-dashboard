@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import { ChevronDownIcon, XIcon, MenuIcon } from "@heroicons/react/solid";
 import {
+  HomeIcon,
   UserIcon,
   BellIcon,
   CalendarIcon,
@@ -110,7 +111,7 @@ export default function Navbar({
           {user ? (
             <Menu as="div" className="relative inline-block text-left">
               {/* Menu button */}
-              <MenuButton className="inline-flex w-full justify-center items-center gap-x-1 lg:gap-x-1.5 rounded-md bg-white py-1 text-xs  text-gray-700 hover:bg-gray-50">
+              <MenuButton className="inline-flex w-full justify-center items-center gap-x-1 lg:gap-x-1.5 rounded-md bg-white py-1 text-xs  text-gray-700">
                 <div className="flex min-w-0 gap-x-4 ">
                   <div
                     onClick={toggleSidebar}
@@ -164,7 +165,7 @@ export default function Navbar({
                   onClick={(e) => e.stopPropagation()} // Prevent close on sidebar click
                 >
                   {/* Profile Info */}
-                  <div className="flex items-center gap-4 mb-4 pl-8">
+                  <div className="flex items-center gap-4 pl-8">
                     <img
                       alt="User"
                       src={
@@ -184,39 +185,45 @@ export default function Navbar({
                   </div>
                   <hr className="my-4" />
                   {/* Sidebar Links */}
-                  <div className="pl-8">
+                  <div>
+                    <a
+                      href="/"
+                      className={`pl-8 space-y-8 py-4 flex items-center gap-3 text-gray-900 ${location.pathname === "/" ? "bg-slate-200" : "text-gray-900"}`}
+                    >
+                      <HomeIcon className="w-4 h-4 text-gray-400 "></HomeIcon>
+                      {t("navigation.navigation-title")}
+                    </a>
                     <a
                       href="/profile"
-                      className="space-y-8 flex items-center gap-3 text-gray-900"
+                      className={`pl-8 space-y-8 py-4 flex items-center gap-3 text-gray-900 ${location.pathname === "/profile" ? "bg-slate-200" : "text-gray-900"}`}
                     >
                       <UserIcon className="w-4 h-4 text-gray-400 "></UserIcon>
                       {t("navigation.profile")}
                     </a>
                     <a
                       href="/notifications"
-                      className="mt-8 flex items-center gap-3 text-gray-900"
+                      className={`pl-8 flex py-4 items-center gap-3 text-gray-900 ${location.pathname === "/notifications" ? "bg-slate-200" : "text-gray-900"}`}
                     >
                       <BellIcon className="w-4 h-4 text-gray-400 "></BellIcon>
                       {t("navigation.notifications")}
                     </a>
                     <a
                       href="/events"
-                      className="mt-8 space-y-8 flex items-center gap-3 text-gray-900"
+                      className={`pl-8 space-y-8 py-4 flex items-center gap-3 text-gray-900 ${location.pathname === "/events" ? "bg-slate-200" : "text-gray-900"}`}
                     >
                       <CalendarIcon className="w-4 h-4 text-gray-400 "></CalendarIcon>
                       {t("navigation.my-events")}
                     </a>
                     <a
                       href="/community"
-                      className="mt-8 flex items-center gap-3 text-gray-900"
+                      className={`pl-8 py-4  flex items-center gap-3 text-gray-900 ${location.pathname === "/community" ? "bg-slate-200" : "text-gray-900"}`}
                     >
                       <UserGroupIcon className="w-4 h-4 text-gray-400 "></UserGroupIcon>
                       {t("navigation.my-community")}
                     </a>
-
                     <a
-                      href="/community"
-                      className="mt-8 flex items-center gap-3 text-gray-900"
+                      href="/space"
+                      className={`pl-8 py-4  flex items-center gap-3 text-gray-900 ${location.pathname === "/space" ? "bg-slate-200" : "text-gray-900"}`}
                     >
                       <LocationMarkerIcon className="w-4 h-4 text-gray-400 "></LocationMarkerIcon>
                       {t("navigation.my-space")}
@@ -226,7 +233,7 @@ export default function Navbar({
                     <Disclosure>
                       {({ open }) => (
                         <>
-                          <DisclosureButton className="mt-8 flex items-center justify-between w-full text-left pr-8 text-gray-700 hover:text-gray-900">
+                          <DisclosureButton className="pl-8 py-4  flex items-center justify-between w-full text-left pr-8 text-gray-700 hover:text-gray-900">
                             <div className="flex items-center gap-3 text-gray-900">
                               <GlobeAltIcon className="w-4 h-4 text-gray-400 "></GlobeAltIcon>
                               <span>{t("navigation.language")}</span>
@@ -271,24 +278,24 @@ export default function Navbar({
                       )}
                     </Disclosure>
                   </div>
-                  <hr className="my-4 " />
-                  <h1 className="ml-8">Links</h1>
+                  <hr className="my-4" />
+                  <h1 className="ml-8 mb-2">Links</h1>
                   <a
                     href="/"
-                    className="mt-8 ml-8 flex items-center gap-3 text-gray-900"
+                    className="pl-8 py-4 flex items-center gap-3 text-gray-900"
                   >
                     <ExternalLinkIcon className="w-4 h-4 text-gray-400 "></ExternalLinkIcon>
                     {t("navigation.view-calendar")}
                   </a>
                   <a
                     href="/event/new"
-                    className="mt-8 ml-8 flex items-center gap-3 text-gray-900"
+                    className={`pl-8 py-4 flex items-center gap-3 text-gray-900 ${location.pathname === "/event/new" ? "bg-slate-200" : "text-gray-900"}`}
                   >
                     <PlusCircleIcon className="w-4 h-4 text-gray-400 "></PlusCircleIcon>
                     {t("navigation.propose-event")}
                   </a>
 
-                  <hr className="my-4 font-semibold" />
+                  <hr className="font-semibold mt-4" />
                   <Button
                     onClick={handleLogout}
                     className="pl-8 flex items-center gap-3 text-red-500 hover:text-red-700"
@@ -313,45 +320,63 @@ export default function Navbar({
                       href="/profile"
                       className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
                     >
-                      Profile
+                      {t("navigation.profile")}
                     </a>
                   </MenuItem>
                   <MenuItem>
-                    <Button
-                      onClick={() =>
-                        handleChangeLanguage(
-                          currentLanguage == "en" ? "ko" : "en"
-                        )
-                      }
-                      className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-                    >
-                      {currentLanguage === "en" ? (
-                        <div className="flex gap-2 items-center">
-                          <div>Switch to Korean</div>
-                          <img
-                            className="w-8 h-8"
-                            alt="KO"
-                            src="http://purecatamphetamine.github.io/country-flag-icons/3x2/KR.svg"
-                          />{" "}
-                        </div>
-                      ) : (
-                        <div className="flex gap-2 items-center">
-                          <div>Switch to English</div>
-                          <img
-                            className="w-6 h-6 "
-                            alt="EN"
-                            src="http://purecatamphetamine.github.io/country-flag-icons/3x2/GB.svg"
-                          />
-                        </div>
+                    <Disclosure>
+                      {({ open }) => (
+                        <>
+                          <DisclosureButton className="px-4 py-2 text-sm flex items-center justify-between w-full text-left pr-8 text-gray-700 hover:text-gray-900">
+                            <span>{t("navigation.language")}</span>
+
+                            <ChevronDownIcon
+                              className={`w-4 h-4 text-gray-400 transform ${open ? "rotate-180" : ""}`}
+                            />
+                          </DisclosureButton>
+                          <DisclosurePanel className="ml-8">
+                            <button
+                              onClick={() => handleChangeLanguage("en")}
+                              className={`flex gap-4 w-full text-sm text-left mt-4 ${
+                                currentLanguage === "en"
+                                  ? "text-gray-800 "
+                                  : "text-gray-400"
+                              } hover:bg-gray-100 rounded-md`}
+                            >
+                              English
+                              <img
+                                className={`w-6 h-6 ${currentLanguage === "en" ? "opacity-100" : "opacity-50"}`}
+                                alt="EN"
+                                src="http://purecatamphetamine.github.io/country-flag-icons/3x2/GB.svg"
+                              />
+                            </button>
+                            <button
+                              onClick={() => handleChangeLanguage("ko")}
+                              className={`flex gap-4 w-full text-sm text-left mt-4 ${
+                                currentLanguage === "ko"
+                                  ? "text-gray-800 "
+                                  : "text-gray-400"
+                              } hover:bg-gray-100 rounded-md`}
+                            >
+                              Korean
+                              <img
+                                className={`w-6 h-6 ${currentLanguage === "ko" ? "opacity-100" : "opacity-50"}`}
+                                alt="KO"
+                                src="http://purecatamphetamine.github.io/country-flag-icons/3x2/KR.svg"
+                              />{" "}
+                            </button>
+                          </DisclosurePanel>
+                        </>
                       )}
-                    </Button>
+                    </Disclosure>
                   </MenuItem>
+
                   <MenuItem>
                     <Button
                       onClick={handleLogout}
                       className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
                     >
-                      Log Out
+                      {t("navigation.logout")}
                     </Button>
                   </MenuItem>
                 </div>

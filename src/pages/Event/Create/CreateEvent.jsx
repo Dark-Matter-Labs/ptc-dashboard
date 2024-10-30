@@ -14,8 +14,8 @@ export default function CreateEvent({ setNavTitle }) {
   const { user } = useUser();
   const [eventData, setEventData] = useState({
     name: "", // to be collected from form
-    spaceId: "4509ce64-ebc2-46d8-9ca8-70b6303625b1",
-    ruleId: "f52f8fee-bf96-4e5c-91c9-b72a80fd75f1", // to be replaced with actual spaceId and ruleId
+    spaceId: "69e0351c-b99f-4183-9b44-e5af54067dda",
+    ruleId: "5bd2c6a2-855a-4a41-86bd-730e87976b60", // to be replaced with actual spaceId and ruleId
     duration: "", // to be collected from form
     startsAt: "", // to be collected from form
   });
@@ -30,7 +30,11 @@ export default function CreateEvent({ setNavTitle }) {
       setNavTitle={setNavTitle}
       updateEventData={updateEventData}
     />,
-    <Step2 key={2} setNavTitle={setNavTitle} />,
+    <Step2
+      key={2}
+      setNavTitle={setNavTitle}
+      updateEventData={updateEventData}
+    />,
     <Step3 key={3} setNavTitle={setNavTitle} />,
     <Step4 key={4} setNavTitle={setNavTitle} />,
     <Step5 key={5} setNavTitle={setNavTitle} />,

@@ -302,7 +302,7 @@ export default function Navbar({
                   <hr className="font-semibold mt-4" />
                   <Button
                     onClick={handleLogout}
-                    className="pl-8 flex items-center gap-3 text-red-500 hover:text-red-700"
+                    className="py-4 pl-8 flex items-center gap-3 text-red-500 hover:text-red-700"
                   >
                     <ArrowLeftIcon className="w-4 h-4 text-gray-400 transform" />
                     {t("navigation.logout")}

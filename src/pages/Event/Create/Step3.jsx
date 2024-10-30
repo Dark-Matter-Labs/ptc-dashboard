@@ -6,10 +6,11 @@ import {
   HandIcon,
 } from "@heroicons/react/outline";
 import { Button } from "@headlessui/react";
-import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
-const noiseLevel = [
+const DEBUG = false;
+const noiseLevelOptions = [
   {
     title: "High",
     description:
@@ -37,6 +38,8 @@ const Step3 = ({ setNavTitle }) => {
   const [audioEquipment, setAudioEquipment] = useState([]);
   const [projectorEquipment, setProjectorEquipment] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [noiseLevel, setNoiseLevel] = useState(1); // default to medium noise level
+  const [foodAllowed, setFoodAllowed] = useState(false);
 
   const handleEquipmentChange = (group, item) => {
     const setState =
@@ -92,11 +95,17 @@ const Step3 = ({ setNavTitle }) => {
               <BellIcon className="w-4 h-auto" />
               <div className="block font-semibold">Noise Level</div>
             </div>
+            {DEBUG && (
+              <div className="bg-pink-300">
+                <p>noiseLevel: {noiseLevel}</p>
+              </div>
+            )}
             <div className="flex flex-col gap-4 lg:flex-row">
-              {noiseLevel.map((content, index) => (
+              {noiseLevelOptions.map((content, index) => (
                 <div
                   key={index}
-                  className="w-full border border-gray-700 rounded-[80px] sm:rounded-[60px] p-3 text-center lg:text-left lg:rounded-sm"
+                  className={`w-full border border-gray-700 rounded-[80px] sm:rounded-[60px] p-3 text-center lg:text-left lg:rounded-sm ${noiseLevel === index ? "bg-gray-200" : ""}`}
+                  onClick={() => setNoiseLevel(index)}
                 >
                   <div className="font-bold mb-1">{content.title}</div>
                   <div className="font-sm text-gray-700 px-2.5">
@@ -113,6 +122,12 @@ const Step3 = ({ setNavTitle }) => {
               <div className="block font-semibold">Equipment</div>
             </div>
 
+            {DEBUG && (
+              <div className="bg-pink-300">
+                <p>audio: {audioEquipment}</p>
+                <p>proj: {projectorEquipment}</p>
+              </div>
+            )}
             {/* Search Bar */}
             <div className="relative mb-4">
               <input
@@ -125,7 +140,6 @@ const Step3 = ({ setNavTitle }) => {
               />
               <SearchIcon className="w-5 h-5 absolute left-3 top-2.5 text-gray-400" />
             </div>
-
             {/* Audio Equipment */}
             <div className="mb-4">
               <div className="flex items-center justify-between gap-2 mb-2">
@@ -160,7 +174,6 @@ const Step3 = ({ setNavTitle }) => {
                 ))}
               </div>
             </div>
-
             {/* Projector Equipment */}
             <div className="mb-4">
               <div className="flex justify-between items-center gap-2 mb-2">
@@ -211,11 +224,22 @@ const Step3 = ({ setNavTitle }) => {
                 Will food or drinks be served at the event?
               </div>
             </div>
+            {DEBUG && (
+              <div className="bg-pink-300">
+                <p>foodAllowed: {foodAllowed ? "true" : "false"}</p>
+              </div>
+            )}
             <div className="flex justify-between gap-4">
-              <Button className="flex-grow border p-4 rounded-[48px] ">
+              <Button
+                onClick={() => setFoodAllowed(true)}
+                className={`flex-grow border p-4 rounded-[48px] ${foodAllowed ? "bg-slate-500" : ""}`}
+              >
                 Yes
               </Button>
-              <Button className="flex-grow bg-slate-500 p-4 rounded-[48px] ">
+              <Button
+                onClick={() => setFoodAllowed(false)}
+                className={`flex-grow p-4 rounded-[48px] ${foodAllowed ? "" : "bg-slate-500"}`}
+              >
                 No
               </Button>
             </div>

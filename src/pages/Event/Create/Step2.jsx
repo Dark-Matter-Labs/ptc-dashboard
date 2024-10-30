@@ -30,7 +30,7 @@ const eventTypes = [
   },
 ];
 
-const Step2 = ({ setNavTitle }) => {
+const Step2 = ({ setNavTitle, updateEventData }) => {
   const { t } = useTranslation();
 
   const [organizerName, setOrganizerName] = useState(""); // should be populated with user's name
@@ -42,14 +42,46 @@ const Step2 = ({ setNavTitle }) => {
     setExpectedAttendees((prev) => Math.max(0, prev + increment)); // Prevent negative values
   };
 
+  const handleFetchMe = () => {
+    console.log("Fetching user data...");
+    fetch("/api/v1/user/me", {
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("User (me)  data fetched:", data);
+
+        // Populate form fields with user data
+        // organiser's name
+        setOrganizerName(data.name);
+        // organizer's email
+        setEmailAddress(data.email);
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
+  };
+
+  useEffect(() => {
+    console.log(
+      "Updating event data with expectedAttendees:",
+      expectedAttendees
+    );
+    //update event data when expectedAttendees
+    updateEventData({
+      expectedAttendees: expectedAttendees, // not required as part of eventData
+    });
+  }, [expectedAttendees]);
+
   useEffect(() => {
     setNavTitle(t("create-event.navigation-title"));
-  });
+    handleFetchMe();
+  }, []);
 
   return (
-    <div className="p-4 space-y-4  ">
+    <div className="p-4 space-y-4">
       <div className="text-left">
-        {/* Enter title */}
+        {/* Organizer name */}
         <label htmlFor="organizer-name" className="block mb-2 font-semibold ">
           Organizer name
         </label>
@@ -62,7 +94,7 @@ const Step2 = ({ setNavTitle }) => {
           placeholder="Enter event organizer's name"
         ></input>
         <div className="my-6" />
-        {/* Event description */}
+        {/* Email address */}
         <div htmlFor="email-adress" className="block mb-2 font-semibold">
           Email address
         </div>
@@ -76,7 +108,7 @@ const Step2 = ({ setNavTitle }) => {
         ></Input>
 
         <hr className="my-6" />
-        {/* Select topic */}
+        {/*  Expected attendees*/}
         <div htmlFor="expected-attendee" className="block mb-2 font-semibold ">
           Expected attendees
         </div>
@@ -111,6 +143,7 @@ const Step2 = ({ setNavTitle }) => {
         </div>
 
         <hr className="my-6" />
+        {/*  Event type */}
         <div className="space-y-4">
           <h2 className="font-semibold">Event type</h2>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -145,5 +178,6 @@ const Step2 = ({ setNavTitle }) => {
 export default Step2;
 
 Step2.propTypes = {
-  setNavTitle: PropTypes.func.isRequired, // Required
+  setNavTitle: PropTypes.func.isRequired,
+  updateEventData: PropTypes.func.isRequired,
 };

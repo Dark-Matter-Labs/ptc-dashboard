@@ -121,7 +121,11 @@ export default function Navbar({
                   </div>
                   <img
                     alt="user picture"
-                    src={user?.picture ? user.picture : ""}
+                    src={
+                      user?.picture
+                        ? user.picture
+                        : "https://raw.githubusercontent.com/Dark-Matter-Labs/ptc-dashboard/main/src/assets/image/user-profile.png"
+                    }
                     className="hidden md:block h-12 w-12 flex-none rounded-full bg-gray-50"
                     onError={(e) => {
                       console.log("picture error: ", e);
@@ -161,7 +165,7 @@ export default function Navbar({
                 onClick={toggleSidebar}
               >
                 <div
-                  className="w-5/6 bg-white h-full shadow-lg py-6"
+                  className="w-5/6 bg-white h-full shadow-lg py-6 overflow-y-auto"
                   onClick={(e) => e.stopPropagation()} // Prevent close on sidebar click
                 >
                   {/* Profile Info */}

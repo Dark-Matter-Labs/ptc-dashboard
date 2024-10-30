@@ -33,17 +33,13 @@ const eventTypes = [
 const Step2 = ({ setNavTitle }) => {
   const { t } = useTranslation();
 
-  const [organizerName, setOrganizerName] = useState("");
-  const [emailAddress, setEmailAddress] = useState("");
+  const [organizerName, setOrganizerName] = useState(""); // should be populated with user's name
+  const [emailAddress, setEmailAddress] = useState(""); // should be populated with user's email
   const [expectedAttendees, setExpectedAttendees] = useState(50);
   const [selectedEventType, setSelectedEventType] = useState(null);
 
   const handleAttendeeChange = (increment) => {
     setExpectedAttendees((prev) => Math.max(0, prev + increment)); // Prevent negative values
-  };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("form submission step 2.");
   };
 
   useEffect(() => {
@@ -51,7 +47,7 @@ const Step2 = ({ setNavTitle }) => {
   });
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 space-y-4  ">
+    <div className="p-4 space-y-4  ">
       <div className="text-left">
         {/* Enter title */}
         <label htmlFor="organizer-name" className="block mb-2 font-semibold ">
@@ -142,7 +138,7 @@ const Step2 = ({ setNavTitle }) => {
           </div>
         </div>
       </div>
-    </form>
+    </div>
   );
 };
 

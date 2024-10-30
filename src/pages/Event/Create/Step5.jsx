@@ -66,44 +66,35 @@ const template_terms = [
 
 const Step5 = ({ setNavTitle }) => {
   const { t } = useTranslation();
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("form submission step 5.");
-  };
+
   useEffect(() => {
     setNavTitle(t("create-event.an-example-template-title"));
   });
 
   return (
-    <div>
-      <form onSubmit={handleSubmit} className="p-4 space-y-4 text-left">
-        {/* View Terms */}
-        <div>
-          <div id="view-terms" className="text-2xl block mb-2 font-semibold ">
-            View Terms
-          </div>
+    <div className="p-4 space-y-4 text-left">
+      {/* View Terms */}
+      <div id="view-terms" className="text-2xl block mb-2 font-semibold ">
+        View Terms
+      </div>
 
-          <p className="mb-4">
-            You can agree to and use a template to receive automatic approval.
-            If you need to request exceptions to any rules, your request will be
-            sent to the Permissioning Group for review.
-          </p>
+      <p className="mb-4">
+        You can agree to and use a template to receive automatic approval. If
+        you need to request exceptions to any rules, your request will be sent
+        to the Permissioning Group for review.
+      </p>
 
-          <div className="flex flex-col gap-4 text-gray-500">
-            {template_terms.map((term) => (
-              <div
-                key={term.id}
-                className="bg-white border border-gray-300  rounded-md p-4"
-              >
-                <h3 className="font-bold text-lg text-gray-900">
-                  {term.title}
-                </h3>
-                <p className="text-gray-400">{term.content}</p>
-              </div>
-            ))}
+      <div className="flex flex-col gap-4 text-gray-500">
+        {template_terms.map((term) => (
+          <div
+            key={term.id}
+            className="bg-white border border-gray-300  rounded-md p-4"
+          >
+            <h3 className="font-bold text-lg text-gray-900">{term.title}</h3>
+            <p className="text-gray-400">{term.content}</p>
           </div>
-        </div>
-      </form>
+        ))}
+      </div>
     </div>
   );
 };

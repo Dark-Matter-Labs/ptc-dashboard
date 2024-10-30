@@ -76,17 +76,13 @@ const Step3 = ({ setNavTitle }) => {
     item.toLowerCase().includes(searchTerm)
   );
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("form submission step 3.");
-  };
   useEffect(() => {
     setNavTitle(t("create-event.navigation-title"));
   });
 
   return (
     <div>
-      <form onSubmit={handleSubmit} className="p-4 space-y-4 text-left">
+      <div className="p-4 space-y-4 text-left">
         {/* Enter title */}
         <div className="block mb-2 font-semibold">Setup Requirements</div>
 
@@ -225,7 +221,7 @@ const Step3 = ({ setNavTitle }) => {
             </div>
           </div>
         </div>
-      </form>
+      </div>
     </div>
   );
 };

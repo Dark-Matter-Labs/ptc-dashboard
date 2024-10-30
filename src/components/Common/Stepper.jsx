@@ -4,13 +4,41 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
-function Stepper({ numSteps, stepContents, setNavTitle }) {
+function Stepper({ numSteps, stepContents, setNavTitle, handleSubmit }) {
   let navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
-  const sendRequest = (path) => {
-    navigate(path);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+
+  const sendRequest = async (e) => {
+    e.preventDefault(); // Prevent form submission
+
+    if (currentStep === 6) {
+      console.log("Submitting at final review... currentStep ", currentStep);
+
+      try {
+        const result = await handleSubmit();
+
+        console.log(
+          "[Stepper] Submitting at final review... success: ",
+          result
+        );
+        if (result.success) {
+          setShowSuccessModal(true); // Show the success modal on successful submission
+        } else {
+          setErrorMessage(result.message);
+        }
+      } catch (error) {
+        console.error("Error submitting at final review:", error);
+        setErrorMessage(
+          "There was an error creating the event. Please try again."
+        );
+      }
+    }
   };
-  const nextStep = async () => {
+  const nextStep = (e) => {
+    e.preventDefault(); // Prevent form submission
+
     const nextCurrentStep = currentStep + 1;
     if (nextCurrentStep < numSteps) {
       setCurrentStep(nextCurrentStep);
@@ -19,6 +47,55 @@ function Stepper({ numSteps, stepContents, setNavTitle }) {
 
   return (
     <div className="w-full lg:w-3/4 mx-auto p-4 bg-white mb-24">
+      {/* Modal for success confirmation */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h2 className="text-2xl font-bold mb-4">
+              Event Created Successfully!
+            </h2>
+            <p className="mb-6">
+              Your event has been created. Click confirm to continue.
+            </p>
+            <button
+              onClick={() => {
+                setShowSuccessModal(false);
+                navigate("/");
+              }}
+              className="px-4 py-2 bg-green-500 text-white rounded-md"
+            >
+              Confirm
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Error Modal */}
+      {errorMessage && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h2 className="text-2xl font-bold mb-4 text-red-500">Error</h2>
+            <p className="mb-6">{errorMessage}</p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setErrorMessage(null)} // Close the modal
+                className="px-4 py-2 bg-slate-600 text-white rounded-md"
+              >
+                Continue
+              </button>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/");
+                }}
+                className="px-4 py-2  bg-gray-100 text-black rounded-md"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <TabGroup
         selectedIndex={currentStep}
         onChange={(index) => {
@@ -59,14 +136,14 @@ function Stepper({ numSteps, stepContents, setNavTitle }) {
             onClick={nextStep}
             className="w-full px-4 py-2 bg-gray-500 text-white rounded-md"
           >
-            Next
+            Next {currentStep}
           </button>
         ) : (
           <button
-            onClick={() => sendRequest("/")}
+            onClick={sendRequest}
             className="w-full px-4 py-2 bg-green-500 text-white rounded-md"
           >
-            Send request
+            Send request {currentStep}
           </button>
         )}
       </div>

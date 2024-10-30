@@ -33,7 +33,7 @@ const SimpleDatePicker = ({ onDateChange }) => {
     "2024-12-23",
     "2024-12-24",
     "2024-12-25",
-  ]; // Example dates
+  ];
 
   // Function to go to the next month
   const handleNextMonth = (e) => {
@@ -58,7 +58,7 @@ const SimpleDatePicker = ({ onDateChange }) => {
 
   // Time slots array
   const timeSlots = [
-    "00:00-10:00",
+    "09:00-10:00",
     "10:00-11:00",
     "11:00-12:00",
     "12:00-13:00",
@@ -68,44 +68,49 @@ const SimpleDatePicker = ({ onDateChange }) => {
     "16:00-17:00",
     "17:00-18:00",
     "18:00-19:00",
+    "19:00-20:00",
+    "20:00-21:00",
+    "21:00-22:00",
   ];
 
   // Handle date click
   const handleDateClick = (date) => {
-    console.log("Selected Date:", date);
     const formattedDate = format(date, "yyyy-MM-dd");
-    console.log("formattedDate:", formattedDate);
+    console.log("Selected Date (formattedDate): ", formattedDate);
     setSelectedDate(formattedDate);
     if (formattedDate && selectedTime) {
-      notifyParent(formattedDate, selectedTime); // Update the parent with the date and time
+      notifyParent(formattedDate, selectedTime);
     }
   };
 
   const handleTimeSlotClick = (slot) => {
-    console.log("Selected Time Slot:", slot);
+    console.log("Selected Time Slot: ", slot);
     setSelectedTime(slot);
     if (selectedDate && slot) {
-      notifyParent(selectedDate, slot); // Update the parent with the date and time
+      notifyParent(selectedDate, slot);
     }
   };
 
   const notifyParent = (date, time) => {
     if (date && time) {
-      //   console.log("Parent notified with date and time:", date, time);
-      console.log("time, slot:", `${date}T${time.split("-")[0]}:00.000Z`);
-      onDateChange(`${date}T${time.split("-")[0]}:00.000Z`); // Format as ISO string
+      console.log("Parent notified with date and time:", date, time);
+      // Format to ISO string
+      onDateChange(`${date}T${time.split("-")[0]}:00.000Z`);
     }
   };
 
   return (
     <div>
+      {/* Date picker title */}
       <div className="block mb-2 font-semibold">Date and time</div>
       {/* Month and Year Display with Navigation */}
       <div className="border rounded">
         <div className="p-2 ">
+          {/* Year */}
           <div className="text-center font-bold text-lg mb-2">
             {format(currentMonth, "yyyy")}
           </div>
+          {/* Month Navigation */}
           <div className="flex items-center justify-between">
             <button
               className="border rounded w-fit py-2 px-2 items-center"
@@ -125,6 +130,8 @@ const SimpleDatePicker = ({ onDateChange }) => {
           </div>
         </div>
         <hr className="my-2" />
+
+        {/* Calendar */}
         <div className="p-2">
           {/* Weekday Labels */}
           <div className="grid grid-cols-7 text-center font-medium mb-2">
@@ -159,15 +166,16 @@ const SimpleDatePicker = ({ onDateChange }) => {
             })}
           </div>
         </div>
-        <hr className="" />
+
+        {/* Select Date field & Set Date Button - ignore for now casue not much functionality/value */}
+        {/* <hr className="" />
         <div className="p-4">
-          {/* Selected Date Display */}
           <div className="flex justify-between w-full items-center ">
             <input
               type="text"
               value={selectedDate}
               readOnly
-              className="border p-2 rounded w-fit"
+              className="border p-2 rounded w-full"
               placeholder="Select a date"
             />
             <button
@@ -177,7 +185,7 @@ const SimpleDatePicker = ({ onDateChange }) => {
               Set date
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Horizontal Scrollable Time Slots */}
@@ -206,5 +214,5 @@ const SimpleDatePicker = ({ onDateChange }) => {
 export default SimpleDatePicker;
 
 SimpleDatePicker.propTypes = {
-  onDateChange: PropTypes.func.isRequired, // Required
+  onDateChange: PropTypes.func.isRequired,
 };

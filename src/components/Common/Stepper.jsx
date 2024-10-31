@@ -50,7 +50,7 @@ function Stepper({ numSteps, stepContents, setNavTitle, handleSubmit }) {
       {/* Modal for success confirmation */}
       {showSuccessModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+          <div className="bg-white m-4 p-6 rounded-lg shadow-lg text-center">
             <h2 className="text-2xl font-bold mb-4">
               Event Created Successfully!
             </h2>
@@ -74,12 +74,12 @@ function Stepper({ numSteps, stepContents, setNavTitle, handleSubmit }) {
       {errorMessage && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-            <h2 className="text-2xl font-bold mb-4 text-red-500">Error</h2>
-            <p className="mb-6">{errorMessage}</p>
-            <div className="flex gap-2">
+            <h2 className="text-2xl font-bold mb-4">Something went wrong!</h2>
+            <p className="mb-6 text-red-500">{errorMessage}</p>
+            <div className="flex w-full justify-between gap-2">
               <button
                 onClick={() => setErrorMessage(null)} // Close the modal
-                className="px-4 py-2 bg-slate-600 text-white rounded-md"
+                className="px-4 py-2 w-full bg-slate-600 text-white rounded-md"
               >
                 Continue
               </button>
@@ -88,7 +88,7 @@ function Stepper({ numSteps, stepContents, setNavTitle, handleSubmit }) {
                   e.preventDefault();
                   navigate("/");
                 }}
-                className="px-4 py-2  bg-gray-100 text-black rounded-md"
+                className="px-4 py-2 w-full bg-gray-100 text-black rounded-md"
               >
                 Cancel
               </button>

@@ -11,7 +11,8 @@ import {
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/outline";
 import PropTypes from "prop-types";
 
-const SimpleDatePicker = ({ onDateChange }) => {
+const DateTimePicker = ({ onDateChange }) => {
+  const [eventDateTime, setEventDateTime] = useState(""); // Store event date in ISO strings format
   const [currentMonth, setCurrentMonth] = useState(new Date()); // Default to the current month
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
@@ -100,7 +101,8 @@ const SimpleDatePicker = ({ onDateChange }) => {
   };
 
   return (
-    <div>
+    <div className="text-left">
+      <hr className="my-6" />
       {/* Date picker title */}
       <div className="block mb-2 font-semibold">Date and time</div>
       {/* Month and Year Display with Navigation */}
@@ -211,8 +213,8 @@ const SimpleDatePicker = ({ onDateChange }) => {
   );
 };
 
-export default SimpleDatePicker;
+export default DateTimePicker;
 
-SimpleDatePicker.propTypes = {
+DateTimePicker.propTypes = {
   onDateChange: PropTypes.func.isRequired,
 };

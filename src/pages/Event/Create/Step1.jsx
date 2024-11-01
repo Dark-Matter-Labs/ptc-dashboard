@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { RadioGroup, Radio, Textarea } from "@headlessui/react";
-import SimpleDatePicker from "../../../components/Common/DatePicker";
+import DateTimePicker from "../../../components/Common/DateTimePicker";
 import {
   CalendarIcon,
   UsersIcon,
@@ -44,7 +44,7 @@ const Step1 = ({ setNavTitle, updateEventData }) => {
   }, [eventTitle]);
 
   return (
-    <div className="p-4 space-y-4 text-left">
+    <div className="p-4 text-left">
       {/* Enter title */}
       <div>
         <label htmlFor="title" className="block mb-2 font-semibold ">
@@ -92,12 +92,11 @@ const Step1 = ({ setNavTitle, updateEventData }) => {
             ))}
           </div>
         </RadioGroup>
-        <hr className="my-6" />
       </div>
-      {/* Date Picker */}
-      <SimpleDatePicker onDateChange={setEventDateTime}></SimpleDatePicker>
-      <hr className="my-6" />
+      {/* Date  and time picker */}
+      <DateTimePicker onDateChange={setEventDateTime} />
       {/* Event description */}
+      <hr className="my-6" />
       <div>
         <label htmlFor="event-description" className="block mb-2 font-semibold">
           Event description

@@ -134,7 +134,7 @@ function Stepper({ numSteps, stepContents, setNavTitle, handleSubmit }) {
         {currentStep < numSteps - 1 ? (
           <button
             onClick={nextStep}
-            className="w-full px-4 py-2 bg-gray-500 text-white rounded-md"
+            className="w-full px-4 py-2 bg-gray-900 text-white rounded-md"
           >
             Next
           </button>

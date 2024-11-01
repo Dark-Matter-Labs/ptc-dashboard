@@ -2,9 +2,9 @@ import { useEffect } from "react";
 
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-import { OrganiserNameEmail } from "../../../components/Common/OrganiserNameEmail";
-import { SpaceEventAccess } from "../../../components/Common/RuleBlocks/SpaceEventAccess";
-import { SpaceEventExpectedAttendeeCount } from "../../../components/Common/RuleBlocks/SpaceEventExpectedAttendeeCount";
+import { OrganiserNameEmail } from "../../../components/Form/OrganiserNameEmail";
+import { SpaceEventAccess } from "../../../components/Form/RuleBlocks/SpaceEventAccess";
+import { SpaceEventExpectedAttendeeCount } from "../../../components/Form/RuleBlocks/SpaceEventExpectedAttendeeCount";
 
 const Step2 = ({ setNavTitle, updateEventData }) => {
   const { t } = useTranslation();

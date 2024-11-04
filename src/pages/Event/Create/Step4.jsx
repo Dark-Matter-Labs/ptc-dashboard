@@ -3,61 +3,60 @@ import { SearchIcon, PlusIcon } from "@heroicons/react/outline";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
-const templateOfRules_relevant = [
+const templates = [
   {
     id: 0,
-    title: "Title of terms 1",
-    content: "Content",
+    title: "template 1",
+    content: "CreatedAt 2024-11-01 // Popularity: 5",
+    createdAt: "2024-11-01T12:58:48.537Z",
+    popularity: 5,
     exceptionAdded: true,
   },
   {
     id: 1,
-    title: "Title of terms 2",
-    content: "Content",
+    title: "template 2",
+    content: "CreatedAt 2024-11-12 // Popularity: 7",
+    createdAt: "2024-11-12T12:58:48.537Z",
+    popularity: 7,
     exceptionAdded: false,
   },
   {
     id: 2,
-    title: "Title of terms 3",
-    content: "Content",
+    title: "template 3",
+    content: "CreatedAt 2024-11-03 // Popularity: 1",
+    createdAt: "2024-11-03T12:58:48.537Z",
+    popularity: 1,
     exceptionAdded: false,
   },
   {
     id: 3,
-    title: "Title of terms 4",
-    content: "Content",
-    exceptionAdded: false,
-  },
-];
-const templateOfRules_popular = [
-  {
-    id: 0,
-    title: "Title of terms 1",
-    content: "Content",
+    title: "template 4",
+    content: "CreatedAt 2024-11-11 // Popularity: 11",
+    createdAt: "2024-11-11T12:58:48.537Z",
+    popularity: 11,
     exceptionAdded: false,
   },
   {
-    id: 1,
-    title: "Title of terms 2",
-    content: "Content",
-    exceptionAdded: true,
-  },
-  {
-    id: 2,
-    title: "Title of terms 3",
-    content: "Content",
+    id: 4,
+    title: "template 5",
+    content: "CreatedAt 2024-11-21 // Popularity: 25",
+    createdAt: "2024-11-21T12:58:48.537Z",
+    popularity: 25,
     exceptionAdded: false,
   },
   {
-    id: 3,
-    title: "Title of terms 4",
-    content: "Content",
+    id: 5,
+    title: "template 6",
+    content: "Content 2024-11-17 // Popularity: 2",
+    createdAt: "2024-11-17T12:58:48.537Z",
+    popularity: 2,
     exceptionAdded: false,
   },
 ];
 const Step4 = ({ setNavTitle }) => {
   const { t } = useTranslation();
-
+  const [templateOfRules_newest, setTemplateOfRules_newest] = useState([]);
+  const [templateOfRules_popular, setTemplateOfRules_popular] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -74,17 +73,31 @@ const Step4 = ({ setNavTitle }) => {
   useEffect(() => {
     setNavTitle(t("create-event.navigation-title"));
   });
+
+  // Sort templates by created date and popularity
+  useEffect(() => {
+    // Sort by created date (newest first)
+    const sortedByDate = [...templates].sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
+    setTemplateOfRules_newest(sortedByDate);
+
+    // Sort by popularity (highest first)
+    const sortedByPopularity = [...templates].sort(
+      (a, b) => b.popularity - a.popularity
+    );
+    setTemplateOfRules_popular(sortedByPopularity);
+  }, [templates]);
   return (
     <div className="p-4 space-y-4 text-left">
       {/* Choose Template */}
       <div id="choose-template" className="text-2xl block mb-2 font-semibold ">
-        Choose a template of rules
+        Browse event templates
       </div>
 
       <p className="mb-4">
-        The most relevant templates for your event type are shown below. If no
-        templates are available, you’ll need to create a new one and submit it
-        for review.
+        Search and select from a variety of event templates with pre-set rules
+        to suit your event, or customize as needed.
       </p>
       <div className="relative mb-4">
         <input
@@ -97,11 +110,11 @@ const Step4 = ({ setNavTitle }) => {
         />
         <SearchIcon className="w-5 h-5 absolute left-3 top-2.5 text-gray-400" />
       </div>
-      <div id="most-relevant-template" className=" block mb-2 font-semibold ">
-        Most relevant
+      <div id="newest-template" className=" block mb-2 font-semibold ">
+        Newest
       </div>
       <div className="flex overflow-x-auto space-x-4 w-full py-2">
-        {templateOfRules_relevant.map((template) => (
+        {templateOfRules_newest.map((template) => (
           <div
             key={template.id}
             onClick={() => handleSelectTemplate(template.id)}

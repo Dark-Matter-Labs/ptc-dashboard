@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 
 function Stepper({ numSteps, stepContents, setNavTitle, handleSubmit }) {
   let navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(3);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -42,6 +42,15 @@ function Stepper({ numSteps, stepContents, setNavTitle, handleSubmit }) {
     const nextCurrentStep = currentStep + 1;
     if (nextCurrentStep < numSteps) {
       setCurrentStep(nextCurrentStep);
+    }
+  };
+
+  const prevStep = (e) => {
+    e.preventDefault(); // Prevent form submission
+
+    const prevStep = currentStep - 1;
+    if (prevStep >= 0) {
+      setCurrentStep(prevStep);
     }
   };
 
@@ -131,20 +140,51 @@ function Stepper({ numSteps, stepContents, setNavTitle, handleSubmit }) {
 
       {/* Next Button */}
       <div className="fixed bottom-0 left-0 w-full bg-gray-100 shadow-lg p-4">
-        {currentStep < numSteps - 1 ? (
+        {/* first step */}
+        {currentStep === 0 && (
           <button
             onClick={nextStep}
             className="w-full px-4 py-2 bg-gray-900 text-white rounded-md"
           >
             Next
           </button>
-        ) : (
-          <button
-            onClick={sendRequest}
-            className="w-full px-4 py-2 bg-green-500 text-white rounded-md"
-          >
-            Send request
-          </button>
+        )}
+        {/* In-between steps*/}
+        {currentStep > 0 && currentStep < numSteps - 1 && (
+          <div className="flex flex-col gap-2">
+            <button
+              onClick={prevStep}
+              disabled={currentStep === 0}
+              className="w-full px-4 py-2 bg-white text-gray-500 rounded-md border border-gray-500"
+            >
+              Back
+            </button>
+            <button
+              onClick={nextStep}
+              className="w-full px-4 py-2 bg-gray-900 text-white rounded-md"
+            >
+              Next
+            </button>
+          </div>
+        )}
+        {/* last step */}
+        {currentStep === numSteps - 1 && (
+          <div className="flex flex-col gap-2">
+            {" "}
+            <button
+              onClick={prevStep}
+              disabled={currentStep === 0}
+              className="w-full px-4 py-2 bg-white text-gray-400 rounded-md border border-gray-400"
+            >
+              Back
+            </button>
+            <button
+              onClick={sendRequest}
+              className="w-full px-4 py-2 bg-green-500 text-white rounded-md"
+            >
+              Send request
+            </button>
+          </div>
         )}
       </div>
     </div>

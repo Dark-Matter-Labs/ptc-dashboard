@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 
 function Stepper({ numSteps, stepContents, setNavTitle, handleSubmit }) {
   let navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(2);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
 

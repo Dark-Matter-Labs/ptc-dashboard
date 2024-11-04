@@ -3,58 +3,59 @@ import { SearchIcon, PlusIcon } from "@heroicons/react/outline";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
-const templates = [
-  {
-    id: 0,
-    title: "template 1",
-    content: "CreatedAt 2024-11-01 // Popularity: 5",
-    createdAt: "2024-11-01T12:58:48.537Z",
-    popularity: 5,
-    exceptionAdded: true,
-  },
-  {
-    id: 1,
-    title: "template 2",
-    content: "CreatedAt 2024-11-12 // Popularity: 7",
-    createdAt: "2024-11-12T12:58:48.537Z",
-    popularity: 7,
-    exceptionAdded: false,
-  },
-  {
-    id: 2,
-    title: "template 3",
-    content: "CreatedAt 2024-11-03 // Popularity: 1",
-    createdAt: "2024-11-03T12:58:48.537Z",
-    popularity: 1,
-    exceptionAdded: false,
-  },
-  {
-    id: 3,
-    title: "template 4",
-    content: "CreatedAt 2024-11-11 // Popularity: 11",
-    createdAt: "2024-11-11T12:58:48.537Z",
-    popularity: 11,
-    exceptionAdded: false,
-  },
-  {
-    id: 4,
-    title: "template 5",
-    content: "CreatedAt 2024-11-21 // Popularity: 25",
-    createdAt: "2024-11-21T12:58:48.537Z",
-    popularity: 25,
-    exceptionAdded: false,
-  },
-  {
-    id: 5,
-    title: "template 6",
-    content: "Content 2024-11-17 // Popularity: 2",
-    createdAt: "2024-11-17T12:58:48.537Z",
-    popularity: 2,
-    exceptionAdded: false,
-  },
-];
+// const templates = [
+//   {
+//     id: 0,
+//     title: "template 1",
+//     content: "CreatedAt 2024-11-01 // Popularity: 5",
+//     createdAt: "2024-11-01T12:58:48.537Z",
+//     popularity: 5,
+//     exceptionAdded: true,
+//   },
+//   {
+//     id: 1,
+//     title: "template 2",
+//     content: "CreatedAt 2024-11-12 // Popularity: 7",
+//     createdAt: "2024-11-12T12:58:48.537Z",
+//     popularity: 7,
+//     exceptionAdded: false,
+//   },
+//   {
+//     id: 2,
+//     title: "template 3",
+//     content: "CreatedAt 2024-11-03 // Popularity: 1",
+//     createdAt: "2024-11-03T12:58:48.537Z",
+//     popularity: 1,
+//     exceptionAdded: false,
+//   },
+//   {
+//     id: 3,
+//     title: "template 4",
+//     content: "CreatedAt 2024-11-11 // Popularity: 11",
+//     createdAt: "2024-11-11T12:58:48.537Z",
+//     popularity: 11,
+//     exceptionAdded: false,
+//   },
+//   {
+//     id: 4,
+//     title: "template 5",
+//     content: "CreatedAt 2024-11-21 // Popularity: 25",
+//     createdAt: "2024-11-21T12:58:48.537Z",
+//     popularity: 25,
+//     exceptionAdded: false,
+//   },
+//   {
+//     id: 5,
+//     title: "template 6",
+//     content: "Content 2024-11-17 // Popularity: 2",
+//     createdAt: "2024-11-17T12:58:48.537Z",
+//     popularity: 2,
+//     exceptionAdded: false,
+//   },
+// ];
 const Step4 = ({ setNavTitle }) => {
   const { t } = useTranslation();
+  const [rules, setRules] = useState([]);
   const [templateOfRules_newest, setTemplateOfRules_newest] = useState([]);
   const [templateOfRules_popular, setTemplateOfRules_popular] = useState([]);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
@@ -70,24 +71,39 @@ const Step4 = ({ setNavTitle }) => {
   const handleCreateNewTemplate = (e) => {
     console.log(e);
   };
+
+  const handleFetchRules = () => {
+    fetch("/api/v1/rule", { credentials: "include" })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("template data: ", data);
+        setRules(data.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching templates: ", error);
+      });
+  };
+
   useEffect(() => {
     setNavTitle(t("create-event.navigation-title"));
-  });
+    handleFetchRules();
+  }, []);
 
   // Sort templates by created date and popularity
   useEffect(() => {
     // Sort by created date (newest first)
-    const sortedByDate = [...templates].sort(
+    const sortedByDate = [...rules].sort(
       (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
     );
     setTemplateOfRules_newest(sortedByDate);
 
     // Sort by popularity (highest first)
-    const sortedByPopularity = [...templates].sort(
-      (a, b) => b.popularity - a.popularity
+    // (a, b) => b.popularity - a.popularity
+    const sortedByPopularity = [...rules].sort(
+      (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
     );
     setTemplateOfRules_popular(sortedByPopularity);
-  }, [templates]);
+  }, [rules]);
   return (
     <div className="p-4 space-y-4 text-left">
       {/* Choose Template */}
@@ -131,9 +147,14 @@ const Step4 = ({ setNavTitle }) => {
                   : " text-gray-800 "
               }`}
             >
-              {template.title}
+              {template.name}
             </h3>
-            <p className="text-sm font-light mt-2 mb-8">{template.content}</p>
+            <p className="text-sm font-light mt-2 mb-8">
+              created at: {template.createdAt}
+            </p>
+            <p className="text-sm font-light mt-2 mb-8">
+              updated at: {template.updatedAt}
+            </p>
             {template.exceptionAdded && (
               <span
                 className={`text-sm mt-2 p-1 px-2 rounded-2xl  bg-gray-200 text-gray-400 `}
@@ -166,9 +187,14 @@ const Step4 = ({ setNavTitle }) => {
                   : " text-gray-800 "
               }`}
             >
-              {template.title}
+              {template.name}
             </h3>
-            <p className="text-sm font-light mt-2 mb-8">{template.content}</p>
+            <p className="text-sm font-light mt-2 mb-8">
+              created at: {template.createdAt}
+            </p>
+            <p className="text-sm font-light mt-2 mb-8">
+              updated at: {template.updatedAt}
+            </p>
             {template.exceptionAdded && (
               <span
                 className={`text-sm mt-2 p-1 px-2 rounded-2xl  bg-gray-200 text-gray-400 `}

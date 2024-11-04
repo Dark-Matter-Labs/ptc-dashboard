@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useUser } from "../../../useUser";
 import Step1 from "./Step1";
-import Step2 from "./Step2";
-import Step3 from "./Step3";
 import Step4 from "./Step4";
 import Step5 from "./Step5";
 import Step6 from "./Step6";
@@ -30,12 +28,6 @@ export default function CreateEvent({ setNavTitle }) {
       setNavTitle={setNavTitle}
       updateEventData={updateEventData}
     />,
-    <Step2
-      key={2}
-      setNavTitle={setNavTitle}
-      updateEventData={updateEventData}
-    />,
-    <Step3 key={3} setNavTitle={setNavTitle} />,
     <Step4 key={4} setNavTitle={setNavTitle} />,
     <Step5 key={5} setNavTitle={setNavTitle} />,
     <Step6 key={6} setNavTitle={setNavTitle} />,

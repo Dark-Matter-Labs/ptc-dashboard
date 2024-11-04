@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { Textarea } from "@headlessui/react";
 import DateTimePicker from "../../../components/Form/DateTimePicker";
 import { EventThemeSelector } from "../../../components/Form/EventThemeSelector";
+import { OrganiserNameEmail } from "../../../components/Form/OrganiserNameEmail";
+import { SpaceEventAccess } from "../../../components/Form/RuleBlocks/SpaceEventAccess";
+import { SetupRequirements } from "../../../components/Form/SetupRequirements";
+import { SpaceEventExpectedAttendeeCount } from "../../../components/Form/RuleBlocks/SpaceEventExpectedAttendeeCount";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
@@ -52,8 +56,18 @@ const Step1 = ({ setNavTitle, updateEventData }) => {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           className="w-full border rounded p-2 min-h-3"
+          placeholder="Enter event description"
         ></Textarea>
       </div>
+      {/* Organizer name and email */}
+      <hr className="my-6" />
+      <OrganiserNameEmail />
+      {/*  Expected attendees */}
+      <SpaceEventExpectedAttendeeCount updateEventData={updateEventData} />
+      {/*  Space access  */}
+      <SpaceEventAccess />
+      {/* SetupRequirements - noise level, equipments */}
+      <SetupRequirements />
     </div>
   );
 };

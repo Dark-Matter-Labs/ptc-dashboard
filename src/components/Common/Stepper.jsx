@@ -4,9 +4,15 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
-function Stepper({ numSteps, stepContents, setNavTitle, handleSubmit }) {
+function Stepper({
+  numSteps,
+  stepContents,
+  setNavTitle,
+  handleSubmit,
+  nextStepBtnText,
+}) {
   let navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState(2);
+  const [currentStep, setCurrentStep] = useState(0);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -146,7 +152,7 @@ function Stepper({ numSteps, stepContents, setNavTitle, handleSubmit }) {
             onClick={nextStep}
             className="w-full px-4 py-2 bg-gray-900 text-white rounded-md"
           >
-            Next
+            {nextStepBtnText}
           </button>
         )}
         {/* In-between steps*/}
@@ -163,7 +169,7 @@ function Stepper({ numSteps, stepContents, setNavTitle, handleSubmit }) {
               onClick={nextStep}
               className="w-full px-4 py-2 bg-gray-900 text-white rounded-md"
             >
-              Next
+              {nextStepBtnText}
             </button>
           </div>
         )}
@@ -198,4 +204,5 @@ Stepper.propTypes = {
   stepContents: PropTypes.array,
   setNavTitle: PropTypes.func,
   handleSubmit: PropTypes.func,
+  nextStepBtnText: PropTypes.string,
 };

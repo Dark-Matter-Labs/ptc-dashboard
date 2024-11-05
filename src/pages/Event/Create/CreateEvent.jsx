@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useUser } from "../../../useUser";
 import Step1 from "./Step1";
-import Step4 from "./Step4";
-import Step5 from "./Step5";
+import Step2 from "./Step2";
+import Step3 from "./Step3";
 import Step6 from "./Step6";
 import Step7 from "./Step7";
 import Stepper from "../../../components//Common/Stepper";
@@ -16,11 +16,18 @@ export default function CreateEvent({ setNavTitle }) {
     ruleId: "5bd2c6a2-855a-4a41-86bd-730e87976b60", // to be replaced with actual spaceId and ruleId
     duration: "", // to be collected from form
     startsAt: "", // to be collected from form
+    templateId: "", // to be collected from form
+    templateRuleBlocks: [],
   });
   const [alertMessage, setAlertMessage] = useState(null);
+  const [nextStepBtnText, setNextStepButtonText] = useState("Next");
   const updateEventData = (newData) => {
     setEventData((prevData) => ({ ...prevData, ...newData }));
   };
+  useEffect(() => {
+    console.log(eventData);
+  }, [eventData]);
+
   // Define the steps content array
   const content = [
     <Step1
@@ -28,8 +35,19 @@ export default function CreateEvent({ setNavTitle }) {
       setNavTitle={setNavTitle}
       updateEventData={updateEventData}
     />,
-    <Step4 key={4} setNavTitle={setNavTitle} />,
-    <Step5 key={5} setNavTitle={setNavTitle} />,
+    <Step2
+      key={2}
+      setNavTitle={setNavTitle}
+      setNextStepButtonText={setNextStepButtonText}
+      updateEventData={updateEventData}
+    />,
+    <Step3
+      key={3}
+      setNavTitle={setNavTitle}
+      setNextStepButtonText={setNextStepButtonText}
+      templateId={eventData.templateId}
+      templateRuleBlocks={eventData.templateRuleBlocks}
+    />,
     <Step6 key={6} setNavTitle={setNavTitle} />,
     <Step7 key={7} setNavTitle={setNavTitle} />,
   ];
@@ -89,6 +107,7 @@ export default function CreateEvent({ setNavTitle }) {
             stepContents={content}
             setNavTitle={setNavTitle}
             handleSubmit={handleSubmit} // Enable form submission at a certain step
+            nextStepBtnText={nextStepBtnText}
           />
         ) : (
           // User is not logged in

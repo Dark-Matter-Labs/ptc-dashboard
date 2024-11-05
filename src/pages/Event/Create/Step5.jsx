@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { PlusIcon, MinusIcon } from "@heroicons/react/solid";
+import {
+  PlusIcon,
+  MinusIcon,
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+} from "@heroicons/react/solid";
 import { useTranslation } from "react-i18next";
 import { ToggleSlider } from "../../../components/Common/ToggleSlider";
 
@@ -108,74 +113,40 @@ const Step5 = ({ setNavTitle }) => {
               <div className="text-left  font-bold text-lg text-gray-900 w-full">
                 {term.title}
               </div>
-              <div>
-                {expandedCards[term.id] ? (
-                  <MinusIcon className="w-5 h-5" />
-                ) : (
-                  <PlusIcon className="w-5 h-5" />
-                )}
-              </div>
-            </button>
 
+              {agreements[term.id]?.agree == null ? (
+                <div>
+                  {expandedCards[term.id] ? (
+                    <MinusIcon className="w-5 h-5" />
+                  ) : (
+                    <PlusIcon className="w-5 h-5" />
+                  )}
+                </div>
+              ) : agreements[term.id].agree ? (
+                <CheckCircleIcon className="w-7 h-7" color="#32B07D" />
+              ) : (
+                <ExclamationCircleIcon className="w-7 h-7" />
+              )}
+            </button>
+            <p># {term.id} </p>
+            <p>
+              Status:{" "}
+              {agreements[term.id]?.agree == null
+                ? "Undecided"
+                : agreements[term.id].agree
+                  ? "Agreed"
+                  : "Disagreed"}
+            </p>
             {/* Content (only visible when expanded) */}
             {expandedCards[term.id] && (
               <div className="mt-2 text-gray-400">
                 <p>{term.content}</p>
 
-                {/* Toggle Buttons */}
-                <div className="mt-4 flex items-center justify-between">
-                  <span className="mr-2 text-gray-700">Agree</span>
-                  <label className="flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={agreements[term.id]?.agree || false}
-                      onChange={() => handleToggle(term.id, true)}
-                      className="sr-only"
-                    />
-                    <div
-                      className={`w-10 h-6 rounded-full transition-colors ${
-                        agreements[term.id]?.agree
-                          ? "bg-green-500"
-                          : "bg-gray-300"
-                      }`}
-                    >
-                      <div
-                        className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform ${
-                          agreements[term.id]?.agree
-                            ? "translate-x-4"
-                            : "translate-x-0"
-                        }`}
-                      ></div>
-                    </div>
-                  </label>
-                  <span className="mr-2 ml-6 text-gray-700">Disagree</span>
-                  <label className="flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={!agreements[term.id]?.agree || false}
-                      onChange={() => handleToggle(term.id, false)}
-                      className="sr-only"
-                    />
-                    <div
-                      className={`w-10 h-6 rounded-full transition-colors ${
-                        !agreements[term.id]?.agree
-                          ? "bg-red-500"
-                          : "bg-gray-300"
-                      }`}
-                    >
-                      <div
-                        className={`w-4 h-4 bg-white rounded-full shadow-md transform transition-transform ${
-                          !agreements[term.id]?.agree
-                            ? "translate-x-4"
-                            : "translate-x-0"
-                        }`}
-                      ></div>
-                    </div>
-                  </label>
-                </div>
-
-                {/*Toggle Slider*/}
-                <ToggleSlider />
+                <ToggleSlider
+                  id={term.id}
+                  handleToggle={handleToggle}
+                  agree={agreements[term.id]?.agree}
+                />
               </div>
             )}
           </div>

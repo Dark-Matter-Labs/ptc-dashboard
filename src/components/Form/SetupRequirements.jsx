@@ -8,7 +8,7 @@ export const SetupRequirements = () => {
       <hr className="my-6" />
 
       {/* Setup Requirements */}
-      <div className="block mb-2 font-semibold">Setup Requirements</div>
+      <div className="block mb-2 font-semibold text-xl">Setup Requirements</div>
       <div id="setup-requirements" className="h-auto flex flex-col gap-4">
         {/* Noise level selector*/}
         <NoiseLevelSelector />

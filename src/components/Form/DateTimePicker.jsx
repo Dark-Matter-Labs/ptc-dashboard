@@ -10,32 +10,16 @@ import {
 } from "date-fns";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/outline";
 import PropTypes from "prop-types";
-
-const DateTimePicker = ({ updateEventData }) => {
+import { fetchAvailability } from "../../api/api";
+const DateTimePicker = ({ updateEventData, spaceId }) => {
   const [eventDateTime, setEventDateTime] = useState(""); // Store event date in ISO strings format
   const [currentMonth, setCurrentMonth] = useState(new Date()); // Default to the current month
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [decided, setDecided] = useState(false);
 
-  // Define non-available days
-  const unAvailableDays = [
-    "2024-09-21",
-    "2024-09-28",
-    "2024-10-10",
-    "2024-10-25",
-    "2024-10-26",
-    "2024-10-27",
-    "2024-11-07",
-    "2024-11-08",
-    "2024-11-09",
-    "2024-12-18",
-    "2024-12-19",
-    "2024-12-20",
-    "2024-12-23",
-    "2024-12-24",
-    "2024-12-25",
-  ];
+  // availability
+  const [availability, setAvailability] = useState([]);
 
   // Function to go to the next month
   const handleNextMonth = (e) => {
@@ -57,23 +41,6 @@ const DateTimePicker = ({ updateEventData }) => {
 
   // Weekday names
   const weekdays = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-
-  // Time slots array
-  const timeSlots = [
-    "09:00-10:00",
-    "10:00-11:00",
-    "11:00-12:00",
-    "12:00-13:00",
-    "13:00-14:00",
-    "14:00-15:00",
-    "15:00-16:00",
-    "16:00-17:00",
-    "17:00-18:00",
-    "18:00-19:00",
-    "19:00-20:00",
-    "20:00-21:00",
-    "21:00-22:00",
-  ];
 
   // Handle date click
   const handleDateClick = (date) => {
@@ -107,6 +74,27 @@ const DateTimePicker = ({ updateEventData }) => {
     setDecided(!decided);
   };
 
+  const loadAvailability = async () => {
+    try {
+      const data = await fetchAvailability(spaceId);
+      const parsedAvailability = data.reduce((acc, slot) => {
+        const date = format(new Date(slot.startTime), "yyyy-MM-dd");
+        const timeSlot =
+          format(new Date(slot.startTime), "HH:mm") +
+          "-" +
+          format(new Date(slot.endTime), "HH:mm");
+
+        if (!acc[date]) acc[date] = [];
+        acc[date].push(timeSlot);
+
+        return acc;
+      }, {});
+      setAvailability(parsedAvailability);
+    } catch (error) {
+      console.error("Error fetching availability:", error);
+    }
+  };
+
   useEffect(() => {
     //update event data when date and time are selected or changed
     updateEventData({
@@ -115,25 +103,31 @@ const DateTimePicker = ({ updateEventData }) => {
     });
   }, [eventDateTime]);
 
+  useEffect(() => {
+    // load availability
+    loadAvailability();
+  }, []);
+
+  useEffect(() => {
+    // load availability
+    console.log("Parsed availability: ", availability);
+  }, [availability]);
+
   return (
     <div className="text-left">
       <hr className="my-6" />
-      {/* Date picker title */}
-      <div className="block mb-2 font-semibold">Date and time</div>
-      {/* Month and Year Display with Navigation */}
+      <div className="block mb-2 font-semibold text-xl">Date and time</div>
       {!decided && (
         <>
           <div className="border rounded">
             <div className="p-2 ">
-              {/* Year */}
               <div className="text-center font-bold text-lg mb-2">
                 {format(currentMonth, "yyyy")}
               </div>
-              {/* Month Navigation */}
               <div className="flex items-center justify-between">
                 <button
-                  className="border rounded w-fit py-2 px-2 items-center"
                   onClick={handlePrevMonth}
+                  className="border rounded w-fit py-2 px-2 items-center"
                 >
                   <ChevronLeftIcon className="w-5 h-5" />
                 </button>
@@ -141,8 +135,8 @@ const DateTimePicker = ({ updateEventData }) => {
                   {format(currentMonth, "MMMM")}
                 </span>
                 <button
-                  className="border rounded w-fit py-2 px-2 items-center"
                   onClick={handleNextMonth}
+                  className="border rounded w-fit py-2 px-2 items-center"
                 >
                   <ChevronRightIcon className="w-5 h-5" />
                 </button>
@@ -150,34 +144,30 @@ const DateTimePicker = ({ updateEventData }) => {
             </div>
             <hr className="my-2" />
 
-            {/* Calendar */}
             <div className="p-2">
-              {/* Weekday Labels */}
               <div className="grid grid-cols-7 text-center font-medium mb-2">
                 {weekdays.map((day) => (
                   <span key={day}>{day}</span>
                 ))}
               </div>
-
-              {/* Days of the Month */}
               <div className="grid grid-cols-7 gap-2 text-center">
                 {daysInMonth.map((date) => {
                   const formattedDate = format(date, "yyyy-MM-dd");
-                  const isUnAvailable = unAvailableDays.includes(formattedDate);
+                  const isAvailable = availability[formattedDate]?.length > 0;
+
                   return (
                     <button
                       key={date}
                       type="button"
-                      // Apply different color if the day is unavailable
                       className={`w-10 h-10 text-center p-2 rounded-full ${
                         formattedDate === selectedDate
-                          ? "bg-[#5570F1] text-white" // Selected date style
-                          : isUnAvailable
-                            ? "bg-white text-gray-300" // unavailable date style
-                            : "bg-white text-black" // Available date styling
+                          ? "bg-[#5570F1] text-white"
+                          : isAvailable
+                            ? "bg-white text-black"
+                            : "bg-white text-gray-300"
                       }`}
                       onClick={() => handleDateClick(date)}
-                      disabled={isUnAvailable} // Optional: disable click for unavailable days
+                      disabled={!isAvailable}
                     >
                       {date.getDate()}
                     </button>
@@ -185,30 +175,16 @@ const DateTimePicker = ({ updateEventData }) => {
                 })}
               </div>
             </div>
-
-            {/* Select Date field & Set Date Button - ignore for now casue not much functionality/value */}
-            {selectedDate && (
-              <>
-                <hr className="" />
-                <div className="p-4 flex justify-between gap-4">
-                  <div className="w-full items-center text-center border-separate bg-gray-600 p-2 px-4 rounded-full text-white">
-                    {format(selectedDate, "dd / MM / yyyy")}
-                  </div>
-                </div>
-              </>
-            )}
           </div>
-          {/* Horizontal Scrollable Time Slots */}
-          <div className="flex overflow-x-auto mt-4 space-x-2 w-full">
-            {timeSlots.map((slot, index) => {
-              // Apply different color if the time slot is selected
-              const isSelected = selectedTime === slot;
-              return (
+
+          {selectedDate && (
+            <div className="flex overflow-x-auto mt-4 space-x-2 w-full">
+              {(availability[selectedDate] || []).map((slot, index) => (
                 <button
                   key={index}
                   type="button"
-                  className={`border p-2 rounded-full min-w-[140px] w-auto text-center ${
-                    isSelected
+                  className={`border p-2 rounded-[12px] min-w-[140px] w-auto text-center ${
+                    selectedTime === slot
                       ? "bg-[#5570F1] text-white"
                       : "bg-white text-black"
                   }`}
@@ -216,24 +192,23 @@ const DateTimePicker = ({ updateEventData }) => {
                 >
                   {slot}
                 </button>
-              );
-            })}
-          </div>
+              ))}
+            </div>
+          )}
         </>
       )}
 
-      {/* Decided Date and Time Display */}
-      {decided && selectedTime && selectedDate && (
+      {decided && selectedDate && selectedTime && (
         <div className="flex justify-between gap-4">
           <button
             onClick={flagDecision}
-            className="w-full items-center text-center border-separate bg-gray-600 p-2 px-4 rounded-xl text-white"
+            className="w-full items-center text-center bg-gray-600 p-2 px-4 rounded-xl text-white"
           >
-            {format(selectedDate, "dd / MM / yyyy")}
+            {selectedDate}
           </button>
           <button
             onClick={flagDecision}
-            className="w-full items-center text-center border-separate bg-gray-600 p-2 px-4 rounded-xl text-white"
+            className="w-full items-center text-center bg-gray-600 p-2 px-4 rounded-xl text-white"
           >
             {selectedTime}
           </button>
@@ -247,4 +222,21 @@ export default DateTimePicker;
 
 DateTimePicker.propTypes = {
   updateEventData: PropTypes.func.isRequired,
+  spaceId: PropTypes.string,
 };
+
+// {
+//   /* Select Date field & Set Date Button - ignore for now casue not much functionality/value */
+// }
+// {
+//   selectedDate && (
+//     <>
+//       <hr className="" />
+//       <div className="p-4 flex justify-between gap-4">
+//         <div className="w-full items-center text-center border-separate bg-gray-600 p-2 px-4 rounded-[12px] text-white">
+//           {format(selectedDate, "dd / MM / yyyy")}
+//         </div>
+//       </div>
+//     </>
+//   );
+// }

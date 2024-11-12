@@ -28,24 +28,29 @@ export const OrganiserNameEmail = () => {
   }, []);
   return (
     <div className="text-left">
-      <label htmlFor="organizer-name" className="block mb-2 font-semibold ">
+      <label
+        htmlFor="organizer-name"
+        className="block mb-2 font-semibold text-xl"
+      >
         Organizer name
       </label>
-      <input
+      <Input
+        disabled
         id="organizer-name"
         type="text"
         value={organizerName}
         onChange={(e) => setOrganizerName(e.target.value)}
         className="w-full border rounded p-2"
         placeholder="Enter event organizer's name"
-      ></input>
+      ></Input>
       <div className="my-6" />
       {/* Email address */}
-      <div htmlFor="email-adress" className="block mb-2 font-semibold">
+      <div htmlFor="email-adress" className="block mb-2 font-semibold text-xl">
         Email address
       </div>
 
       <Input
+        disabled
         id="email-adress"
         value={emailAddress}
         onChange={(e) => setEmailAddress(e.target.value)}

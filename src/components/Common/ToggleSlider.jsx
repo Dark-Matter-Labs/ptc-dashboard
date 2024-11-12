@@ -40,6 +40,7 @@ export const ToggleSlider = ({ id, handleToggle, agree }) => {
           }}
           active={localAgree === true}
           activeTextColor="text-white"
+          // do string manipulation in slider for this kind of BgColor
           activeBgColor="bg-[#32B07D]"
         />
         <Slider

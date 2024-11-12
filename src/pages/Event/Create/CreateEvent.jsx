@@ -8,11 +8,11 @@ import Step7 from "./Step7";
 import Stepper from "../../../components//Common/Stepper";
 import PropTypes from "prop-types";
 
-export default function CreateEvent({ setNavTitle }) {
+export default function CreateEvent({ setNavTitle, spaceId }) {
   const { user } = useUser();
   const [eventData, setEventData] = useState({
     name: "", // to be collected from form
-    spaceId: "69e0351c-b99f-4183-9b44-e5af54067dda",
+    spaceId: spaceId,
     ruleId: "5bd2c6a2-855a-4a41-86bd-730e87976b60", // to be replaced with actual spaceId and ruleId
     duration: "", // to be collected from form
     startsAt: "", // to be collected from form
@@ -20,6 +20,7 @@ export default function CreateEvent({ setNavTitle }) {
     templateRuleBlocks: [],
   });
   const [alertMessage, setAlertMessage] = useState(null);
+  const [currentStep, setCurrentStep] = useState(0);
   const [nextStepBtnText, setNextStepButtonText] = useState("Next");
   const updateEventData = (newData) => {
     setEventData((prevData) => ({ ...prevData, ...newData }));
@@ -32,11 +33,14 @@ export default function CreateEvent({ setNavTitle }) {
   const content = [
     <Step1
       key={1}
+      spaceId={spaceId}
       setNavTitle={setNavTitle}
       updateEventData={updateEventData}
     />,
     <Step2
       key={2}
+      currentStep={currentStep}
+      setCurrentStep={setCurrentStep}
       setNavTitle={setNavTitle}
       setNextStepButtonText={setNextStepButtonText}
       updateEventData={updateEventData}
@@ -103,6 +107,8 @@ export default function CreateEvent({ setNavTitle }) {
         )}
         {user ? (
           <Stepper
+            currentStep={currentStep}
+            setCurrentStep={setCurrentStep}
             numSteps={content.length} // Dynamically calculate steps
             stepContents={content}
             setNavTitle={setNavTitle}
@@ -119,4 +125,5 @@ export default function CreateEvent({ setNavTitle }) {
 }
 CreateEvent.propTypes = {
   setNavTitle: PropTypes.func.isRequired, // Required
+  spaceId: PropTypes.string, //
 };

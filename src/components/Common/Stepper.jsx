@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
 function Stepper({
+  currentStep,
+  setCurrentStep,
   numSteps,
   stepContents,
   setNavTitle,
@@ -12,7 +14,7 @@ function Stepper({
   nextStepBtnText,
 }) {
   let navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState(0);
+
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -165,12 +167,15 @@ function Stepper({
             >
               Back
             </button>
-            <button
-              onClick={nextStep}
-              className="w-full px-4 py-2 bg-gray-900 text-white rounded-md"
-            >
-              {nextStepBtnText}
-            </button>
+            {/* hide Next button in step 1 */}
+            {currentStep != 1 && (
+              <button
+                onClick={nextStep}
+                className="w-full px-4 py-2 bg-gray-900 text-white rounded-md"
+              >
+                {nextStepBtnText}
+              </button>
+            )}
           </div>
         )}
         {/* last step */}
@@ -200,6 +205,8 @@ function Stepper({
 export default Stepper;
 
 Stepper.propTypes = {
+  currentStep: PropTypes.number,
+  setCurrentStep: PropTypes.func,
   numSteps: PropTypes.number,
   stepContents: PropTypes.array,
   setNavTitle: PropTypes.func,

@@ -97,7 +97,7 @@ const Step3 = ({
     const hasDisagreement = Object.values(agreements).some(
       (agreement) => agreement.agree === false
     );
-    setNextStepButtonText(hasDisagreement ? "request exception" : "next");
+    setNextStepButtonText(hasDisagreement ? "Request exception" : "Next");
   }, [agreements, setNextStepButtonText]);
 
   useEffect(() => {

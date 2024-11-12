@@ -9,7 +9,13 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { fetchSpaceEventRules, fetchTopics } from "../../../api/api";
 
-const Step2 = ({ setNavTitle, updateEventData, setNextStepButtonText }) => {
+const Step2 = ({
+  currentStep,
+  setCurrentStep,
+  setNavTitle,
+  updateEventData,
+  setNextStepButtonText,
+}) => {
   const { t } = useTranslation();
   const [rules, setRules] = useState([]);
   const [topics, setTopics] = useState([]);
@@ -30,6 +36,13 @@ const Step2 = ({ setNavTitle, updateEventData, setNextStepButtonText }) => {
       templateRuleBlocks: templateRuleBlocks,
     });
     setSelectedTemplate(templateId);
+    notifyParentToNextStep();
+  };
+
+  const notifyParentToNextStep = () => {
+    const nextStep = currentStep + 1;
+    console.log("Notifying parent to next step: ", nextStep);
+    setCurrentStep(nextStep);
   };
 
   const handleCreateNewTemplate = (e) => {
@@ -235,7 +248,9 @@ const Step2 = ({ setNavTitle, updateEventData, setNextStepButtonText }) => {
 
 export default Step2;
 Step2.propTypes = {
-  setNavTitle: PropTypes.func.isRequired, // Required
+  currentStep: PropTypes.number.isRequired,
+  setCurrentStep: PropTypes.func.isRequired,
+  setNavTitle: PropTypes.func.isRequired,
   updateEventData: PropTypes.func.isRequired,
   setNextStepButtonText: PropTypes.func.isRequired,
 };

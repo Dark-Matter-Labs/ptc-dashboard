@@ -8,8 +8,10 @@ import Profile from "./pages/Profile/Profile";
 import Navbar from "./components/Common/Navbar";
 import CreateEvent from "./pages/Event/Create/CreateEvent";
 import DisplayEvents from "./pages/Event/Display/DisplayEvents";
+import { fetchSpace } from "./api/api";
 
 function App() {
+  const [spaceId, setSpaceId] = useState(null);
   const { t } = useTranslation();
   const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
   const [navTitle, setNavTitle] = useState(t("navigation.navigation-title")); // state to track current step
@@ -30,6 +32,18 @@ function App() {
     setCurrentLanguage(lng);
     localStorage.setItem("i18nextLng", lng); // Store language in localStorage
   };
+  const loadSpaces = async () => {
+    try {
+      const space = await fetchSpace();
+      console.log("the space: ", space);
+      setSpaceId(space.id);
+    } catch (error) {
+      console.error("Error fetching topics: ", error);
+    }
+  };
+  useEffect(() => {
+    loadSpaces();
+  }, []);
   return (
     <div>
       <UserProvider>
@@ -39,11 +53,13 @@ function App() {
           handleChangeLanguage={handleChangeLanguage}
         />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home spaceId={spaceId} />} />
           <Route path="/profile" element={<Profile />} />
           <Route
             path="/event/new"
-            element={<CreateEvent setNavTitle={setNavTitle} />}
+            element={
+              <CreateEvent setNavTitle={setNavTitle} spaceId={spaceId} />
+            }
           />
           <Route path="/events" element={<DisplayEvents />} />
         </Routes>

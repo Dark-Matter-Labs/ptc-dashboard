@@ -99,9 +99,13 @@ export default function CreateEvent({ setNavTitle, spaceId }) {
       return { success: false, message: "Form data is not complete." };
     }
   };
+
+  useEffect(() => {
+    console.log("eventData: ", eventData);
+  }, [eventData]);
   return (
     <form className="text-center pt-2">
-      {spaceId}
+      {/* {spaceId} */}
       <div>
         {alertMessage && (
           <div className="alert alert-success">{alertMessage}</div>

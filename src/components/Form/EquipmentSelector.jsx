@@ -144,4 +144,5 @@ export const EquipmentSelector = ({ spaceId }) => {
 
 EquipmentSelector.propTypes = {
   spaceId: PropTypes.string.isRequired,
+  updateEventData: PropTypes.func.isRequired,
 };

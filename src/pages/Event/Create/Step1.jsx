@@ -73,7 +73,7 @@ const Step1 = ({ setNavTitle, updateEventData, spaceId }) => {
       {/*  Space access  */}
       <SpaceEventAccess />
       {/* SetupRequirements - noise level, equipments */}
-      <SetupRequirements spaceId={spaceId} />
+      <SetupRequirements spaceId={spaceId} updateEventData={updateEventData} />
     </div>
   );
 };

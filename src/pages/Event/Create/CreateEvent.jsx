@@ -101,6 +101,7 @@ export default function CreateEvent({ setNavTitle, spaceId }) {
   };
   return (
     <form className="text-center pt-2">
+      {spaceId}
       <div>
         {alertMessage && (
           <div className="alert alert-success">{alertMessage}</div>

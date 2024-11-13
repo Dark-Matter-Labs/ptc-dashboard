@@ -46,3 +46,13 @@ export const fetchSpace = async () => {
     //returnt the first space
     return data[0];
 }
+
+// Fetch equipment of a space
+export const fetchEquipment = async (spaceId) => {
+    const response = await fetch(`/api/v1/space/equipment?spaceId=${spaceId}`, { credentials: "include" });
+    if (!response.ok) {
+        throw new Error("Error fetching equipment" + `/api/v1/space/equipment?spaceId=${spaceId}`);
+    }
+    const data = await response.json();
+    return data.data;
+}

@@ -1,8 +1,8 @@
 import { NoiseLevelSelector } from "./NoiseLevelSelector";
 import { EquipmentSelector } from "./EquipmentSelector";
 import { FoodAllowedSelector } from "./FoodAllowedSelector";
-
-export const SetupRequirements = () => {
+import PropTypes from "prop-types";
+export const SetupRequirements = ({ spaceId }) => {
   return (
     <div className="text-left">
       <hr className="my-6" />
@@ -13,10 +13,14 @@ export const SetupRequirements = () => {
         {/* Noise level selector*/}
         <NoiseLevelSelector />
         {/* Equipment selector */}
-        <EquipmentSelector />
+        <EquipmentSelector spaceId={spaceId} />
         {/* Food Allowed selector */}
         <FoodAllowedSelector />
       </div>
     </div>
   );
+};
+
+SetupRequirements.propTypes = {
+  spaceId: PropTypes.string.isRequired,
 };

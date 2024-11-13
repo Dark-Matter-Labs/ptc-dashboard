@@ -224,19 +224,3 @@ DateTimePicker.propTypes = {
   updateEventData: PropTypes.func.isRequired,
   spaceId: PropTypes.string,
 };
-
-// {
-//   /* Select Date field & Set Date Button - ignore for now casue not much functionality/value */
-// }
-// {
-//   selectedDate && (
-//     <>
-//       <hr className="" />
-//       <div className="p-4 flex justify-between gap-4">
-//         <div className="w-full items-center text-center border-separate bg-gray-600 p-2 px-4 rounded-[12px] text-white">
-//           {format(selectedDate, "dd / MM / yyyy")}
-//         </div>
-//       </div>
-//     </>
-//   );
-// }

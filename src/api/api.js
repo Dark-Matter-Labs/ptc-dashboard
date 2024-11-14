@@ -1,12 +1,66 @@
 // src/api/api.js
 
-// Fetch rules with target=space_event 
-export const fetchSpaceEventRules = async () => {
+// Fetch all rules with target=space_event 
+export const fetchAllSpaceEventRules = async () => {
     const response = await fetch("/api/v1/rule?target=space_event", {
         credentials: "include",
     });
     if (!response.ok) {
         throw new Error("Error fetching rules");
+    }
+    const data = await response.json();
+    return data.data;
+};
+
+
+// Fetch topics by rule id
+export const fetchTopicsByRuleId = async (ruleId) => {
+    console.log("Fetching topics: ", ruleId);
+    const response = await fetch(`/api/v1/rule/${ruleId}`, {
+        credentials: "include",
+    });
+    if (!response.ok) {
+        throw new Error("Error fetching topics");
+    }
+    const data = await response.json();
+    const topicNames = data.topics.map(t => t.name);
+    return topicNames;
+};
+
+export const fetchSpaceRulesByRelevance = async (spaceId, selectedTopics) => {
+    if (selectedTopics.length == 0) {
+        console.log("No selected topics, return null");
+        return null;
+    }
+    const topicIdsQuery = selectedTopics.map((id) => `topicIds=${id}`).join('&');;
+    console.log(topicIdsQuery);
+    const response = await fetch(`http://localhost/api/v1/space/approved-rule?spaceId=${spaceId}&${topicIdsQuery}`, {
+        credentials: "include",
+    });
+    if (!response.ok) {
+        throw new Error("Error fetching relevant rules");
+    }
+    const data = await response.json();
+    return data.data;
+}
+
+export const fetchSpaceRules = async (spaceId) => {
+    const response = await fetch(`http://localhost/api/v1/space/approved-rule?spaceId=${spaceId}`, {
+        credentials: "include",
+    });
+    if (!response.ok) {
+        throw new Error("Error fetching space rules");
+    }
+    const data = await response.json();
+    return data.data;
+};
+
+export const fetchSpaceRulesSortBy = async (spaceId, sortBy) => {
+    const response = await fetch(`http://localhost/api/v1/space/approved-rule?spaceId=${spaceId}&sortBy=${sortBy}`, {
+        credentials: "include",
+    });
+    if (!response.ok) {
+        throw new Error("Error fetching space rules");
     }
     const data = await response.json();
     return data.data;
@@ -56,3 +110,5 @@ export const fetchEquipment = async (spaceId) => {
     const data = await response.json();
     return data.data;
 }
+
+

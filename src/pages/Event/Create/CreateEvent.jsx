@@ -20,7 +20,7 @@ export default function CreateEvent({ setNavTitle, spaceId }) {
     templateRuleBlocks: [],
   });
   const [alertMessage, setAlertMessage] = useState(null);
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(1);
   const [nextStepBtnText, setNextStepButtonText] = useState("Next");
   const updateEventData = (newData) => {
     setEventData((prevData) => ({ ...prevData, ...newData }));
@@ -39,6 +39,7 @@ export default function CreateEvent({ setNavTitle, spaceId }) {
     />,
     <Step2
       key={2}
+      spaceId={spaceId}
       currentStep={currentStep}
       setCurrentStep={setCurrentStep}
       setNavTitle={setNavTitle}

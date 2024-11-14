@@ -25,6 +25,6 @@ export const SetupRequirements = ({ spaceId, updateEventData }) => {
 };
 
 SetupRequirements.propTypes = {
-  spaceId: PropTypes.string.isRequired,
+  spaceId: PropTypes.string,
   updateEventData: PropTypes.func.isRequired,
 };

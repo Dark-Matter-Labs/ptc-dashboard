@@ -82,7 +82,7 @@ const Step2 = ({
     try {
       // fetch rules
       const data = await fetchSpaceRulesSortBy(spaceId, "popularity");
-      console.log("fetched space rules data, set by popularity: ", data);
+      // console.log("fetched space rules data, set by popularity: ", data);
 
       //asign color
       const rulesWithColors = data.map((rule, index) => ({
@@ -97,7 +97,7 @@ const Step2 = ({
           return { ...rule, topicNames: topicNames };
         })
       );
-      console.log("rulesWithColorsAndTopics: ", rulesWithColorsAndTopics);
+      // console.log("rulesWithColorsAndTopics: ", rulesWithColorsAndTopics);
       // set rules_popular
       setRules_popular(rulesWithColorsAndTopics);
     } catch (error) {
@@ -167,7 +167,7 @@ const Step2 = ({
   }, [selectedTopics]);
 
   useEffect(() => {
-    console.log("rules_popular: ", rules_popular);
+    // console.log("rules_popular: ", rules_popular);
     // Sort by created date (newest first)
     const sortedByDate = [...rules_popular].sort(
       (a, b) => new Date(b.createAt) - new Date(a.createAt)
@@ -349,7 +349,7 @@ const Step2 = ({
       </div>
       <div
         onClick={() => handleCreateNewTemplate()}
-        className="bg-gray-100 w-40 h-40 border rounded-md cursor-pointer flex justify-center items-center"
+        className="bg-gray-100 w-40 h-44 rounded-2xl cursor-pointer flex justify-center items-center"
       >
         <PlusIcon className="w-5 h-5 mx-auto my-auto text-gray-500"></PlusIcon>
       </div>

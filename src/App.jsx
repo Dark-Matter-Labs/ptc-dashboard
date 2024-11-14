@@ -12,6 +12,7 @@ import { fetchSpace } from "./api/api";
 
 function App() {
   const [spaceId, setSpaceId] = useState(null);
+  const [spaceRuleId, setSpaceRuleId] = useState(null);
   const { t } = useTranslation();
   const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
   const [navTitle, setNavTitle] = useState(t("navigation.navigation-title")); // state to track current step
@@ -36,6 +37,7 @@ function App() {
     try {
       const space = await fetchSpace();
       console.log("the space: ", space);
+      setSpaceRuleId(space.ruleId);
       setSpaceId(space.id);
     } catch (error) {
       console.error("Error fetching topics: ", error);
@@ -58,7 +60,11 @@ function App() {
           <Route
             path="/event/new"
             element={
-              <CreateEvent setNavTitle={setNavTitle} spaceId={spaceId} />
+              <CreateEvent
+                setNavTitle={setNavTitle}
+                spaceId={spaceId}
+                spaceRuleId={spaceRuleId}
+              />
             }
           />
           <Route path="/events" element={<DisplayEvents />} />

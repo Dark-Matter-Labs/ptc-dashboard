@@ -3,17 +3,18 @@ import { useUser } from "../../../useUser";
 import Step1 from "./Step1";
 import Step2 from "./Step2";
 import Step3 from "./Step3";
+import Step4 from "./Step4";
 import Step6 from "./Step6";
 import Step7 from "./Step7";
 import Stepper from "../../../components//Common/Stepper";
 import PropTypes from "prop-types";
 
-export default function CreateEvent({ setNavTitle, spaceId }) {
+export default function CreateEvent({ setNavTitle, spaceId, spaceRuleId }) {
   const { user } = useUser();
   const [eventData, setEventData] = useState({
     name: "", // to be collected from form
     spaceId: spaceId,
-    ruleId: "5bd2c6a2-855a-4a41-86bd-730e87976b60", // to be replaced with actual spaceId and ruleId
+    ruleId: spaceRuleId,
     duration: "", // to be collected from form
     startsAt: "", // to be collected from form
     templateId: "", // to be collected from form
@@ -26,7 +27,7 @@ export default function CreateEvent({ setNavTitle, spaceId }) {
     setEventData((prevData) => ({ ...prevData, ...newData }));
   };
   useEffect(() => {
-    console.log(eventData);
+    console.log("event data: ", eventData);
   }, [eventData]);
 
   // Define the steps content array
@@ -48,6 +49,15 @@ export default function CreateEvent({ setNavTitle, spaceId }) {
     />,
     <Step3
       key={3}
+      spaceId={spaceId}
+      spaceRuleId={spaceRuleId}
+      setNavTitle={setNavTitle}
+      setNextStepButtonText={setNextStepButtonText}
+      templateId={eventData.templateId}
+      // templateRuleBlocks={eventData.templateRuleBlocks}
+    />,
+    <Step4
+      key={4}
       setNavTitle={setNavTitle}
       setNextStepButtonText={setNextStepButtonText}
       templateId={eventData.templateId}
@@ -131,5 +141,6 @@ export default function CreateEvent({ setNavTitle, spaceId }) {
 }
 CreateEvent.propTypes = {
   setNavTitle: PropTypes.func.isRequired, // Required
-  spaceId: PropTypes.string, //
+  spaceId: PropTypes.string,
+  spaceRuleId: PropTypes.string,
 };

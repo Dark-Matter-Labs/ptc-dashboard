@@ -4,7 +4,7 @@ import Step1 from "./Step1";
 import Step2 from "./Step2";
 import Step3 from "./Step3";
 import Step4 from "./Step4";
-import Step6 from "./Step6";
+import Step5 from "./Step5";
 import Step7 from "./Step7";
 import Stepper from "../../../components//Common/Stepper";
 import PropTypes from "prop-types";
@@ -21,7 +21,7 @@ export default function CreateEvent({ setNavTitle, spaceId, spaceRuleId }) {
     templateRuleBlocks: [],
   });
   const [alertMessage, setAlertMessage] = useState(null);
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(4);
   const [nextStepBtnText, setNextStepButtonText] = useState("Next");
   const updateEventData = (newData) => {
     setEventData((prevData) => ({ ...prevData, ...newData }));
@@ -64,7 +64,7 @@ export default function CreateEvent({ setNavTitle, spaceId, spaceRuleId }) {
       templateId={eventData.templateId}
       templateRuleBlocks={eventData.templateRuleBlocks}
     />,
-    <Step6 key={6} setNavTitle={setNavTitle} />,
+    <Step5 key={5} setNavTitle={setNavTitle} />,
     <Step7 key={7} setNavTitle={setNavTitle} />,
   ];
 

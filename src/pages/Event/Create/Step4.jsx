@@ -216,7 +216,7 @@ const Step4 = ({
             </p>
             {/* Content (only visible when expanded) */}
             {expandedCards[block.id] && (
-              <div className="mt-2 text-gray-400">
+              <div className="mt-2 text-gray-400 break-all">
                 <p>{block.content}</p>
 
                 <ToggleSlider

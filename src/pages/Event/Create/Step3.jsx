@@ -108,13 +108,13 @@ const Step3 = ({
             {/* Header with Title and Expand/Collapse Icon */}
             <button
               onClick={(e) => toggleExpand(e, block.id)}
-              className="w-full flex gap-2 justify-between items-center text-gray-600 hover:text-gray-900"
+              className="w-full flex gap-2 justify-between place-items-start md:items-center text-gray-600 hover:text-gray-900"
             >
               <div className="text-base sm:text-lg text-gray-900 w-full flex flex-col sm:flex-row gap-2 justify-start">
                 <div className="whitespace-nowrap text-sm bg-gray-200 rounded-full px-4 py-1 self-start">
                   {ruleTypeInterpreter(block.type)}
                 </div>
-                <div className="text-left w-full font-semibold text-lg text-gray-700 break-words">
+                <div className="text-left w-full font-semibold text-lg text-gray-700 break-words break-all">
                   {block.name}
                 </div>
               </div>

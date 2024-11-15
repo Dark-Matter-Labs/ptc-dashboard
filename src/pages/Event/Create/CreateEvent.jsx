@@ -59,6 +59,7 @@ export default function CreateEvent({ setNavTitle, spaceId, spaceRuleId }) {
     <Step4
       key={4}
       setNavTitle={setNavTitle}
+      spaceRuleId={spaceRuleId}
       setNextStepButtonText={setNextStepButtonText}
       templateId={eventData.templateId}
       templateRuleBlocks={eventData.templateRuleBlocks}

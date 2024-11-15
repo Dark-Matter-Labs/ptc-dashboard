@@ -64,7 +64,7 @@ export const ToggleSlider = ({ id, handleToggle, agree }) => {
 };
 
 ToggleSlider.propTypes = {
-  id: PropTypes.number.isRequired,
+  id: PropTypes.string.isRequired,
   handleToggle: PropTypes.func.isRequired,
   agree: PropTypes.bool,
 };

@@ -10,7 +10,12 @@ import { SpaceEventExpectedAttendeeCount } from "../../../components/Form/RuleBl
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
-const Step1 = ({ setNavTitle, updateEventData, spaceId }) => {
+const Step1 = ({
+  setNavTitle,
+  updateEventData,
+  spaceId,
+  permissionEngineAPI,
+}) => {
   const { t } = useTranslation();
   const [eventTitle, setEventTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -43,11 +48,11 @@ const Step1 = ({ setNavTitle, updateEventData, spaceId }) => {
         <hr className="my-6" />
       </div>
       {/* Event theme */}
-      <EventThemeSelector />
+      <EventThemeSelector permissionEngineAPI={permissionEngineAPI} />
       {/* Excluded theme */}
-      <ExcludedThemeDisplay />
+      <ExcludedThemeDisplay permissionEngineAPI={permissionEngineAPI} />
       {/* Date  and time picker */}
-      <DateTimePicker updateEventData={updateEventData} spaceId={spaceId} />
+      <DateTimePicker updateEventData={updateEventData} spaceId={spaceId} permissionEngineAPI={permissionEngineAPI} />
       {/* Event description */}
       <hr className="my-6" />
       <div>
@@ -84,4 +89,5 @@ Step1.propTypes = {
   setNavTitle: PropTypes.func.isRequired,
   updateEventData: PropTypes.func.isRequired,
   spaceId: PropTypes.string,
+  permissionEngineAPI: PropTypes.object,
 };

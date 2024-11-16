@@ -3,6 +3,7 @@ import "../../assets/css/Activity.css";
 import { Button } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
 import Today from "./Today";
+import PropTypes from "prop-types";
 
 const events_data = [
   {
@@ -79,7 +80,7 @@ const past_events_data = [
       "https://images.unsplash.com/photo-1504639725590-34d0984388bd?q=80&w=2274&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
 ];
-export default function Activity() {
+export default function Activity({ spaceId }) {
   const [events, setEvents] = useState([]);
   const [pastEvents, setPastEvents] = useState([]);
   let navigate = useNavigate();
@@ -108,7 +109,7 @@ export default function Activity() {
             <h1>Availability</h1>
             <div>Available to register for activities</div>
             <Button
-              onClick={() => gotoCreateEvent("/event/new")}
+              onClick={() => gotoCreateEvent(`/event/new/${spaceId}`)}
               className="get-permission-button"
             >
               Get permission
@@ -151,3 +152,6 @@ export default function Activity() {
     </section>
   );
 }
+Activity.propTypes = {
+  spaceId: PropTypes.string,
+};

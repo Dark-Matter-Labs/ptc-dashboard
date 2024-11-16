@@ -10,8 +10,8 @@ import {
 } from "date-fns";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/outline";
 import PropTypes from "prop-types";
-import { fetchAvailability } from "../../api/api";
-const DateTimePicker = ({ updateEventData, spaceId }) => {
+
+const DateTimePicker = ({ updateEventData, spaceId, permissionEngineAPI }) => {
   const [eventDateTime, setEventDateTime] = useState(""); // Store event date in ISO strings format
   const [currentMonth, setCurrentMonth] = useState(new Date()); // Default to the current month
   const [selectedDate, setSelectedDate] = useState("");
@@ -76,7 +76,7 @@ const DateTimePicker = ({ updateEventData, spaceId }) => {
 
   const loadAvailability = async () => {
     try {
-      const data = await fetchAvailability(spaceId);
+      const data = await permissionEngineAPI.fetchAvailability(spaceId);
       const parsedAvailability = data.reduce((acc, slot) => {
         const date = format(new Date(slot.startTime), "yyyy-MM-dd");
         const timeSlot =
@@ -223,4 +223,5 @@ export default DateTimePicker;
 DateTimePicker.propTypes = {
   updateEventData: PropTypes.func.isRequired,
   spaceId: PropTypes.string,
+  permissionEngineAPI: PropTypes.object,
 };

@@ -8,10 +8,6 @@ import {
 } from "@heroicons/react/solid";
 import { useTranslation } from "react-i18next";
 import { ToggleSlider } from "../../../components/Common/ToggleSlider";
-import {
-  fetchSpaceRuleBlocksBySpaceRuleId,
-  fetchEventRuleBlocksByEventRuleId,
-} from "../../../api/api";
 // const template_terms = [
 //   {
 //     id: 0,
@@ -73,6 +69,7 @@ const Step4 = ({
   spaceRuleId,
   setNextStepButtonText,
   templateId,
+  permissionEngineAPI,
 }) => {
   const { t } = useTranslation();
   const [expandedCards, setExpandedCards] = useState({ 0: true }); //{0: true, 2: false}
@@ -114,7 +111,10 @@ const Step4 = ({
   const loadSpaceRuleBlocks = async () => {
     // fetch space rules
     try {
-      const data = await fetchSpaceRuleBlocksBySpaceRuleId(spaceRuleId);
+      const data =
+        await permissionEngineAPI.fetchSpaceRuleBlocksBySpaceRuleId(
+          spaceRuleId
+        );
       console.log("space rule blocks: ", data);
       setSpaceRuleBlocks(data);
     } catch (error) {
@@ -125,7 +125,8 @@ const Step4 = ({
   const loadEventRuleBlocks = async () => {
     // fetch evnet rules
     try {
-      const data = await fetchEventRuleBlocksByEventRuleId(templateId);
+      const data =
+        await permissionEngineAPI.fetchEventRuleBlocksByEventRuleId(templateId);
       console.log("event rule blocks: ", data);
       setEventRuleBlocks(data);
     } catch (error) {
@@ -238,6 +239,7 @@ Step4.propTypes = {
   spaceRuleId: PropTypes.string,
   setNextStepButtonText: PropTypes.func.isRequired,
   templateId: PropTypes.string,
+  permissionEngineAPI: PropTypes.object,
 };
 
 export default Step4;

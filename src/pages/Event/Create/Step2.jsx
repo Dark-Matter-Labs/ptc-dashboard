@@ -2,12 +2,6 @@ import { useState, useEffect } from "react";
 import { PlusIcon } from "@heroicons/react/outline";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-import {
-  fetchTopics,
-  fetchSpaceRulesSortBy,
-  fetchSpaceRulesByRelevance,
-  fetchTopicsByRuleId,
-} from "../../../api/api";
 
 const Step2 = ({
   currentStep,
@@ -16,6 +10,7 @@ const Step2 = ({
   setNavTitle,
   updateEventData,
   setNextStepButtonText,
+  permissionEngineAPI,
 }) => {
   const { t } = useTranslation();
 
@@ -81,7 +76,10 @@ const Step2 = ({
 
     try {
       // fetch rules
-      const data = await fetchSpaceRulesSortBy(spaceId, "popularity");
+      const data = await permissionEngineAPI.fetchSpaceApprovedRulesSortBy(
+        spaceId,
+        "popularity"
+      );
       // console.log("fetched space rules data, set by popularity: ", data);
 
       //asign color
@@ -93,7 +91,9 @@ const Step2 = ({
       // assign related topics
       const rulesWithColorsAndTopics = await Promise.all(
         rulesWithColors.map(async (rule) => {
-          const topicNames = await fetchTopicsForRules(rule.id);
+          const topicNames = await fetchTopicsForRules(
+            rule.id
+          );
           return { ...rule, topicNames: topicNames };
         })
       );
@@ -107,7 +107,9 @@ const Step2 = ({
 
   const fetchTopicsForRules = async (ruleId) => {
     try {
-      const topicNames = fetchTopicsByRuleId(ruleId);
+      const topicNames = permissionEngineAPI
+        .fetchTopicsByRuleId(ruleId)
+        .then((res) => res.map((item) => item.name));
       return topicNames;
     } catch (error) {
       console.log("Failed to fetch topics for rules_popular: ", error);
@@ -121,7 +123,10 @@ const Step2 = ({
 
     try {
       // fetch rules
-      const data = await fetchSpaceRulesByRelevance(spaceId, selectedTopics);
+      const data = await permissionEngineAPI.fetchSpaceApprovedRulesByRelevance(
+        spaceId,
+        selectedTopics
+      );
 
       // grab color by rule id from rules_popular
       const relevantRulesWithColors = data.map((rule) => {
@@ -134,7 +139,9 @@ const Step2 = ({
       // assign related topics
       const relevantRulesWithColorsAndTopics = await Promise.all(
         relevantRulesWithColors.map(async (rule) => {
-          const topicNames = await fetchTopicsForRules(rule.id);
+          const topicNames = await fetchTopicsForRules(
+            rule.id
+          );
           return { ...rule, topicNames: topicNames };
         })
       );
@@ -148,7 +155,7 @@ const Step2 = ({
 
   const loadTopics = async () => {
     try {
-      const data = await fetchTopics();
+      const data = await permissionEngineAPI.fetchTopics();
       setTopics(data);
     } catch (error) {
       console.error("Error fetching topics: ", error);
@@ -358,6 +365,7 @@ const Step2 = ({
 };
 
 export default Step2;
+
 Step2.propTypes = {
   currentStep: PropTypes.number.isRequired,
   spaceId: PropTypes.string,
@@ -365,4 +373,5 @@ Step2.propTypes = {
   setNavTitle: PropTypes.func.isRequired,
   updateEventData: PropTypes.func.isRequired,
   setNextStepButtonText: PropTypes.func.isRequired,
+  permissionEngineAPI: PropTypes.object,
 };

@@ -1,3 +1,4 @@
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useUser } from "../../../useUser";
 import Step1 from "./Step1";
@@ -9,25 +10,71 @@ import Step7 from "./Step7";
 import Stepper from "../../../components//Common/Stepper";
 import PropTypes from "prop-types";
 
-export default function CreateEvent({ setNavTitle, spaceId, spaceRuleId }) {
+export default function CreateEvent({
+  setNavTitle,
+  permissionEngineAPI,
+  currentLanguage,
+}) {
+  const navigate = useNavigate();
+  let { spaceId } = useParams();
+
   const { user } = useUser();
+  const [spaceRuleId, setSpaceRuleId] = useState(null);
+  const [eventRuleData, setEventRuleData] = useState({
+    id: "",
+    name: "", // to be collected from form
+    spaceId: spaceId,
+    ruleBlocks: [],
+  });
   const [eventData, setEventData] = useState({
     name: "", // to be collected from form
     spaceId: spaceId,
-    ruleId: spaceRuleId,
+    ruleId: "",
     duration: "", // to be collected from form
     startsAt: "", // to be collected from form
-    templateId: "", // to be collected from form
-    templateRuleBlocks: [],
+    externalServiceId: "",
+    details: "",
+    link: "",
+    callbackLink: "",
+    images: [],
+    topicIds: [],
+  });
+  const [permissionRequestData, setPermissionRequestData] = useState({
+    spaceId: spaceId,
+    spaceRuleId: spaceRuleId,
+    spaceEventId: "",
+    spaceEventRuleId: "",
   });
   const [alertMessage, setAlertMessage] = useState(null);
-  const [currentStep, setCurrentStep] = useState(4);
+  const [currentStep, setCurrentStep] = useState(0);
   const [nextStepBtnText, setNextStepButtonText] = useState("Next");
+  const updateEventRuleData = (newData) => {
+    setEventRuleData((prevData) => ({ ...prevData, ...newData }));
+  };
   const updateEventData = (newData) => {
     setEventData((prevData) => ({ ...prevData, ...newData }));
   };
+  const updatePermissionRequestData = (newData) => {
+    setPermissionRequestData((prevData) => ({ ...prevData, ...newData }));
+  };
+
+  const loadSpaceRule = async () => {
+    try {
+      if (!spaceId) {
+        navigate(`/`);
+      }
+      const spaceRule = await permissionEngineAPI.fetchSpaceRule(spaceId);
+      console.log("the spaceRule: ", spaceRule);
+
+      setSpaceRuleId(spaceRule.id);
+    } catch (error) {
+      console.error(`Error fetching space rule`, error);
+    }
+  };
+
   useEffect(() => {
     console.log("event data: ", eventData);
+    loadSpaceRule();
   }, [eventData]);
 
   // Define the steps content array
@@ -36,7 +83,10 @@ export default function CreateEvent({ setNavTitle, spaceId, spaceRuleId }) {
       key={1}
       spaceId={spaceId}
       setNavTitle={setNavTitle}
+      updateEventRuleData={updateEventRuleData}
       updateEventData={updateEventData}
+      updatePermissionRequestData={updatePermissionRequestData}
+      permissionEngineAPI={permissionEngineAPI}
     />,
     <Step2
       key={2}
@@ -45,7 +95,10 @@ export default function CreateEvent({ setNavTitle, spaceId, spaceRuleId }) {
       setCurrentStep={setCurrentStep}
       setNavTitle={setNavTitle}
       setNextStepButtonText={setNextStepButtonText}
+      updateEventRuleData={updateEventRuleData}
       updateEventData={updateEventData}
+      updatePermissionRequestData={updatePermissionRequestData}
+      permissionEngineAPI={permissionEngineAPI}
     />,
     <Step3
       key={3}
@@ -54,6 +107,7 @@ export default function CreateEvent({ setNavTitle, spaceId, spaceRuleId }) {
       setNavTitle={setNavTitle}
       setNextStepButtonText={setNextStepButtonText}
       templateId={eventData.templateId}
+      permissionEngineAPI={permissionEngineAPI}
       // templateRuleBlocks={eventData.templateRuleBlocks}
     />,
     <Step4
@@ -63,9 +117,18 @@ export default function CreateEvent({ setNavTitle, spaceId, spaceRuleId }) {
       setNextStepButtonText={setNextStepButtonText}
       templateId={eventData.templateId}
       templateRuleBlocks={eventData.templateRuleBlocks}
+      permissionEngineAPI={permissionEngineAPI}
     />,
-    <Step5 key={5} setNavTitle={setNavTitle} />,
-    <Step7 key={7} setNavTitle={setNavTitle} />,
+    <Step5
+      key={5}
+      setNavTitle={setNavTitle}
+      permissionEngineAPI={permissionEngineAPI}
+    />,
+    <Step7
+      key={7}
+      setNavTitle={setNavTitle}
+      permissionEngineAPI={permissionEngineAPI}
+    />,
   ];
 
   const handleSubmit = async () => {
@@ -140,8 +203,9 @@ export default function CreateEvent({ setNavTitle, spaceId, spaceRuleId }) {
     </form>
   );
 }
+
 CreateEvent.propTypes = {
   setNavTitle: PropTypes.func.isRequired, // Required
-  spaceId: PropTypes.string,
-  spaceRuleId: PropTypes.string,
+  permissionEngineAPI: PropTypes.object,
+  currentLanguage: PropTypes.string,
 };

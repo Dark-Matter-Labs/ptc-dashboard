@@ -29,6 +29,7 @@ export default function Navbar({
   navTitle,
   currentLanguage,
   handleChangeLanguage,
+  permissionEngineAPI,
 }) {
   const { user, setUser } = useUser();
   const { t } = useTranslation();

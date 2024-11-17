@@ -1,26 +1,26 @@
 import { useState, useEffect } from "react";
-import {
-  SearchIcon,
-  PlusIcon,
-  AdjustmentsIcon,
-} from "@heroicons/react/outline";
-import { format } from "date-fns";
+import { PlusIcon } from "@heroicons/react/outline";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-import { fetchSpaceEventRules, fetchTopics } from "../../../api/api";
 
-const Step2 = ({ setNavTitle, updateEventData, setNextStepButtonText }) => {
+const Step2 = ({
+  currentStep,
+  spaceId,
+  setCurrentStep,
+  setNavTitle,
+  updateEventData,
+  setNextStepButtonText,
+  permissionEngineAPI,
+}) => {
   const { t } = useTranslation();
-  const [rules, setRules] = useState([]);
-  const [topics, setTopics] = useState([]);
-  const [templateOfRules_newest, setTemplateOfRules_newest] = useState([]);
-  const [templateOfRules_popular, setTemplateOfRules_popular] = useState([]);
-  const [selectedTemplate, setSelectedTemplate] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
 
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value.toLowerCase());
-  };
+  const [rules_relevent, setRules_relevant] = useState([]);
+  const [rules_newest, setRules_newest] = useState([]);
+  const [rules_popular, setRules_popular] = useState([]);
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [topics, setTopics] = useState([]);
+  const [selectedTopics, setSelectedTopics] = useState([]);
+
   const handleSelectTemplate = (templateId, templateRuleBlocks) => {
     console.log("Selected template: ", templateId);
     console.log("Selected template rule block: ", templateRuleBlocks);
@@ -30,6 +30,13 @@ const Step2 = ({ setNavTitle, updateEventData, setNextStepButtonText }) => {
       templateRuleBlocks: templateRuleBlocks,
     });
     setSelectedTemplate(templateId);
+    notifyParentToNextStep();
+  };
+
+  const notifyParentToNextStep = () => {
+    const nextStep = currentStep + 1;
+    console.log("Notifying parent to next step: ", nextStep);
+    setCurrentStep(nextStep);
   };
 
   const handleCreateNewTemplate = (e) => {
@@ -45,47 +52,135 @@ const Step2 = ({ setNavTitle, updateEventData, setNextStepButtonText }) => {
     return `rgb(${Math.floor(r * 0.8)}, ${Math.floor(g * 0.8)}, ${Math.floor(b * 0.8)})`;
   };
 
-  const loadRules = async () => {
+  const handleTopicSelection = (topicID) => {
+    setSelectedTopics((prevTopics) =>
+      prevTopics.includes(topicID)
+        ? prevTopics.filter((id) => id !== topicID)
+        : [...prevTopics, topicID]
+    );
+  };
+
+  // Fetch and assign colors to rules by popularity
+  const loadRulesByPopularity = async () => {
     // Define color array
     const colors = [
-      "#3b3a43",
-      "#a6977a",
-      "#8da695",
-      "#7e96a3",
-      "#988fae",
-      "#a38890",
-      "#736f6d",
+      "#f8eafa",
+      "#dff7f5",
+      "#f5f7df",
+      "#ffeede",
+      "#dfe2f7",
+      "#e3edf0",
+      "#dfeaf7",
+      "#f7dfe0",
     ];
 
     try {
-      // ?target=space_event
-      const data = await fetchSpaceEventRules();
-      console.log("fetched data: ", data);
-      const rulesWithExtras = data.map((rule, index) => ({
+      // fetch rules
+      const data = await permissionEngineAPI.fetchSpaceApprovedRulesSortBy(
+        spaceId,
+        "popularity"
+      );
+      // console.log("fetched space rules data, set by popularity: ", data);
+
+      //asign color
+      const rulesWithColors = data.map((rule, index) => ({
         ...rule,
-        popularity: Math.floor(Math.random() * 11), // Random integer between 0 and 10
         color: colors[index % colors.length], // Cycle through colors array
       }));
-      console.log("Enhanced rule data: ", rulesWithExtras);
-      setRules(rulesWithExtras);
+
+      // assign related topics
+      const rulesWithColorsAndTopics = await Promise.all(
+        rulesWithColors.map(async (rule) => {
+          const topicNames = await fetchTopicsForRules(
+            rule.id
+          );
+          return { ...rule, topicNames: topicNames };
+        })
+      );
+      // console.log("rulesWithColorsAndTopics: ", rulesWithColorsAndTopics);
+      // set rules_popular
+      setRules_popular(rulesWithColorsAndTopics);
     } catch (error) {
-      console.error("Error fetching templates: ", error);
+      console.error("Error setting rules by popular: ", error);
+    }
+  };
+
+  const fetchTopicsForRules = async (ruleId) => {
+    try {
+      const topicNames = permissionEngineAPI
+        .fetchTopicsByRuleId(ruleId)
+        .then((res) => res.map((item) => item.name));
+      return topicNames;
+    } catch (error) {
+      console.log("Failed to fetch topics for rules_popular: ", error);
+      return [];
+    }
+  };
+  // Load rules by relevance and match colors with rules in rules_popular
+  const loadRulesByRelevance = async () => {
+    // return if topic not selected
+    if (selectedTopics.length == 0) return;
+
+    try {
+      // fetch rules
+      const data = await permissionEngineAPI.fetchSpaceApprovedRulesByRelevance(
+        spaceId,
+        selectedTopics
+      );
+
+      // grab color by rule id from rules_popular
+      const relevantRulesWithColors = data.map((rule) => {
+        const popularRule = rules_popular.find(
+          (popular) => popular.id === rule.id
+        );
+        return popularRule ? { ...rule, color: popularRule.color } : rule;
+      });
+
+      // assign related topics
+      const relevantRulesWithColorsAndTopics = await Promise.all(
+        relevantRulesWithColors.map(async (rule) => {
+          const topicNames = await fetchTopicsForRules(
+            rule.id
+          );
+          return { ...rule, topicNames: topicNames };
+        })
+      );
+
+      // set rules_relevant
+      setRules_relevant(relevantRulesWithColorsAndTopics);
+    } catch (error) {
+      console.error("Error setting rules by relevance: ", error);
     }
   };
 
   const loadTopics = async () => {
     try {
-      const data = await fetchTopics();
+      const data = await permissionEngineAPI.fetchTopics();
       setTopics(data);
     } catch (error) {
       console.error("Error fetching topics: ", error);
     }
   };
+
   useEffect(() => {
     setNavTitle(t("create-event.navigation-title"));
-    loadRules();
+    loadRulesByPopularity();
     loadTopics();
   }, []);
+
+  useEffect(() => {
+    // console.log("selectedTopics: ", selectedTopics);
+    loadRulesByRelevance();
+  }, [selectedTopics]);
+
+  useEffect(() => {
+    // console.log("rules_popular: ", rules_popular);
+    // Sort by created date (newest first)
+    const sortedByDate = [...rules_popular].sort(
+      (a, b) => new Date(b.createAt) - new Date(a.createAt)
+    );
+    setRules_newest(sortedByDate);
+  }, [rules_popular]);
 
   useEffect(() => {
     if (selectedTemplate) {
@@ -93,71 +188,83 @@ const Step2 = ({ setNavTitle, updateEventData, setNextStepButtonText }) => {
     }
   }, [selectedTemplate]);
 
-  // Sort templates by created date and popularity
-  useEffect(() => {
-    // Sort by created date (newest first)
-    const sortedByDate = [...rules].sort(
-      (a, b) => new Date(b.createAt) - new Date(a.createAt)
-    );
-    setTemplateOfRules_newest(sortedByDate);
-
-    // Sort by popularity (highest first)
-    const sortedByPopularity = [...rules].sort(
-      (a, b) => b.popularity - a.popularity
-    );
-    setTemplateOfRules_popular(sortedByPopularity);
-  }, [rules]);
   return (
     <div className="p-4 text-left">
       {/* Choose Template */}
       <div id="choose-template" className="text-2xl block mb-4 font-semibold ">
         Browse event templates
       </div>
-
-      <p className="mb-4">
-        Search and select from a variety of event templates with pre-set rules
-        to suit your event, or customize as needed.
-      </p>
-      <div className="flex flex-row w-full justify-between gap-2">
-        <div className="relative w-full">
-          <SearchIcon className="w-5 h-5 absolute left-3 top-2.5 text-gray-400" />
-          <input
-            id="search-template"
-            type="text"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            className="w-full border rounded-md p-2 pl-10"
-            placeholder="Search"
-          />
-        </div>
-        <button className="bg-slate-200 flex items-center flex-row gap-2 px-4 w-max rounded">
-          <AdjustmentsIcon className="w-5 text-gray-600 rotate-90" />
-          <span className="">Filter</span>
-        </button>
-      </div>
       <div className="flex overflow-x-auto mt-4 space-x-4 w-full">
         {topics.map((topic) => {
           return (
             <div
-              className="rounded-full px-4 py-2 bg-slate-200 w-max"
+              className={`rounded-full px-4 py-2 w-max cursor-pointer ${selectedTopics.includes(topic.id) ? "bg-gray-400" : "bg-slate-200"}`}
               key={topic.id}
+              onClick={() => handleTopicSelection(topic.id)}
             >
               {topic.name}
             </div>
           );
         })}
       </div>
+      {rules_relevent.length != 0 && (
+        <>
+          <div id="newest-template" className="mt-14 block mb-2 font-semibold ">
+            Most relevant
+          </div>
+          <div className="flex overflow-x-auto space-x-4 w-full py-2">
+            {rules_relevent.map((template) => (
+              <div
+                key={template.id}
+                onClick={() =>
+                  handleSelectTemplate(template.id, template.ruleBlocks)
+                }
+                className={`text-gray-500 flex flex-col justify-between gap-2 flex-shrink-0 w-40 rounded-[20px] p-4 cursor-pointer 
+            }`}
+                style={{ backgroundColor: template.color || "#000" }}
+              >
+                <div>
+                  <h3 className="text-base font-semibold pb-2 text-gray-600">
+                    {template.name}
+                  </h3>
+                  <div className="text-xs pb-4">
+                    Rules for hosting a live podcast event, including noise
+                    limits, seating setup, equipment
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2">
+                  {template.topicNames.map((topic, index) => (
+                    <div
+                      className="bg-white rounded-full text-sm w-fit p-1 px-2 text-gray-700"
+                      key={index}
+                    >
+                      {topic}
+                    </div>
+                  ))}
+                </div>
+                {template.exceptionAdded && (
+                  <span
+                    className={`text-sm mt-2 p-1 px-2 rounded-2xl  bg-gray-200 text-gray-400 `}
+                  >
+                    Exception added
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
       <div id="newest-template" className="mt-14 block mb-2 font-semibold ">
         Newest
       </div>
       <div className="flex overflow-x-auto space-x-4 w-full py-2">
-        {templateOfRules_newest.map((template) => (
+        {rules_newest.map((template) => (
           <div
             key={template.id}
             onClick={() =>
               handleSelectTemplate(template.id, template.ruleBlocks)
             }
-            className={`text-white flex-shrink-0 w-40 h-40 border rounded-md p-4 cursor-pointer 
+            className={`text-gray-500 flex flex-col justify-between gap-2 flex-shrink-0 w-40 rounded-[20px] p-4 cursor-pointer 
             }`}
             style={{
               backgroundColor:
@@ -166,13 +273,25 @@ const Step2 = ({ setNavTitle, updateEventData, setNextStepButtonText }) => {
                   : template.color,
             }}
           >
-            <h3 className="font-bold text-sm">{template.name}</h3>
-            <p className="text-sm font-light mt-2 ">
-              Popularity: {template.popularity}
-            </p>
-            <p className="text-sm font-light mt-2 ">
-              created at: {format(template.createdAt, "yyyy-MM-dd HH:mm:ss")}
-            </p>
+            <div>
+              <h3 className="text-base font-semibold pb-2 text-gray-600">
+                {template.name}
+              </h3>
+              <div className="text-xs pb-4">
+                Rules for hosting a live podcast event, including noise limits,
+                seating setup, equipment
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              {template.topicNames.map((topic, index) => (
+                <div
+                  className="bg-white rounded-full text-sm w-fit p-1 px-2"
+                  key={index}
+                >
+                  {topic}
+                </div>
+              ))}
+            </div>
             {template.exceptionAdded && (
               <span
                 className={`text-sm mt-2 p-1 px-2 rounded-2xl  bg-gray-200 text-gray-400 `}
@@ -188,13 +307,13 @@ const Step2 = ({ setNavTitle, updateEventData, setNextStepButtonText }) => {
         Most popular
       </div>
       <div className="flex overflow-x-auto space-x-4 w-full py-2">
-        {templateOfRules_popular.map((template) => (
+        {rules_popular.map((template) => (
           <div
             key={template.id}
             onClick={() =>
               handleSelectTemplate(template.id, template.ruleBlocks)
             }
-            className="text-white flex-shrink-0 w-40 h-40 border rounded-md p-4 cursor-pointer"
+            className="text-gray-500 flex flex-col justify-between gap-2  flex-shrink-0 w-40 h-fit rounded-[20px] p-4 cursor-pointer"
             style={{
               backgroundColor:
                 selectedTemplate === template.id
@@ -202,13 +321,25 @@ const Step2 = ({ setNavTitle, updateEventData, setNextStepButtonText }) => {
                   : template.color,
             }}
           >
-            <h3 className="font-bold text-sm">{template.name}</h3>
-            <p className="text-sm font-light mt-2">
-              Popularity: {template.popularity}
-            </p>
-            <p className="text-sm font-light mt-2">
-              created at: {format(template.createdAt, "yyyy/MM/dd HH:mm:ss")}
-            </p>
+            <div>
+              <h3 className="text-base font-semibold pb-2 text-gray-600">
+                {template.name}
+              </h3>
+              <div className="text-xs pb-4">
+                Rules for hosting a live podcast event, including noise limits,
+                seating setup, equipment
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              {template.topicNames.map((topic, index) => (
+                <div
+                  className="bg-white rounded-full text-sm w-fit p-1 px-2"
+                  key={index}
+                >
+                  {topic}
+                </div>
+              ))}
+            </div>
             {template.exceptionAdded && (
               <span
                 className={`text-sm mt-2 p-1 px-2 rounded-2xl  bg-gray-200 text-gray-400 `}
@@ -225,7 +356,7 @@ const Step2 = ({ setNavTitle, updateEventData, setNextStepButtonText }) => {
       </div>
       <div
         onClick={() => handleCreateNewTemplate()}
-        className="bg-gray-100 w-40 h-40 border rounded-md cursor-pointer flex justify-center items-center"
+        className="bg-gray-100 w-40 h-44 rounded-2xl cursor-pointer flex justify-center items-center"
       >
         <PlusIcon className="w-5 h-5 mx-auto my-auto text-gray-500"></PlusIcon>
       </div>
@@ -234,8 +365,13 @@ const Step2 = ({ setNavTitle, updateEventData, setNextStepButtonText }) => {
 };
 
 export default Step2;
+
 Step2.propTypes = {
-  setNavTitle: PropTypes.func.isRequired, // Required
+  currentStep: PropTypes.number.isRequired,
+  spaceId: PropTypes.string,
+  setCurrentStep: PropTypes.func.isRequired,
+  setNavTitle: PropTypes.func.isRequired,
   updateEventData: PropTypes.func.isRequired,
   setNextStepButtonText: PropTypes.func.isRequired,
+  permissionEngineAPI: PropTypes.object,
 };

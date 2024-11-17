@@ -1,27 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RadioGroup, Radio } from "@headlessui/react";
-import {
-  ChipIcon,
-  XCircleIcon,
-  HeartIcon,
-  LightBulbIcon,
-  ChatAlt2Icon,
-  ColorSwatchIcon,
-} from "@heroicons/react/solid";
-const eventThemes = [
-  { name: "Technology", icon: ChipIcon },
-  { name: "Health", icon: HeartIcon },
-  { name: "Business", icon: LightBulbIcon },
-  { name: "Education", icon: ChatAlt2Icon },
-  { name: "Art", icon: ColorSwatchIcon },
-];
+import { XCircleIcon } from "@heroicons/react/solid";
+import PropTypes from "prop-types";
 
-export const EventThemeSelector = () => {
-  const [selectedTopic, setSelectedTopic] = useState(eventThemes[0]);
+export const EventThemeSelector = ({ permissionEngineAPI }) => {
+  const [topics, setTopics] = useState([]);
+  const [selectedTopic, setSelectedTopic] = useState(null);
+  const loadTopics = async () => {
+    try {
+      const data = await permissionEngineAPI.fetchTopics();
+      setTopics(data);
+    } catch (error) {
+      console.error("Error fetching topics: ", error);
+    }
+  };
+
+  useEffect(() => {
+    loadTopics();
+  }, []);
+
+  useEffect(() => {
+    if (topics) {
+      console.log("the topics: ", topics);
+    }
+  }, [topics]);
 
   return (
     <div className="text-left">
-      <div htmlFor="themes" className="block mb-2 font-semibold ">
+      <div htmlFor="themes" className="block mb-2 font-semibold text-xl">
         Themes
       </div>
       <RadioGroup
@@ -31,7 +37,7 @@ export const EventThemeSelector = () => {
         onChange={setSelectedTopic}
       >
         <div className="py-1 flex flex-wrap gap-2">
-          {eventThemes.map((topic) => (
+          {topics.map((topic) => (
             <Radio key={topic.name} value={topic}>
               {({ active, checked }) => (
                 <div
@@ -43,7 +49,7 @@ export const EventThemeSelector = () => {
                     }
                     ${active ? "ring-2  ring-blue-500" : ""}`}
                 >
-                  <topic.icon className="size-4 mr-2" />
+                  <div className="size-4 mr-1">{topic.icon}</div>
                   <span>{topic.name}</span>
                   {checked && (
                     <button
@@ -64,4 +70,8 @@ export const EventThemeSelector = () => {
       </RadioGroup>
     </div>
   );
+};
+
+EventThemeSelector.propTypes = {
+  permissionEngineAPI: PropTypes.object,
 };

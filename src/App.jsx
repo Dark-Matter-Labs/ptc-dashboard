@@ -1,24 +1,28 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { UserProvider } from "./UserProvider";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import i18n from "./i18n";
-import Home from "./pages/Home/Home";
+import SpaceDashboard from "./pages/Space/SpaceDashboard";
 import Profile from "./pages/Profile/Profile";
 import Navbar from "./components/Common/Navbar";
 import CreateEvent from "./pages/Event/Create/CreateEvent";
 import DisplayEvents from "./pages/Event/Display/DisplayEvents";
+import { API } from "./lib/PermissionEngine";
 
 function App() {
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
   const [navTitle, setNavTitle] = useState(t("navigation.navigation-title")); // state to track current step
   const location = useLocation();
+  const permissionEngineAPI = new API();
 
   // Reset navTitle when navigating back to "/"
   useEffect(() => {
     if (location.pathname === "/") {
       setNavTitle(t("navigation.navigation-title")); // Reset to default when on home page
+      navigate("/space/default");
     } else if (location.pathname === "/event/new") {
       console.log("at route /event/new, ", t("create-event.navigation-title"));
       setNavTitle(t("create-event.navigation-title")); // Reset to default when on home page
@@ -30,6 +34,7 @@ function App() {
     setCurrentLanguage(lng);
     localStorage.setItem("i18nextLng", lng); // Store language in localStorage
   };
+
   return (
     <div>
       <UserProvider>
@@ -37,15 +42,46 @@ function App() {
           navTitle={navTitle}
           currentLanguage={currentLanguage}
           handleChangeLanguage={handleChangeLanguage}
+          permissionEngineAPI={permissionEngineAPI}
         />
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
           <Route
-            path="/event/new"
-            element={<CreateEvent setNavTitle={setNavTitle} />}
+            path="/space/:spaceId"
+            element={
+              <SpaceDashboard
+                permissionEngineAPI={permissionEngineAPI}
+                currentLanguage={currentLanguage}
+              />
+            }
           />
-          <Route path="/events" element={<DisplayEvents />} />
+          <Route
+            path="/profile"
+            element={
+              <Profile
+                permissionEngineAPI={permissionEngineAPI}
+                currentLanguage={currentLanguage}
+              />
+            }
+          />
+          <Route
+            path="/profile/events"
+            element={
+              <DisplayEvents
+                permissionEngineAPI={permissionEngineAPI}
+                currentLanguage={currentLanguage}
+              />
+            }
+          />
+          <Route
+            path="/event/new/:spaceId"
+            element={
+              <CreateEvent
+                setNavTitle={setNavTitle}
+                permissionEngineAPI={permissionEngineAPI}
+                currentLanguage={currentLanguage}
+              />
+            }
+          />
         </Routes>
       </UserProvider>
     </div>

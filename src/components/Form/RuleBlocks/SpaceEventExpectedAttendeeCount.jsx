@@ -23,7 +23,10 @@ export const SpaceEventExpectedAttendeeCount = ({ updateEventData }) => {
     <div className="text-left">
       <hr className="my-6" />
       <div>
-        <div htmlFor="expected-attendee" className="block mb-2 font-semibold ">
+        <div
+          htmlFor="expected-attendee"
+          className="block mb-2 font-semibold text-xl"
+        >
           Expected attendees
         </div>
         <div

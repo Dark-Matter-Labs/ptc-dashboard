@@ -257,7 +257,7 @@ export class API {
   };
 
   fetchSpaceRule = async (spaceId) => {
-    const response = await this.get("space/:spaceId", {
+    const response = await this.get("rule/space/:spaceId", {
       spaceId,
     });
 

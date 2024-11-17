@@ -198,14 +198,14 @@ export default function Navbar({
                     src={
                       user?.picture
                         ? user.picture
-                        : "https://raw.githubusercontent.com/Dark-Matter-Labs/ptc-dashboard/main/src/assets/image/user-profile.png"
+                        : "https://permissioning-the-city.s3.ap-northeast-2.amazonaws.com/0e92e6a3-56b8-40f7-ac9a-7688bc36ed21_user-profile.png"
                     }
                     className="hidden md:block h-12 w-12 flex-none rounded-full bg-gray-50"
                     onError={(e) => {
                       console.log("picture error: ", e);
                       // Fallback image if the user picture fails to load
                       e.target.src =
-                        "https://raw.githubusercontent.com/Dark-Matter-Labs/ptc-dashboard/main/src/assets/image/user-profile.png";
+                        "https://permissioning-the-city.s3.ap-northeast-2.amazonaws.com/0e92e6a3-56b8-40f7-ac9a-7688bc36ed21_user-profile.png";
                     }}
                   />
                   <div className="text-left hidden lg:block md:block">
@@ -248,7 +248,7 @@ export default function Navbar({
                       alt="User"
                       src={
                         user?.picture ||
-                        "https://raw.githubusercontent.com/Dark-Matter-Labs/ptc-dashboard/main/src/assets/image/user-profile.png"
+                        "https://permissioning-the-city.s3.ap-northeast-2.amazonaws.com/0e92e6a3-56b8-40f7-ac9a-7688bc36ed21_user-profile.png"
                       }
                       className="h-16 w-16 rounded-full bg-gray-100"
                     />

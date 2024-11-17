@@ -37,6 +37,7 @@ export default function SpaceDashboard({
       }
     } catch (error) {
       console.error("Error fetching space: ", error);
+      navigate("/");
     }
   };
 

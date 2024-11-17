@@ -3,6 +3,7 @@ import Map, { Marker } from "react-map-gl";
 import mapboxgl from "mapbox-gl";
 import PropTypes from "prop-types";
 import { accessToken } from "../../lib/mapbox";
+import { LocationMarkerIcon } from "@heroicons/react/solid";
 
 mapboxgl.accessToken = accessToken;
 
@@ -39,7 +40,7 @@ export const MapBox = ({ option, location, currentLanguage }) => {
         latitude={Number(location?.latitude ?? defaultLocation.latitude)}
         longitude={Number(location?.longitude ?? defaultLocation.longitude)}
       >
-        <div style={{ color: "red", fontSize: "x-large" }}>📍</div>
+        <LocationMarkerIcon className="h-12 w-12 white mr-1 text-red-600"/>
       </Marker>
     </Map>
   );

@@ -10,7 +10,6 @@ import PropTypes from "prop-types";
 import * as Type from "../../lib/PermissionEngine/type";
 import { MapBox } from "../../components/Common/MapBox";
 import dayjs from "dayjs";
-// import { useEffect, useState } from "react";
 
 export default function Space({ space, spaceOwner, currentLanguage }) {
   const location = {
@@ -25,6 +24,9 @@ export default function Space({ space, spaceOwner, currentLanguage }) {
     (item) => item.type === Type.SpaceImageType.cover
   )?.link;
 
+  const fallbackImage =
+    "https://permissioning-the-city.s3.ap-northeast-2.amazonaws.com/0e92e6a3-56b8-40f7-ac9a-7688bc36ed21_user-profile.png";
+
   function capitalizeFirstLetter(str) {
     if (!str) return str; // Return the original string if it's empty
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -37,9 +39,25 @@ export default function Space({ space, spaceOwner, currentLanguage }) {
       <div className="space-data">
         <div className="space-image">
           {/* First, space image */}
-          <img src={cover}></img>
+          <img
+            alt="space cover"
+            src={cover ? cover : fallbackImage}
+            onError={(e) => {
+              console.log("picture error: ", e);
+              // Fallback image if the user picture fails to load
+              e.target.src = fallbackImage;
+            }}
+          ></img>
           {/* Second, profile image */}
-          <img src={thumbnail}></img>
+          <img
+            alt="space thumbnail"
+            src={thumbnail ? thumbnail : fallbackImage}
+            onError={(e) => {
+              console.log("picture error: ", e);
+              // Fallback image if the user picture fails to load
+              e.target.src = fallbackImage;
+            }}
+          ></img>
         </div>
         <div className="space-snippet">
           <h1>{space?.name}</h1>
@@ -74,9 +92,9 @@ export default function Space({ space, spaceOwner, currentLanguage }) {
           <div className="chip">
             {/* Forground, profile image */}
             <img src={thumbnail}></img>
-            <div className="chip-content">
+            <div className="chip-content overflow-hidden">
               <h1>{space?.name}</h1>
-              <div>{space?.address}</div>
+              <div className="line-clamp-1">{space?.address}</div>
             </div>
           </div>
         </div>
@@ -94,7 +112,7 @@ export default function Space({ space, spaceOwner, currentLanguage }) {
           </div>
           <hr></hr>
           <div className="address">
-            <LocationMarkerIcon className="h-5 w-5 white mr-1 text-gray-400"></LocationMarkerIcon>
+            <LocationMarkerIcon className="h-7 w-7 white mr-1 text-gray-400"></LocationMarkerIcon>
             {space?.address}
           </div>
           {/* <div className="website">
@@ -114,5 +132,7 @@ export default function Space({ space, spaceOwner, currentLanguage }) {
 Space.propTypes = {
   space: PropTypes.object,
   spaceOwner: PropTypes.object,
+  spaceRule: PropTypes.object,
   currentLanguage: PropTypes.string,
+  permissionEngineAPI: PropTypes.object,
 };

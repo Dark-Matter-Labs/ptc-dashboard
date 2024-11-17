@@ -1,5 +1,5 @@
 import { useUser } from "../../useUser";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import { ChevronDownIcon, XIcon, MenuIcon } from "@heroicons/react/solid";
 import {
@@ -23,6 +23,7 @@ import {
 import { useTranslation } from "react-i18next";
 import i18n from "../../i18n";
 import PropTypes from "prop-types";
+import { io } from 'socket.io-client';
 
 export default function Navbar({
   navTitle,
@@ -34,6 +35,8 @@ export default function Navbar({
   const { t } = useTranslation();
   const [dynamicTitle, setDynamicTitle] = useState(navTitle);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const webSocket = useRef(null);
 
   useEffect(() => {
     setDynamicTitle(navTitle);
@@ -101,9 +104,57 @@ export default function Navbar({
     }
     console.log("in Navbar: ", { navTitle }); // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!webSocket.current) {
+      webSocket.current = io("http://localhost:3000", {
+        transports: ['websocket'],
+        withCredentials: true,
+        autoConnect: true,
+      });
+
+      webSocket.current.on('connect', () => {
+        console.log('webSocket.current.connected', webSocket.current.connected, webSocket.current.id);
+        if (webSocket) {
+          return;
+        }
+      });
+
+      webSocket.current.on('disconnect', () => {
+        console.log('webSocket disconnected');
+      });
+
+      // Listen for notifications
+      webSocket.current.on('receive_notification', (message) => {
+        try {
+          message = JSON.parse(message)
+        } catch (e) {}
+        setNotifications((prev)=> [...prev, message])
+      });
+
+    }
+
+    return () => {
+      if (webSocket.current && webSocket.current.connected) {
+        webSocket.current.disconnect();
+      }
+    };
+  }, []);
+
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+
   return (
     <div className="w-full h-24 lg:h-20 flex items-center justify-between px-6 bg-white ">
+      {/* Test notification handling */}
+      <div>
+        {notifications.filter(item => item.subject).map((content, index) => (
+            <div key={index}>
+              <h1>{content.subject}</h1>
+              <div dangerouslySetInnerHTML={{ __html: content.html}} />
+            </div>
+          ))}
+      </div>
+
       {/* Dropdown Menu  */}
       <ul
         className={`flex items-center ${navTitle == t("navigation.navigation-title") ? "order-1 lg:order-2" : "order-1"}`}

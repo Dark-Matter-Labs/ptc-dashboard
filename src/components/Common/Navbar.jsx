@@ -116,8 +116,8 @@ export default function Navbar({
       webSocket.current.on("connect", () => {
         console.log(
           "webSocket.current.connected",
-          webSocket.current.connected,
-          webSocket.current.id
+          webSocket.current?.connected,
+          webSocket.current?.id
         );
         if (webSocket) {
           return;
@@ -126,18 +126,23 @@ export default function Navbar({
 
       webSocket.current.on("disconnect", () => {
         console.log("webSocket disconnected");
-        webSocket.current = null;
+        if (user) {
+          webSocket.current = null;
+        }
       });
 
       // Listen for notifications
       webSocket.current.on("receive_notification", (message) => {
         try {
+          // try to parse message
           message = JSON.parse(message);
-        // eslint-disable-next-line no-unused-vars
-        } catch (e) { /* empty */ }
+          // eslint-disable-next-line no-unused-vars
+        } catch (e) {
+          /* empty */
+        }
         setNotifications((prev) => [...prev, message]);
         setTimeout(() => {
-          console.log("Notifications: remove the first item");
+          // Notifications: remove the first item
           setNotifications(notifications.slice(1));
         }, 4000);
       });
@@ -158,14 +163,18 @@ export default function Navbar({
       <div className="w-full h-auto absolute left-0 flex justify-center items-center">
         {notifications
           .filter((item) => item.subject)
-          .map((content, index) => (
-            <Notification
-              key={index}
-              subject={content.subject}
-              html={content.html}
-              text={content.text}
-            />
-          ))}
+          .map((content, index) =>
+            content.subject && content.html ? (
+              <Notification
+                key={index}
+                subject={content.subject}
+                html={content.html}
+                text={content.text}
+              />
+            ) : (
+              ""
+            )
+          )}
       </div>
 
       {/* Dropdown Menu  */}

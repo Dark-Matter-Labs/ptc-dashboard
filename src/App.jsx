@@ -74,7 +74,7 @@ function App() {
             }
           />
           <Route
-            path="/profile/notification"
+            path="/notifications"
             element={
               <DisplayNotifications
                 permissionEngineAPI={permissionEngineAPI}

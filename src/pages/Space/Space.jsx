@@ -1,5 +1,5 @@
 import { UserIcon } from "@heroicons/react/solid";
-import { PlusIcon } from "@heroicons/react/solid";
+// import { PlusIcon } from "@heroicons/react/solid";
 // import { LinkIcon } from "@heroicons/react/solid";
 import { LocationMarkerIcon } from "@heroicons/react/outline";
 import { CalendarIcon } from "@heroicons/react/outline";
@@ -10,7 +10,7 @@ import PropTypes from "prop-types";
 import * as Type from "../../lib/PermissionEngine/type";
 import { MapBox } from "../../components/Common/MapBox";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 
 export default function Space({ space, spaceOwner, currentLanguage }) {
   const location = {

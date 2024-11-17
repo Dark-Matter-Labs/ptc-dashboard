@@ -12,7 +12,7 @@ export function Notification({ subject, html, text }) {
 
   const handleOnClick = (e) => {
     e.preventDefault();
-    navigate("/profile/notification");
+    navigate("/notifications");
   };
 
   useEffect(() => {

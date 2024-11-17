@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import "../../assets/css/Home.css";
+import "../../assets/css/SpaceDashboard.css";
 import Activity from "./Activity";
 import Space from "./Space";
 import Report from "./Report";

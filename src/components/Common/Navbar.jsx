@@ -23,13 +23,13 @@ import {
 import { useTranslation } from "react-i18next";
 import i18n from "../../i18n";
 import PropTypes from "prop-types";
-import { io } from 'socket.io-client';
+import { io } from "socket.io-client";
+import { Notification } from "./Notification";
 
 export default function Navbar({
   navTitle,
   currentLanguage,
   handleChangeLanguage,
-  permissionEngineAPI,
 }) {
   const { user, setUser } = useUser();
   const { t } = useTranslation();
@@ -108,30 +108,39 @@ export default function Navbar({
   useEffect(() => {
     if (!webSocket.current) {
       webSocket.current = io("http://localhost:3000", {
-        transports: ['websocket'],
+        transports: ["websocket"],
         withCredentials: true,
         autoConnect: true,
       });
 
-      webSocket.current.on('connect', () => {
-        console.log('webSocket.current.connected', webSocket.current.connected, webSocket.current.id);
+      webSocket.current.on("connect", () => {
+        console.log(
+          "webSocket.current.connected",
+          webSocket.current.connected,
+          webSocket.current.id
+        );
         if (webSocket) {
           return;
         }
       });
 
-      webSocket.current.on('disconnect', () => {
-        console.log('webSocket disconnected');
+      webSocket.current.on("disconnect", () => {
+        console.log("webSocket disconnected");
+        webSocket.current = null;
       });
 
       // Listen for notifications
-      webSocket.current.on('receive_notification', (message) => {
+      webSocket.current.on("receive_notification", (message) => {
         try {
-          message = JSON.parse(message)
-        } catch (e) {}
-        setNotifications((prev)=> [...prev, message])
+          message = JSON.parse(message);
+        // eslint-disable-next-line no-unused-vars
+        } catch (e) { /* empty */ }
+        setNotifications((prev) => [...prev, message]);
+        setTimeout(() => {
+          console.log("Notifications: remove the first item");
+          setNotifications(notifications.slice(1));
+        }, 4000);
       });
-
     }
 
     return () => {
@@ -139,19 +148,23 @@ export default function Navbar({
         webSocket.current.disconnect();
       }
     };
-  }, []);
+  }, [notifications]);
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   return (
-    <div className="w-full h-24 lg:h-20 flex items-center justify-between px-6 bg-white ">
+    <div className="w-full h-24 lg:h-20 flex items-center justify-between px-6 bg-white sticky top-0 z-10">
       {/* Test notification handling */}
-      <div>
-        {notifications.filter(item => item.subject).map((content, index) => (
-            <div key={index}>
-              <h1>{content.subject}</h1>
-              <div dangerouslySetInnerHTML={{ __html: content.html}} />
-            </div>
+      <div className="w-full h-auto absolute left-0 flex justify-center items-center">
+        {notifications
+          .filter((item) => item.subject)
+          .map((content, index) => (
+            <Notification
+              key={index}
+              subject={content.subject}
+              html={content.html}
+              text={content.text}
+            />
           ))}
       </div>
 

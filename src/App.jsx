@@ -8,6 +8,7 @@ import Profile from "./pages/Profile/Profile";
 import Navbar from "./components/Common/Navbar";
 import CreateEvent from "./pages/Event/Create/CreateEvent";
 import DisplayEvents from "./pages/Event/Display/DisplayEvents";
+import DisplayNotifications from "./pages/Event/Display/DisplayNotifications";
 import { API } from "./lib/PermissionEngine";
 
 function App() {
@@ -67,6 +68,15 @@ function App() {
             path="/profile/events"
             element={
               <DisplayEvents
+                permissionEngineAPI={permissionEngineAPI}
+                currentLanguage={currentLanguage}
+              />
+            }
+          />
+          <Route
+            path="/profile/notification"
+            element={
+              <DisplayNotifications
                 permissionEngineAPI={permissionEngineAPI}
                 currentLanguage={currentLanguage}
               />

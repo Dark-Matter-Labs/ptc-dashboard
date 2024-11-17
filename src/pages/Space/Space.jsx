@@ -57,9 +57,9 @@ export default function Space({ space, spaceOwner, currentLanguage }) {
             </Button>
           ))}
           <div className="space-call-to-action">
-            <Button className="follow-button" onClick={() => alert("TBD")}>
+            {/* <Button className="follow-button" onClick={() => alert("TBD")}>
               <PlusIcon className="h-5 w-5 white mr-1"></PlusIcon>Follow
-            </Button>
+            </Button> */}
           </div>
         </div>
       </div>

@@ -1,20 +1,20 @@
 {
   "navigation": {
     "navigation-title": "스페이스 대시보드",
-    "profile": "프로",
-    "notifications": "공고",
+    "profile": "프로필",
+    "notifications": "알림",
     "my-events": "나의 이벤트",
-    "my-community": "내 커뮤니티",
-    "my-space": "내 공간",
+    "my-community": "나의 커뮤니티",
+    "my-space": "나의 공간",
     "language": "언어",
-    "view-calendar": "캘린더 보기",
+    "view-calendar": "캘린더",
     "propose-event": "이벤트 제안",
-    "logout": "로그아"
+    "logout": "로그아웃"
   },
 
   "home": {
     "follow-button": "팔로우",
-    "availability": "이용 가능성",
+    "availability": "이용 가능 시간",
     "upcoming events": "다가오는 이벤트",
     "past events": "지난 이벤트"
   },

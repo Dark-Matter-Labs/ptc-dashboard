@@ -2,16 +2,13 @@ import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { PlusIcon, MinusIcon } from "@heroicons/react/solid";
 import { useTranslation } from "react-i18next";
-import {
-  fetchSpaceRuleBlocksBySpaceRuleId,
-  fetchEventRuleBlocksByEventRuleId,
-} from "../../../api/api";
 
 const Step3 = ({
   setNavTitle,
   spaceRuleId,
   setNextStepButtonText,
   templateId,
+  permissionEngineAPI,
 }) => {
   const { t } = useTranslation();
   const [expandedCards, setExpandedCards] = useState({ 0: false }); //{0: true, 2: false}
@@ -27,7 +24,10 @@ const Step3 = ({
   const loadSpaceRuleBlocks = async () => {
     // fetch space rules
     try {
-      const data = await fetchSpaceRuleBlocksBySpaceRuleId(spaceRuleId);
+      const data =
+        await permissionEngineAPI.fetchSpaceRuleBlocksBySpaceRuleId(
+          spaceRuleId
+        );
       console.log("space rule blocks: ", data);
       setSpaceRuleBlocks(data);
     } catch (error) {
@@ -38,7 +38,8 @@ const Step3 = ({
   const loadEventRuleBlocks = async () => {
     // fetch evnet rules
     try {
-      const data = await fetchEventRuleBlocksByEventRuleId(templateId);
+      const data =
+        await permissionEngineAPI.fetchEventRuleBlocksByEventRuleId(templateId);
       console.log("event rule blocks: ", data);
       setEventRuleBlocks(data);
     } catch (error) {
@@ -146,6 +147,7 @@ Step3.propTypes = {
   spaceRuleId: PropTypes.string,
   setNextStepButtonText: PropTypes.func.isRequired,
   templateId: PropTypes.string,
+  permissionEngineAPI: PropTypes.object,
 };
 
 export default Step3;

@@ -2,7 +2,9 @@ import { useUser } from "../../useUser";
 import { useEffect } from "react";
 import i18n from "../../i18n";
 import { useTranslation } from "react-i18next";
-export default function Profile() {
+import PropTypes from "prop-types";
+
+export default function Profile({ permissionEngineApi, currentLanguage }) {
   const { user } = useUser();
   const { t } = useTranslation();
   console.log("user: ", user);
@@ -30,3 +32,8 @@ export default function Profile() {
     </div>
   );
 }
+
+Profile.propTypes = {
+  permissionEngineAPI: PropTypes.object,
+  currentLanguage: PropTypes.string,
+};

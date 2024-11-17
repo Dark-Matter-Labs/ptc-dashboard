@@ -1,6 +1,7 @@
 import { useUser } from "../../../useUser";
 import { useState, useEffect } from "react";
 import { CalendarIcon, ClockIcon } from "@heroicons/react/outline";
+import PropTypes from "prop-types";
 
 export default function DisplayEvents() {
   const [events, setEvents] = useState([]);
@@ -145,3 +146,8 @@ export default function DisplayEvents() {
     </div>
   );
 }
+
+DisplayEvents.propTypes = {
+  permissionEngineAPI: PropTypes.object,
+  currentLanguage: PropTypes.string,
+};

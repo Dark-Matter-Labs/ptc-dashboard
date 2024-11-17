@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { SearchIcon, PresentationChartBarIcon } from "@heroicons/react/outline";
-import { fetchEquipment } from "../../api/api";
 import PropTypes from "prop-types";
 
-export const EquipmentSelector = ({ spaceId }) => {
+export const EquipmentSelector = ({ spaceId, permissionEngineAPI }) => {
   const [allEquipment, setAllEquipment] = useState({});
   const [selectedEquipment, setSelectedEquipment] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
@@ -45,7 +44,7 @@ export const EquipmentSelector = ({ spaceId }) => {
 
   const loadEquipments = async () => {
     try {
-      const data = await fetchEquipment(spaceId);
+      const data = await permissionEngineAPI.fetchEquipment(spaceId);
       console.log("[api] space equipment", data);
 
       // Categorize equipment based on `type`
@@ -145,4 +144,5 @@ export const EquipmentSelector = ({ spaceId }) => {
 EquipmentSelector.propTypes = {
   spaceId: PropTypes.string.isRequired,
   updateEventData: PropTypes.func.isRequired,
+  permissionEngineAPI: PropTypes.object,
 };

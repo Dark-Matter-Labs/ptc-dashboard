@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { fetchTopics } from "../../api/api";
+import PropTypes from "prop-types";
 
 const excludedTheme = [{ id: "0", name: "Policital Campaigns", icon: "📢" }];
-export const ExcludedThemeDisplay = () => {
+
+export const ExcludedThemeDisplay = ({permissionEngineAPI}) => {
   const [topics, setTopics] = useState([]);
 
   const loadTopics = async () => {
     try {
-      const data = await fetchTopics();
+      const data = await permissionEngineAPI.fetchTopics();
       setTopics(data);
     } catch (error) {
       console.error("Error fetching topics: ", error);
@@ -39,4 +40,15 @@ export const ExcludedThemeDisplay = () => {
       </div>
     </div>
   );
+};
+
+
+ExcludedThemeDisplay.propTypes = {
+  currentStep: PropTypes.number.isRequired,
+  spaceId: PropTypes.string,
+  setCurrentStep: PropTypes.func.isRequired,
+  setNavTitle: PropTypes.func.isRequired,
+  updateEventData: PropTypes.func.isRequired,
+  setNextStepButtonText: PropTypes.func.isRequired,
+  permissionEngineAPI: PropTypes.object,
 };

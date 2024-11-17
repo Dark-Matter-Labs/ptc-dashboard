@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { RadioGroup, Radio } from "@headlessui/react";
 import { XCircleIcon } from "@heroicons/react/solid";
-import { fetchTopics } from "../../api/api";
+import PropTypes from "prop-types";
 
-export const EventThemeSelector = () => {
+export const EventThemeSelector = ({ permissionEngineAPI }) => {
   const [topics, setTopics] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState(null);
   const loadTopics = async () => {
     try {
-      const data = await fetchTopics();
+      const data = await permissionEngineAPI.fetchTopics();
       setTopics(data);
     } catch (error) {
       console.error("Error fetching topics: ", error);
@@ -70,4 +70,8 @@ export const EventThemeSelector = () => {
       </RadioGroup>
     </div>
   );
+};
+
+EventThemeSelector.propTypes = {
+  permissionEngineAPI: PropTypes.object,
 };

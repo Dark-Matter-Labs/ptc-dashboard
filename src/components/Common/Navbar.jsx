@@ -126,9 +126,7 @@ export default function Navbar({
 
       webSocket.current.on("disconnect", () => {
         console.log("webSocket disconnected");
-        if (user) {
-          webSocket.current = null;
-        }
+        webSocket.current = null;
       });
 
       // Listen for notifications

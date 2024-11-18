@@ -35,6 +35,20 @@
   object-fit: cover;
   border-radius: 50%;
 }
+.space-image svg:first-child {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.space-image svg:nth-child(2) {
+  position: absolute;
+  top: 18rem;
+  left: 2rem;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+}
 
 .space-data .space-snippet {
   margin-top: 5rem;

@@ -63,7 +63,14 @@ export default function Space({ space, spaceOwner, currentLanguage }) {
           <h1>{space?.name}</h1>
 
           <div className="space-account">
-            <UserIcon className="h-5 w-5 text-gray-800 mr-1" />
+            {spaceOwner?.image ? (
+              <img
+              className="h-5 w-5 flex-none rounded-full bg-gray-50 mr-1"
+              src={spaceOwner?.image}
+            ></img>
+            ) : (
+              <UserIcon className="h-5 w-5 text-gray-800 mr-1" />
+            )}
             {spaceOwner?.name}
           </div>
           <div className="space-desc">{space?.details}</div>

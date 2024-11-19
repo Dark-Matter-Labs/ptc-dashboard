@@ -337,6 +337,12 @@ export class API {
     return response;
   };
 
+  fetchEvents = async (option = { page: 1, limit: 10 }) => {
+    const response = await this.get("event", {}, option);
+
+    return response?.data ?? [];
+  };
+
   fetchPublicUserData = async (userId) => {
     const response = await this.get("user/:userId", {
       userId,
@@ -344,6 +350,12 @@ export class API {
 
     return response;
   };
+
+  fetchMe = async () => {
+    const response = await this.get("user/me");
+
+    return response;
+  }
 
   /**
    *

@@ -1,31 +1,42 @@
 import { useUser } from "../../../useUser";
 import { useState, useEffect } from "react";
 import { CalendarIcon, ClockIcon } from "@heroicons/react/outline";
+import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
-export default function DisplayEvents() {
+export default function DisplayEvents({ permissionEngineAPI }) {
+  const navigate = useNavigate();
   const [events, setEvents] = useState([]);
+  const [me, setMe] = useState(null);
   const { user } = useUser();
-  const fetchEvents = () => {
-    console.log("call fetching events data");
-    fetch("/api/v1/event", {
-      credentials: "include",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.message === "Unauthorized") {
-          console.log("User not logged in.");
-        }
-        console.log("event data: ", data);
-        setEvents(data.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching profile info:", error);
-      });
+
+  const fetchMe = async () => {
+    const me = await permissionEngineAPI.fetchMe();
+    setMe(me);
   };
+
+  const fetchEvents = async () => {
+    if (me) {
+      await permissionEngineAPI
+        .fetchEvents({ page: 1, limit: 20, organizerId: me?.id })
+        .then((data) => {
+          console.log("event data: ", data);
+          setEvents(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching event info:", error);
+          navigate("/");
+        });
+    }
+  };
+
+  useEffect(() => {
+    fetchMe();
+  }, []);
+
   useEffect(() => {
     fetchEvents();
-  }, []);
+  }, [me]);
 
   // Helper function to format event date and time
   const formatEventDateTime = (start, duration) => {
@@ -114,9 +125,7 @@ export default function DisplayEvents() {
                     className="border p-4 shadow rounded-[1rem] bg-white"
                   >
                     <div className="flex items-center justify-between">
-                      <div className="font-semibold text-xl ">
-                        {key} - {event.name}
-                      </div>
+                      <div className="font-semibold text-xl ">{event.name}</div>
                       <div className="bg-yellow-300 text-sm p-1 px-2 rounded-full">
                         {event.status}
                       </div>

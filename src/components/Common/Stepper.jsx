@@ -90,7 +90,7 @@ function Stepper({
             <button
               onClick={() => {
                 setShowSuccessModal(false);
-                navigate("/");
+                navigate("/profile/events");
               }}
               className="px-4 py-2 bg-green-500 text-white rounded-md"
             >

@@ -284,7 +284,7 @@ export default function Navbar({
                       {t("navigation.notifications")}
                     </a>
                     <a
-                      href="/events"
+                      href="/profile/events"
                       className={`pl-8 space-y-8 py-4 flex items-center gap-3 text-gray-900 ${location.pathname === "/events" ? "bg-slate-200" : "text-gray-900"}`}
                     >
                       <CalendarIcon className="w-4 h-4 text-gray-400 "></CalendarIcon>

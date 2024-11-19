@@ -1,35 +1,41 @@
 import { useState, useEffect } from "react";
-import { PlusIcon } from "@heroicons/react/outline";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
-const Step2 = ({
+const StepChooseEventRule = ({
   currentStep,
   spaceId,
+  spaceRule,
+  topicIds,
   setCurrentStep,
   setNavTitle,
   updateEventData,
+  updateEventRuleData,
   setNextStepButtonText,
   permissionEngineAPI,
 }) => {
   const { t } = useTranslation();
 
-  const [rules_relevent, setRules_relevant] = useState([]);
-  const [rules_newest, setRules_newest] = useState([]);
-  const [rules_popular, setRules_popular] = useState([]);
-  const [selectedTemplate, setSelectedTemplate] = useState(null);
-  const [topics, setTopics] = useState([]);
-  const [selectedTopics, setSelectedTopics] = useState([]);
+  const [releventRules, setRelevantRules] = useState([]);
+  const [newestRules, setNewestRules] = useState([]);
+  const [popularRules, setPopularRules] = useState([]);
+  const [selectedEventRule, setSelectedEventRule] = useState(null);
 
-  const handleSelectTemplate = (templateId, templateRuleBlocks) => {
-    console.log("Selected template: ", templateId);
-    console.log("Selected template rule block: ", templateRuleBlocks);
-
-    updateEventData({
-      templateId: templateId,
-      templateRuleBlocks: templateRuleBlocks,
-    });
-    setSelectedTemplate(templateId);
+  const handleSelectTemplate = (eventRule) => {
+    if (eventRule) {
+      updateEventData({
+        ruleId: eventRule.id,
+      });
+      updateEventRuleData({
+        ...eventRule,
+      });
+      setSelectedEventRule(eventRule);
+    } else {
+      updateEventRuleData({
+        name: spaceRule.name,
+        ruleBlocks: [],
+      });
+    }
     notifyParentToNextStep();
   };
 
@@ -39,9 +45,17 @@ const Step2 = ({
     setCurrentStep(nextStep);
   };
 
-  const handleCreateNewTemplate = (e) => {
-    console.log(e);
-  };
+  // Define color array
+  const colors = [
+    "#f8eafa",
+    "#dff7f5",
+    "#f5f7df",
+    "#ffeede",
+    "#dfe2f7",
+    "#e3edf0",
+    "#dfeaf7",
+    "#f7dfe0",
+  ];
 
   // Utility function to darken the color
   const darkenColor = (color) => {
@@ -52,35 +66,14 @@ const Step2 = ({
     return `rgb(${Math.floor(r * 0.8)}, ${Math.floor(g * 0.8)}, ${Math.floor(b * 0.8)})`;
   };
 
-  const handleTopicSelection = (topicID) => {
-    setSelectedTopics((prevTopics) =>
-      prevTopics.includes(topicID)
-        ? prevTopics.filter((id) => id !== topicID)
-        : [...prevTopics, topicID]
-    );
-  };
-
   // Fetch and assign colors to rules by popularity
   const loadRulesByPopularity = async () => {
-    // Define color array
-    const colors = [
-      "#f8eafa",
-      "#dff7f5",
-      "#f5f7df",
-      "#ffeede",
-      "#dfe2f7",
-      "#e3edf0",
-      "#dfeaf7",
-      "#f7dfe0",
-    ];
-
     try {
       // fetch rules
       const data = await permissionEngineAPI.fetchSpaceApprovedRulesSortBy(
         spaceId,
         "popularity"
       );
-      // console.log("fetched space rules data, set by popularity: ", data);
 
       //asign color
       const rulesWithColors = data.map((rule, index) => ({
@@ -91,15 +84,12 @@ const Step2 = ({
       // assign related topics
       const rulesWithColorsAndTopics = await Promise.all(
         rulesWithColors.map(async (rule) => {
-          const topicNames = await fetchTopicsForRules(
-            rule.id
-          );
+          const topicNames = await fetchTopicsForRules(rule.id);
           return { ...rule, topicNames: topicNames };
         })
       );
-      // console.log("rulesWithColorsAndTopics: ", rulesWithColorsAndTopics);
-      // set rules_popular
-      setRules_popular(rulesWithColorsAndTopics);
+      // set popularRules
+      setPopularRules(rulesWithColorsAndTopics);
     } catch (error) {
       console.error("Error setting rules by popular: ", error);
     }
@@ -112,25 +102,25 @@ const Step2 = ({
         .then((res) => res.map((item) => item.name));
       return topicNames;
     } catch (error) {
-      console.log("Failed to fetch topics for rules_popular: ", error);
+      console.log("Failed to fetch topics for popularRules: ", error);
       return [];
     }
   };
-  // Load rules by relevance and match colors with rules in rules_popular
+  // Load rules by relevance and match colors with rules in popularRules
   const loadRulesByRelevance = async () => {
     // return if topic not selected
-    if (selectedTopics.length == 0) return;
+    if (topicIds.length == 0) return;
 
     try {
       // fetch rules
       const data = await permissionEngineAPI.fetchSpaceApprovedRulesByRelevance(
         spaceId,
-        selectedTopics
+        topicIds
       );
 
-      // grab color by rule id from rules_popular
+      // grab color by rule id from popularRules
       const relevantRulesWithColors = data.map((rule) => {
-        const popularRule = rules_popular.find(
+        const popularRule = popularRules.find(
           (popular) => popular.id === rule.id
         );
         return popularRule ? { ...rule, color: popularRule.color } : rule;
@@ -139,54 +129,44 @@ const Step2 = ({
       // assign related topics
       const relevantRulesWithColorsAndTopics = await Promise.all(
         relevantRulesWithColors.map(async (rule) => {
-          const topicNames = await fetchTopicsForRules(
-            rule.id
-          );
+          const topicNames = await fetchTopicsForRules(rule.id);
           return { ...rule, topicNames: topicNames };
         })
       );
 
       // set rules_relevant
-      setRules_relevant(relevantRulesWithColorsAndTopics);
+      setRelevantRules(relevantRulesWithColorsAndTopics);
     } catch (error) {
       console.error("Error setting rules by relevance: ", error);
-    }
-  };
-
-  const loadTopics = async () => {
-    try {
-      const data = await permissionEngineAPI.fetchTopics();
-      setTopics(data);
-    } catch (error) {
-      console.error("Error fetching topics: ", error);
     }
   };
 
   useEffect(() => {
     setNavTitle(t("create-event.navigation-title"));
     loadRulesByPopularity();
-    loadTopics();
   }, []);
 
   useEffect(() => {
     // console.log("selectedTopics: ", selectedTopics);
-    loadRulesByRelevance();
-  }, [selectedTopics]);
+    if (topicIds && popularRules) {
+      loadRulesByRelevance();
+    }
+  }, [popularRules]);
 
   useEffect(() => {
-    // console.log("rules_popular: ", rules_popular);
+    // console.log("popularRules: ", popularRules);
     // Sort by created date (newest first)
-    const sortedByDate = [...rules_popular].sort(
+    const sortedByDate = [...popularRules].sort(
       (a, b) => new Date(b.createAt) - new Date(a.createAt)
     );
-    setRules_newest(sortedByDate);
-  }, [rules_popular]);
+    setNewestRules(sortedByDate);
+  }, [popularRules]);
 
   useEffect(() => {
-    if (selectedTemplate) {
+    if (selectedEventRule) {
       setNextStepButtonText("Use this template");
     }
-  }, [selectedTemplate]);
+  }, [selectedEventRule]);
 
   return (
     <div className="p-4 text-left">
@@ -194,38 +174,28 @@ const Step2 = ({
       <div id="choose-template" className="text-2xl block mb-4 font-semibold ">
         Browse event templates
       </div>
-      <div className="flex overflow-x-auto mt-4 space-x-4 w-full">
-        {topics.map((topic) => {
-          return (
-            <div
-              className={`rounded-full px-4 py-2 w-max cursor-pointer ${selectedTopics.includes(topic.id) ? "bg-gray-400" : "bg-slate-200"}`}
-              key={topic.id}
-              onClick={() => handleTopicSelection(topic.id)}
-            >
-              {topic.name}
-            </div>
-          );
-        })}
-      </div>
-      {rules_relevent.length != 0 && (
+      {releventRules.length != 0 && (
         <>
           <div id="newest-template" className="mt-14 block mb-2 font-semibold ">
             Most relevant
           </div>
           <div className="flex overflow-x-auto space-x-4 w-full py-2">
-            {rules_relevent.map((template) => (
+            {releventRules.map((eventRule) => (
               <div
-                key={template.id}
-                onClick={() =>
-                  handleSelectTemplate(template.id, template.ruleBlocks)
-                }
+                key={eventRule.id}
+                onClick={() => handleSelectTemplate(eventRule)}
                 className={`text-gray-500 flex flex-col justify-between gap-2 flex-shrink-0 w-40 rounded-[20px] p-4 cursor-pointer 
             }`}
-                style={{ backgroundColor: template.color || "#000" }}
+                style={{
+                  backgroundColor:
+                    selectedEventRule === eventRule.id
+                      ? darkenColor(eventRule.color)
+                      : eventRule.color,
+                }}
               >
                 <div>
                   <h3 className="text-base font-semibold pb-2 text-gray-600">
-                    {template.name}
+                    {eventRule.name}
                   </h3>
                   <div className="text-xs pb-4">
                     Rules for hosting a live podcast event, including noise
@@ -233,7 +203,7 @@ const Step2 = ({
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
-                  {template.topicNames.map((topic, index) => (
+                  {eventRule.topicNames.map((topic, index) => (
                     <div
                       className="bg-white rounded-full text-sm w-fit p-1 px-2 text-gray-700"
                       key={index}
@@ -242,7 +212,7 @@ const Step2 = ({
                     </div>
                   ))}
                 </div>
-                {template.exceptionAdded && (
+                {eventRule.exceptionAdded && (
                   <span
                     className={`text-sm mt-2 p-1 px-2 rounded-2xl  bg-gray-200 text-gray-400 `}
                   >
@@ -258,24 +228,22 @@ const Step2 = ({
         Newest
       </div>
       <div className="flex overflow-x-auto space-x-4 w-full py-2">
-        {rules_newest.map((template) => (
+        {newestRules.map((eventRule) => (
           <div
-            key={template.id}
-            onClick={() =>
-              handleSelectTemplate(template.id, template.ruleBlocks)
-            }
+            key={eventRule.id}
+            onClick={() => handleSelectTemplate(eventRule)}
             className={`text-gray-500 flex flex-col justify-between gap-2 flex-shrink-0 w-40 rounded-[20px] p-4 cursor-pointer 
             }`}
             style={{
               backgroundColor:
-                selectedTemplate === template.id
-                  ? darkenColor(template.color)
-                  : template.color,
+                selectedEventRule === eventRule.id
+                  ? darkenColor(eventRule.color)
+                  : eventRule.color,
             }}
           >
             <div>
               <h3 className="text-base font-semibold pb-2 text-gray-600">
-                {template.name}
+                {eventRule.name}
               </h3>
               <div className="text-xs pb-4">
                 Rules for hosting a live podcast event, including noise limits,
@@ -283,7 +251,7 @@ const Step2 = ({
               </div>
             </div>
             <div className="flex flex-col gap-2">
-              {template.topicNames.map((topic, index) => (
+              {eventRule.topicNames.map((topic, index) => (
                 <div
                   className="bg-white rounded-full text-sm w-fit p-1 px-2"
                   key={index}
@@ -292,7 +260,7 @@ const Step2 = ({
                 </div>
               ))}
             </div>
-            {template.exceptionAdded && (
+            {eventRule.exceptionAdded && (
               <span
                 className={`text-sm mt-2 p-1 px-2 rounded-2xl  bg-gray-200 text-gray-400 `}
               >
@@ -307,23 +275,21 @@ const Step2 = ({
         Most popular
       </div>
       <div className="flex overflow-x-auto space-x-4 w-full py-2">
-        {rules_popular.map((template) => (
+        {popularRules.map((eventRule) => (
           <div
-            key={template.id}
-            onClick={() =>
-              handleSelectTemplate(template.id, template.ruleBlocks)
-            }
+            key={eventRule.id}
+            onClick={() => handleSelectTemplate(eventRule)}
             className="text-gray-500 flex flex-col justify-between gap-2  flex-shrink-0 w-40 h-fit rounded-[20px] p-4 cursor-pointer"
             style={{
               backgroundColor:
-                selectedTemplate === template.id
-                  ? darkenColor(template.color)
-                  : template.color,
+                selectedEventRule === eventRule.id
+                  ? darkenColor(eventRule.color)
+                  : eventRule.color,
             }}
           >
             <div>
               <h3 className="text-base font-semibold pb-2 text-gray-600">
-                {template.name}
+                {eventRule.name}
               </h3>
               <div className="text-xs pb-4">
                 Rules for hosting a live podcast event, including noise limits,
@@ -331,7 +297,7 @@ const Step2 = ({
               </div>
             </div>
             <div className="flex flex-col gap-2">
-              {template.topicNames.map((topic, index) => (
+              {eventRule.topicNames.map((topic, index) => (
                 <div
                   className="bg-white rounded-full text-sm w-fit p-1 px-2"
                   key={index}
@@ -340,7 +306,7 @@ const Step2 = ({
                 </div>
               ))}
             </div>
-            {template.exceptionAdded && (
+            {eventRule.exceptionAdded && (
               <span
                 className={`text-sm mt-2 p-1 px-2 rounded-2xl  bg-gray-200 text-gray-400 `}
               >
@@ -352,26 +318,50 @@ const Step2 = ({
       </div>
       <div className="my-6" />
       <div id="create-new-template" className=" block mb-2 font-semibold ">
-        Create a new one from scratch
+        Original space rule
       </div>
-      <div
-        onClick={() => handleCreateNewTemplate()}
-        className="bg-gray-100 w-40 h-44 rounded-2xl cursor-pointer flex justify-center items-center"
-      >
-        <PlusIcon className="w-5 h-5 mx-auto my-auto text-gray-500"></PlusIcon>
+      <div className="flex overflow-x-auto space-x-4 w-full py-2">
+        <div
+          key={spaceRule.id}
+          onClick={() => handleSelectTemplate()}
+          className="text-gray-500 flex flex-col justify-between gap-2  flex-shrink-0 w-40 h-fit rounded-[20px] p-4 cursor-pointer"
+          style={{
+            backgroundColor: "#F7F2DF",
+          }}
+        >
+          <div>
+            <h3 className="text-base font-semibold pb-2 text-gray-600">
+              {spaceRule.name}
+            </h3>
+            <div className="text-xs pb-4">{spaceRule.details}</div>
+          </div>
+          <div className="flex flex-col gap-2">
+            {spaceRule.topics.map((topic, index) => (
+              <div
+                className="bg-white rounded-full text-sm w-fit p-1 px-2"
+                key={index}
+              >
+                {topic.name}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
-export default Step2;
+export default StepChooseEventRule;
 
-Step2.propTypes = {
+StepChooseEventRule.propTypes = {
   currentStep: PropTypes.number.isRequired,
   spaceId: PropTypes.string,
+  spaceRule: PropTypes.object,
+  topicIds: PropTypes.array,
   setCurrentStep: PropTypes.func.isRequired,
   setNavTitle: PropTypes.func.isRequired,
   updateEventData: PropTypes.func.isRequired,
+  updateEventRuleData: PropTypes.func.isRequired,
   setNextStepButtonText: PropTypes.func.isRequired,
   permissionEngineAPI: PropTypes.object,
 };

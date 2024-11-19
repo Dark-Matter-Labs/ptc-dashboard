@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-const Step7 = ({ setNavTitle }) => {
+const StepFinalReview = ({ setNavTitle }) => {
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -27,8 +27,8 @@ const Step7 = ({ setNavTitle }) => {
   );
 };
 
-export default Step7;
+export default StepFinalReview;
 
-Step7.propTypes = {
+StepFinalReview.propTypes = {
   setNavTitle: PropTypes.func.isRequired, // Required
 };

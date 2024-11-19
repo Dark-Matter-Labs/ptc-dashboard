@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { TrashIcon } from "@heroicons/react/outline";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-const Step5 = ({ setNavTitle }) => {
+const StepCheckRisks = ({ setNavTitle }) => {
   const { t } = useTranslation();
   const [riskAssessmentContent, setRiskAssessmentContent] = useState("");
 
@@ -63,8 +63,8 @@ const Step5 = ({ setNavTitle }) => {
   );
 };
 
-export default Step5;
+export default StepCheckRisks;
 
-Step5.propTypes = {
+StepCheckRisks.propTypes = {
   setNavTitle: PropTypes.func.isRequired, // Required
 };

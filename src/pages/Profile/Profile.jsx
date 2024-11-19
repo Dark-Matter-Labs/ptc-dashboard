@@ -14,6 +14,7 @@ export default function Profile({ permissionEngineApi, currentLanguage }) {
     }
   }, []);
 
+  // TODO. add email subscription control
   return (
     <div className="px-8 pt-8">
       <h1 className="text-2xl font-bold text-black">{t("profile.title")}</h1>

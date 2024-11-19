@@ -27,9 +27,9 @@
   "create-event": {
     "navigation-title": "Propose an event",
     "an-example-template-title": "Template Title",
-    "self-risk-assessment": "Self-risk assessment"
+    "self-risk-assessment": "Self-risk assessment",
+    "proposal-final-review": "Proposal final review"
   },
-  "proposal-final-review": "Proposal final review",
   "space-general-name": "General rule block for space rules",
   "space-general-description": "General rule block for space rules",
   "space-excluded_topic-name": "Space theme",

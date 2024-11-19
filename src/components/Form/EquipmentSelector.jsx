@@ -144,5 +144,6 @@ export const EquipmentSelector = ({ spaceId, permissionEngineAPI }) => {
 EquipmentSelector.propTypes = {
   spaceId: PropTypes.string.isRequired,
   updateEventData: PropTypes.func.isRequired,
+  updateEventRuleData: PropTypes.func.isRequired,
   permissionEngineAPI: PropTypes.object,
 };

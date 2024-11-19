@@ -7,6 +7,10 @@ import PropTypes from "prop-types";
 function Stepper({
   currentStep,
   setCurrentStep,
+  isStepComplete,
+  agreements,
+  eventData,
+  eventRuleData,
   numSteps,
   stepContents,
   setNavTitle,
@@ -21,7 +25,7 @@ function Stepper({
   const sendRequest = async (e) => {
     e.preventDefault(); // Prevent form submission
 
-    if (currentStep === 6) {
+    if (currentStep + 1 === numSteps) {
       console.log("Submitting at final review... currentStep ", currentStep);
 
       try {
@@ -46,10 +50,19 @@ function Stepper({
   };
   const nextStep = (e) => {
     e.preventDefault(); // Prevent form submission
+    if (isStepComplete) {
+      console.log("isStepComplete", isStepComplete);
+      const completed = isStepComplete(eventData, eventRuleData, agreements);
 
-    const nextCurrentStep = currentStep + 1;
-    if (nextCurrentStep < numSteps) {
-      setCurrentStep(nextCurrentStep);
+      if (completed.result === false) {
+        alert(completed.message);
+        return;
+      }
+
+      const nextCurrentStep = currentStep + 1;
+      if (nextCurrentStep < numSteps) {
+        setCurrentStep(nextCurrentStep);
+      }
     }
   };
 
@@ -211,5 +224,9 @@ Stepper.propTypes = {
   stepContents: PropTypes.array,
   setNavTitle: PropTypes.func,
   handleSubmit: PropTypes.func,
+  isStepComplete: PropTypes.func,
   nextStepBtnText: PropTypes.string,
+  eventData: PropTypes.object,
+  eventRuleData: PropTypes.object,
+  agreements: PropTypes.object,
 };

@@ -3,12 +3,16 @@ import { RadioGroup, Radio } from "@headlessui/react";
 import { XCircleIcon } from "@heroicons/react/solid";
 import PropTypes from "prop-types";
 
-export const EventThemeSelector = ({ permissionEngineAPI }) => {
+export const EventThemeSelector = ({
+  updateEventData,
+  updateEventRuleData,
+  permissionEngineAPI,
+}) => {
   const [topics, setTopics] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState(null);
   const loadTopics = async () => {
     try {
-      const data = await permissionEngineAPI.fetchTopics();
+      const data = await permissionEngineAPI.fetchTopics({page: 1, limit: 20});
       setTopics(data);
     } catch (error) {
       console.error("Error fetching topics: ", error);
@@ -23,7 +27,16 @@ export const EventThemeSelector = ({ permissionEngineAPI }) => {
     if (topics) {
       console.log("the topics: ", topics);
     }
-  }, [topics]);
+    if (selectedTopic) {
+      console.log("selectedTopic", selectedTopic);
+      updateEventData({
+        topicIds: [selectedTopic.id],
+      });
+      updateEventRuleData({
+        topicIds: [selectedTopic.id],
+      });
+    }
+  }, [topics, selectedTopic]);
 
   return (
     <div className="text-left">
@@ -49,7 +62,7 @@ export const EventThemeSelector = ({ permissionEngineAPI }) => {
                     }
                     ${active ? "ring-2  ring-blue-500" : ""}`}
                 >
-                  <div className="size-4 mr-1">{topic.icon}</div>
+                  {/* <div className="size-4 mr-1">{topic.icon}</div> */}
                   <span>{topic.name}</span>
                   {checked && (
                     <button
@@ -73,5 +86,7 @@ export const EventThemeSelector = ({ permissionEngineAPI }) => {
 };
 
 EventThemeSelector.propTypes = {
+  updateEventData: PropTypes.func.isRequired,
+  updateEventRuleData: PropTypes.func.isRequired,
   permissionEngineAPI: PropTypes.object,
 };

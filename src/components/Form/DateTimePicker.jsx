@@ -7,11 +7,26 @@ import {
   startOfMonth,
   endOfMonth,
   eachDayOfInterval,
+  getDay,
 } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/outline";
 import PropTypes from "prop-types";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import abbrTimezone from "dayjs-abbr-timezone";
 
-const DateTimePicker = ({ updateEventData, spaceId, permissionEngineAPI }) => {
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(abbrTimezone);
+
+const DateTimePicker = ({
+  updateEventData,
+  spaceId,
+  timezone: spaceTimezone,
+  permissionEngineAPI,
+}) => {
   const [eventDateTime, setEventDateTime] = useState(""); // Store event date in ISO strings format
   const [currentMonth, setCurrentMonth] = useState(new Date()); // Default to the current month
   const [selectedDate, setSelectedDate] = useState("");
@@ -25,12 +40,14 @@ const DateTimePicker = ({ updateEventData, spaceId, permissionEngineAPI }) => {
   const handleNextMonth = (e) => {
     e.preventDefault();
     setCurrentMonth(addMonths(currentMonth, 1));
+    loadAvailability(addMonths(currentMonth, 1));
   };
 
   // Function to go to the previous month
   const handlePrevMonth = (e) => {
     e.preventDefault();
     setCurrentMonth(subMonths(currentMonth, 1));
+    loadAvailability(subMonths(currentMonth, 1));
   };
 
   // Get all the days in the current month
@@ -40,12 +57,20 @@ const DateTimePicker = ({ updateEventData, spaceId, permissionEngineAPI }) => {
   });
 
   // Weekday names
+  // Adjust to start the week on Monday
   const weekdays = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+
+  const getWeekStartOffset = () => {
+    const firstDayOfMonth = getDay(startOfMonth(currentMonth));
+    // Adjust for Monday as the start of the week (Sunday is 0, so subtract 1)
+    return firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
+  };
 
   // Handle date click
   const handleDateClick = (date) => {
     const formattedDate = format(date, "yyyy-MM-dd");
-    console.log("Selected Date (formattedDate): ", formattedDate);
+    console.log(availability[formattedDate]);
+
     setSelectedDate(formattedDate);
     if (formattedDate && selectedTime) {
       notifySetter(formattedDate, selectedTime);
@@ -53,7 +78,6 @@ const DateTimePicker = ({ updateEventData, spaceId, permissionEngineAPI }) => {
   };
 
   const handleTimeSlotClick = (slot) => {
-    console.log("Selected Time Slot: ", slot);
     setSelectedTime(slot);
     if (selectedDate && slot) {
       notifySetter(selectedDate, slot);
@@ -63,29 +87,34 @@ const DateTimePicker = ({ updateEventData, spaceId, permissionEngineAPI }) => {
   const notifySetter = (date, time) => {
     if (date && time) {
       flagDecision();
-      console.log("Setter notified with date and time:", date, time);
-      // Format to ISO string
       setEventDateTime(`${date}T${time.split("-")[0]}:00.000Z`);
     }
   };
 
   const flagDecision = () => {
-    console.log("set decided from ", decided, " to ", !decided);
     setDecided(!decided);
   };
 
-  const loadAvailability = async () => {
+  const loadAvailability = async (currentMonth) => {
     try {
-      const data = await permissionEngineAPI.fetchAvailability(spaceId);
+      const data = await permissionEngineAPI.fetchAvailability(
+        spaceId,
+        new Date(startOfMonth(currentMonth).getTime()).toISOString(),
+        new Date(endOfMonth(currentMonth).getTime()).toISOString()
+      );
       const parsedAvailability = data.reduce((acc, slot) => {
-        const date = format(new Date(slot.startTime), "yyyy-MM-dd");
+        const date = formatInTimeZone(slot.startTime, spaceTimezone, "yyyy-MM-dd", {
+          timeZone: spaceTimezone,
+        });
         const timeSlot =
           format(new Date(slot.startTime), "HH:mm") +
           "-" +
           format(new Date(slot.endTime), "HH:mm");
 
         if (!acc[date]) acc[date] = [];
-        acc[date].push(timeSlot);
+        if (dayjs() <= dayjs(slot.startTime).tz(spaceTimezone)) {
+          acc[date] = [...acc[date].sort(), timeSlot].sort();
+        }
 
         return acc;
       }, {});
@@ -105,8 +134,10 @@ const DateTimePicker = ({ updateEventData, spaceId, permissionEngineAPI }) => {
 
   useEffect(() => {
     // load availability
-    loadAvailability();
-  }, []);
+    if (!availability || availability.length === 0) {
+      loadAvailability(currentMonth);
+    }
+  }, [availability]);
 
   useEffect(() => {
     // load availability
@@ -120,7 +151,7 @@ const DateTimePicker = ({ updateEventData, spaceId, permissionEngineAPI }) => {
       {!decided && (
         <>
           <div className="border rounded">
-            <div className="p-2 ">
+            <div className="p-2">
               <div className="text-center font-bold text-lg mb-2">
                 {format(currentMonth, "yyyy")}
               </div>
@@ -151,6 +182,12 @@ const DateTimePicker = ({ updateEventData, spaceId, permissionEngineAPI }) => {
                 ))}
               </div>
               <div className="grid grid-cols-7 gap-2 text-center">
+                {/* Add offset for the first day of the month */}
+                {Array(getWeekStartOffset())
+                  .fill("")
+                  .map((_, i) => (
+                    <div key={i}></div>
+                  ))}
                 {daysInMonth.map((date) => {
                   const formattedDate = format(date, "yyyy-MM-dd");
                   const isAvailable = availability[formattedDate]?.length > 0;
@@ -223,5 +260,6 @@ export default DateTimePicker;
 DateTimePicker.propTypes = {
   updateEventData: PropTypes.func.isRequired,
   spaceId: PropTypes.string,
+  timezone: PropTypes.string,
   permissionEngineAPI: PropTypes.object,
 };

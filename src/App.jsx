@@ -23,7 +23,7 @@ function App() {
   useEffect(() => {
     if (location.pathname === "/") {
       setNavTitle(t("navigation.navigation-title")); // Reset to default when on home page
-      navigate("/space/default");
+      navigate("/space/1");
     } else if (location.pathname === "/event/new") {
       console.log("at route /event/new, ", t("create-event.navigation-title"));
       setNavTitle(t("create-event.navigation-title")); // Reset to default when on home page

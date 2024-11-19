@@ -17,17 +17,20 @@ export default function SpaceDashboard({
 
   const loadSpace = async () => {
     try {
-      if (!spaceId || spaceId === "default") {
+      if (!spaceId || ["1", "2"].includes(spaceId) === true) {
+        let index =
+          ["1", "2"].includes(spaceId) === true ? parseInt(spaceId) - 1 : 0;
+
         const spaces = await permissionEngineAPI.fetchSpaces({
           page: 1,
           limit: 1,
         });
-        spaceId = spaces?.[0]?.id;
+        spaceId = spaces?.[index]?.id;
 
         navigate(`/space/${spaceId}`);
       }
 
-      if (spaceId && spaceId !== "default") {
+      if (spaceId && ["1", "2"].includes(spaceId) === false) {
         const fetchedSpace = await permissionEngineAPI.fetchSpace(spaceId);
         const fetchedSpaceOwner = await permissionEngineAPI.fetchPublicUserData(
           fetchedSpace?.ownerId

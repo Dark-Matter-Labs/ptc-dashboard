@@ -29,6 +29,14 @@ const StepSetEventData = ({
   });
 
   useEffect(() => {
+    // Scroll to the top of the page
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Optional: smooth scrolling
+    });
+  }, []);
+
+  useEffect(() => {
     setIsStepComplete((updatedEventData, updatedEventRuleData) => {
       return (
         eventData = updatedEventData,

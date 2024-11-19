@@ -133,13 +133,14 @@ const StepCheckRuleBlocks = ({
   };
 
   useEffect(() => {
-    // console.log(template_ruleblocks);
     loadEventRuleBlocks();
   }, []);
 
   useEffect(() => {
     combineRuleBlocks();
+  }, [spaceRuleBlocks, eventRuleBlocks]);
 
+  useEffect(() => {
     setIsStepComplete(
       (updatedEventData, updatedEventRuleData, updatedAgreements) => {
         return (
@@ -164,10 +165,11 @@ const StepCheckRuleBlocks = ({
             }
 
             for (const key of agreementKeys) {
-              const ruleBlock = [...spaceRuleBlocks, ...eventRuleData.ruleBlocks].find(
-                (item) => item.id === key
-              );
-              console.log(key, ruleBlock)
+              const ruleBlock = [
+                ...spaceRuleBlocks,
+                ...eventRuleData.ruleBlocks,
+              ].find((item) => item.id === key);
+              console.log(key, ruleBlock);
               const agreement = agreements[key];
               if (agreement.agree == null) {
                 throw new Error(
@@ -219,10 +221,6 @@ const StepCheckRuleBlocks = ({
         };
       }
     );
-  }, [spaceRuleBlocks, eventRuleBlocks]);
-
-  useEffect(() => {
-    console.log("allRuleBlocks: ", allRuleBlocks);
   }, [allRuleBlocks]);
 
   return (
@@ -300,20 +298,27 @@ const StepCheckRuleBlocks = ({
               </div>
             )}
             {ruleBlock.type === Type.RuleBlockType.spaceEventException ? (
-                    <div className="mt-2 ml-4 w-[300px] p-0 flex flex-col">
-                      <div className="flex flex-row justify-center items-center gap-[5px]">
-                        <img
-                          className="h-[16px] w-[16px]"
-                          src={ExclamationSm}
-                        />
-                        <div className="text-[#6b6c78] text-left text-[10px] font-inter flex-col left-[21px] top-[5px] leading-auto w-[279px] flex">
-                          <p>This rule has modified the original space rule:</p>
-                        </div>
-                      </div>
-                      <div className="flex flex-col ml-6">
-                        <p>
-                          <strong>
-                            {forceStaticNamedSpaceRuleBlocks.includes(
+              <div className="mt-2 ml-4 w-[300px] p-0 flex flex-col">
+                <div className="flex flex-row justify-center items-center gap-[5px]">
+                  <img className="h-[16px] w-[16px]" src={ExclamationSm} />
+                  <div className="text-[#6b6c78] text-left text-[10px] font-inter flex-col left-[21px] top-[5px] leading-auto w-[279px] flex">
+                    <p>This rule has modified the original space rule:</p>
+                  </div>
+                </div>
+                <div className="flex flex-col ml-6">
+                  <p>
+                    <strong>
+                      {forceStaticNamedSpaceRuleBlocks.includes(
+                        spaceRuleBlocks.find(
+                          (item) =>
+                            item.hash ===
+                            ruleBlock.content.split(
+                              Type.RuleBlockContentDivider.type
+                            )[0]
+                        )?.type
+                      )
+                        ? t(
+                            getRuleBlockTypeNameTranslationKey(
                               spaceRuleBlocks.find(
                                 (item) =>
                                   item.hash ===
@@ -322,43 +327,33 @@ const StepCheckRuleBlocks = ({
                                   )[0]
                               )?.type
                             )
-                              ? t(
-                                  getRuleBlockTypeNameTranslationKey(
-                                    spaceRuleBlocks.find(
-                                      (item) =>
-                                        item.hash ===
-                                        ruleBlock.content.split(
-                                          Type.RuleBlockContentDivider.type
-                                        )[0]
-                                    )?.type
-                                  )
-                                )
-                              : spaceRuleBlocks.find(
-                                  (item) =>
-                                    item.hash ===
-                                    ruleBlock.content.split(
-                                      Type.RuleBlockContentDivider.type
-                                    )[0]
-                                )?.name}
-                          </strong>
-                        </p>
-                        <p>
-                          {
-                            // TODO. dynamic content parsing by original spaceRuleBlock type
-                            spaceRuleBlocks.find(
-                              (item) =>
-                                item.hash ===
-                                ruleBlock.content.split(
-                                  Type.RuleBlockContentDivider.type
-                                )[0]
-                            )?.content
-                          }
-                        </p>
-                      </div>
-                    </div>
-                  ) : (
-                    ""
-                  )}
+                          )
+                        : spaceRuleBlocks.find(
+                            (item) =>
+                              item.hash ===
+                              ruleBlock.content.split(
+                                Type.RuleBlockContentDivider.type
+                              )[0]
+                          )?.name}
+                    </strong>
+                  </p>
+                  <p>
+                    {
+                      // TODO. dynamic content parsing by original spaceRuleBlock type
+                      spaceRuleBlocks.find(
+                        (item) =>
+                          item.hash ===
+                          ruleBlock.content.split(
+                            Type.RuleBlockContentDivider.type
+                          )[0]
+                      )?.content
+                    }
+                  </p>
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
         ))}
         <div className="bg-white border border-dashed border-gray-200 rounded-xl p-6 round flex items-center justify-center mb-24">

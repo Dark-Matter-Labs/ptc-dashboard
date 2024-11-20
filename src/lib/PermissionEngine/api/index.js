@@ -231,6 +231,12 @@ export class API {
     return response?.ruleBlocks ?? [];
   };
 
+  fetchRuleByRuleId = async (ruleId) => {
+    const response = await this.get("rule/:ruleId", { ruleId });
+
+    return response ?? [];
+  };
+
   fetchSpaceApprovedRulesSortBy = async (spaceId, sortBy) => {
     const response = await this.get(
       "space/approved-rule",

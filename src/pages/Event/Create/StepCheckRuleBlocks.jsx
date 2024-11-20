@@ -23,6 +23,7 @@ const StepCheckRuleBlocks = ({
   ruleTypeInterpreter,
   getRuleBlockTypeNameTranslationKey,
   updateEventRuleData,
+  updateEventData,
   setIsStepComplete,
   setNextStepButtonText,
   permissionEngineAPI,
@@ -46,6 +47,16 @@ const StepCheckRuleBlocks = ({
       ...prev,
       [id]: { ...prev[id], agree: isAgree },
     }));
+  };
+
+  const handleAgreeAll = (e) => {
+    e.preventDefault();
+    // Set all rule blocks to agree (for debugging purposes)
+    const newAgreements = {};
+    allRuleBlocks.forEach((ruleBlock) => {
+      newAgreements[ruleBlock.id] = { agree: true };
+    });
+    setAgreements(newAgreements);
   };
 
   const handleException = (id, desiredValue, reason) => {
@@ -75,7 +86,14 @@ const StepCheckRuleBlocks = ({
 
       return agreement.agree === false && ruleBlock;
     });
-    setNextStepButtonText(hasDisagreement ? "Request exception" : "Next");
+    console.log("hasDisagreements? ::: ", hasDisagreement);
+    if (hasDisagreement) {
+      setNextStepButtonText("Request exception");
+      updateEventData({ requestType: "exceptions" });
+    } else {
+      setNextStepButtonText("Next");
+      updateEventData({ requestType: "agreed" });
+    }
   }, [agreements, setNextStepButtonText]);
 
   const loadEventRuleBlocks = async () => {
@@ -231,6 +249,12 @@ const StepCheckRuleBlocks = ({
       </div>
 
       <p className="mb-4">{eventRuleData.details}</p>
+      <button
+        onClick={(e) => handleAgreeAll(e)}
+        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+      >
+        Agree to All Rules
+      </button>
 
       <div className="flex flex-col gap-4 text-gray-500">
         {allRuleBlocks.map((ruleBlock) => (
@@ -378,6 +402,7 @@ StepCheckRuleBlocks.propTypes = {
   setNextStepButtonText: PropTypes.func.isRequired,
   setIsStepComplete: PropTypes.func.isRequired,
   updateEventRuleData: PropTypes.func.isRequired,
+  updateEventData: PropTypes.func.isRequired,
   ruleTypeInterpreter: PropTypes.func.isRequired,
   getRuleBlockTypeNameTranslationKey: PropTypes.func.isRequired,
   permissionEngineAPI: PropTypes.object,

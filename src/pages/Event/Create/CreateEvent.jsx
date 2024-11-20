@@ -66,6 +66,7 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
     // id: null,
     // name: null, // to be collected from form
     // parentRuleId: null,
+
     spaceId: spaceId,
     ruleBlocks: [],
     target: Type.RuleTarget.spaceEvent,
@@ -85,6 +86,7 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
     // images: [],
     topicIds: [],
     privateRuleBlocks: [],
+    requestType: null,
   });
   // eslint-disable-next-line no-unused-vars
   const [alertMessage, setAlertMessage] = useState(null);
@@ -136,9 +138,16 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
 
   useEffect(() => {
     console.log("event data: ", eventData);
+  }, [eventData]);
+
+  useEffect(() => {
+    console.log("isStepComplete: ", isStepComplete);
+  }, [isStepComplete]);
+
+  useEffect(() => {
     loadSpace();
     loadSpaceRule();
-  }, [eventData]);
+  }, []);
 
   // Define the steps content array
   const content = [
@@ -196,6 +205,7 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
       spaceRule={spaceRule}
       eventRuleData={eventRuleData}
       updateEventRuleData={updateEventRuleData}
+      updateEventData={updateEventData}
       setNextStepButtonText={setNextStepButtonText}
       permissionEngineAPI={permissionEngineAPI}
       spaceRuleBlockExcludedTypes={spaceRuleBlockExcludedTypes}
@@ -215,6 +225,7 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
       permissionEngineAPI={permissionEngineAPI}
       isStepComplete={isStepComplete}
       setIsStepComplete={setIsStepComplete}
+      eventData={eventData}
     />,
   ];
 
@@ -393,6 +404,10 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
   useEffect(() => {
     console.log("eventData: ", eventData);
   }, [eventData]);
+
+  useEffect(() => {
+    console.log("agreements: ", agreements);
+  }, [agreements]);
 
   return (
     <form className="text-center pt-2">

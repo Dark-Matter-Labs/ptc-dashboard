@@ -15,8 +15,13 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
     Type.RuleBlockType.spaceConsentMethod,
     Type.RuleBlockType.spaceConsentTimeout,
     Type.RuleBlockType.spacePostEventCheck,
-
     Type.RuleBlockType.spacePrivateGuide,
+
+    // TODO. temporary exclude for workshop
+    Type.RuleBlockType.spaceAvailability,
+    Type.RuleBlockType.spaceAvailabilityUnit,
+    Type.RuleBlockType.spaceMaxAvailabilityUnitCount,
+    Type.RuleBlockType.spaceAvailabilityBuffer,
   ];
   const spaceRuleBlockOrderPriority = [
     Type.RuleBlockType.spaceExcludedTopic,

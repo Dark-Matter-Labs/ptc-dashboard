@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { CalendarIcon, ClockIcon } from "@heroicons/react/outline";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import * as Type from "../../../lib/PermissionEngine/type";
 
 export default function DisplayEvents({ permissionEngineAPI }) {
   const navigate = useNavigate();
@@ -16,18 +17,17 @@ export default function DisplayEvents({ permissionEngineAPI }) {
   };
 
   const fetchEvents = async () => {
-    if (me) {
-      await permissionEngineAPI
-        .fetchEvents({ page: 1, limit: 20, organizerId: me?.id })
-        .then((data) => {
-          console.log("event data: ", data);
-          setEvents(data);
-        })
-        .catch((error) => {
-          console.error("Error fetching event info:", error);
-          navigate("/");
-        });
-    }
+    // TODO. add pagination or infinite scroll feature
+    await permissionEngineAPI
+      .fetchEvents({ page: 1, limit: 20, organizerId: me?.id })
+      .then((data) => {
+        console.log("event data: ", data);
+        setEvents(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching event info:", error);
+        navigate("/");
+      });
   };
 
   useEffect(() => {
@@ -35,7 +35,9 @@ export default function DisplayEvents({ permissionEngineAPI }) {
   }, []);
 
   useEffect(() => {
-    fetchEvents();
+    if (me) {
+      fetchEvents();
+    }
   }, [me]);
 
   // Helper function to format event date and time
@@ -104,7 +106,7 @@ export default function DisplayEvents({ permissionEngineAPI }) {
   };
 
   return (
-    <div className="px-8 pt-8">
+    <div className="px-8 pt-8 mb-24">
       <h1 className="text-2xl font-bold text-black">My events</h1>
       {user ? (
         events.length > 0 ? (
@@ -119,6 +121,28 @@ export default function DisplayEvents({ permissionEngineAPI }) {
                   event.startsAt,
                   event.duration
                 );
+                let eventStatusColor = "bg-yellow-300";
+
+                switch (event.status) {
+                  case Type.SpaceEventStatus.permissionRejected:
+                  case Type.SpaceEventStatus.cancelled:
+                    eventStatusColor = "bg-red-300";
+                    break;
+                  case Type.SpaceEventStatus.permissionGranted:
+                    eventStatusColor = "bg-[#3DD598]";
+                    break;
+                  case Type.SpaceEventStatus.complete:
+                  case Type.SpaceEventStatus.completeWithIssueResolved:
+                    eventStatusColor = "bg-gray-600";
+                    break;
+                  case Type.SpaceEventStatus.completeWithIssue:
+                  case Type.SpaceEventStatus.running:
+                  case Type.SpaceEventStatus.closed:
+                  case Type.SpaceEventStatus.permissionRequested:
+                  case Type.SpaceEventStatus.pending:
+                  default:
+                    break;
+                }
                 return (
                   <div
                     key={key}
@@ -126,7 +150,9 @@ export default function DisplayEvents({ permissionEngineAPI }) {
                   >
                     <div className="flex items-center justify-between">
                       <div className="font-semibold text-xl ">{event.name}</div>
-                      <div className="bg-yellow-300 text-sm p-1 px-2 rounded-full">
+                      <div
+                        className={`${eventStatusColor} text-sm p-1 px-4 rounded-full`}
+                      >
                         {event.status}
                       </div>
                     </div>

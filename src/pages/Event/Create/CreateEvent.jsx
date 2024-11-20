@@ -84,6 +84,7 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
     // callbackLink: null,
     // images: [],
     topicIds: [],
+    privateRuleBlocks: [],
   });
   // eslint-disable-next-line no-unused-vars
   const [alertMessage, setAlertMessage] = useState(null);
@@ -363,9 +364,10 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
 
     //API call
     try {
-      const spaceEventRuleBlocks = await createEventRuleBlocks(
-        eventRuleData.ruleBlocks
-      );
+      const spaceEventRuleBlocks = await createEventRuleBlocks([
+        ...eventRuleData.ruleBlocks,
+        ...eventData.privateRuleBlocks,
+      ]);
       const spaceEventRule = await createEventRule(spaceEventRuleBlocks);
       const spaceEvent = await createEvent({
         ...eventData,

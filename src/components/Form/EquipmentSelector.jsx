@@ -1,8 +1,13 @@
 import { useState, useEffect } from "react";
 import { SearchIcon, PresentationChartBarIcon } from "@heroicons/react/outline";
 import PropTypes from "prop-types";
+import * as Type from "../../lib/PermissionEngine/type";
 
-export const EquipmentSelector = ({ spaceId, permissionEngineAPI }) => {
+export const EquipmentSelector = ({
+  spaceId,
+  updateEventData,
+  permissionEngineAPI,
+}) => {
   const [allEquipment, setAllEquipment] = useState({});
   const [selectedEquipment, setSelectedEquipment] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
@@ -25,15 +30,14 @@ export const EquipmentSelector = ({ spaceId, permissionEngineAPI }) => {
   };
 
   const handleSelectAll = (category) => {
+    setSearchTerm("");
     setSelectedEquipment((prev) => {
       const isAllSelected =
         (selectedEquipment[category] || []).length ===
         (allEquipment[category] || []).length;
       return {
         ...prev,
-        [category]: isAllSelected
-          ? []
-          : allEquipment[category].map((eq) => eq.name),
+        [category]: isAllSelected ? [] : allEquipment[category],
       };
     });
   };
@@ -54,10 +58,7 @@ export const EquipmentSelector = ({ spaceId, permissionEngineAPI }) => {
         if (!categorizedEquipment[category]) {
           categorizedEquipment[category] = [];
         }
-        categorizedEquipment[category].push({
-          name: item.name,
-          quantity: item.quantity,
-        });
+        categorizedEquipment[category].push(item);
       });
 
       console.log("Categorized Equipment:", categorizedEquipment);
@@ -70,6 +71,26 @@ export const EquipmentSelector = ({ spaceId, permissionEngineAPI }) => {
   useEffect(() => {
     loadEquipments();
   }, [spaceId]);
+
+  useEffect(() => {
+    const selectedSpaceEquipments = [];
+    Object.values(selectedEquipment).map((categoryEquipments) =>
+      selectedSpaceEquipments.push(...categoryEquipments)
+    );
+    updateEventData({
+      privateRuleBlocks: selectedSpaceEquipments.map(
+        (spaceEquipment) => {
+          return {
+            name: spaceEquipment.name,
+            type: Type.RuleBlockType.spaceEventRequireEquipment,
+            content: [spaceEquipment.id, spaceEquipment.quantity].join(
+              Type.RuleBlockContentDivider.type
+            ),
+          };
+        }
+      ),
+    });
+  }, [selectedEquipment]);
 
   const getFilteredEquipment = (category) => {
     return (allEquipment[category] || []).filter((item) =>
@@ -127,10 +148,12 @@ export const EquipmentSelector = ({ spaceId, permissionEngineAPI }) => {
                 <input
                   type="checkbox"
                   id={`${category}-${index}`}
-                  checked={(selectedEquipment[category] || []).includes(
-                    item.name
-                  )}
-                  onChange={() => handleEquipmentChange(category, item.name)}
+                  checked={
+                    !!(selectedEquipment[category] || []).find(
+                      (selectedItem) => selectedItem.id === item.id
+                    )
+                  }
+                  onChange={() => handleEquipmentChange(category, item)}
                 />
               </div>
             ))}

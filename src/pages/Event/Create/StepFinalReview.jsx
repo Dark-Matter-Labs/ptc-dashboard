@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-<<<<<<< HEAD
 import { useUser } from "../../../useUser";
-=======
-const StepFinalReview = ({ setNavTitle, setIsStepComplete }) => {
-  const { t } = useTranslation();
->>>>>>> 845aaafa6eb0820824b909fa6079078be7209d37
+
+// const { t } = useTranslation();
 
 const temp_eventData = {
   spaceId: "071ad776-0d37-40a5-8a5b-548f7768621c",
@@ -28,7 +25,12 @@ const temp_eventData = {
   ruleId: "4e283863-5483-491b-b5e9-027e4f245c25",
   requestType: "agreed",
 };
-const StepFinalReview = ({ setNavTitle, eventData, permissionEngineAPI }) => {
+const StepFinalReview = ({
+  setIsStepComplete,
+  setNavTitle,
+  eventData,
+  permissionEngineAPI,
+}) => {
   const { user } = useUser();
   const { t } = useTranslation();
   const [topics, setTopics] = useState([]);
@@ -238,7 +240,6 @@ const StepFinalReview = ({ setNavTitle, eventData, permissionEngineAPI }) => {
 };
 
 export default StepFinalReview;
-
 StepFinalReview.propTypes = {
   setNavTitle: PropTypes.func.isRequired, // Required
   eventData: PropTypes.object, // Required

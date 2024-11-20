@@ -67,7 +67,10 @@ function App() {
               />
             }
           />
-          <Route path="/events" element={<DisplayEvents />} />
+          <Route
+            path="/events"
+            element={<DisplayEvents setNavTitle={setNavTitle} />}
+          />
         </Routes>
       </UserProvider>
     </div>

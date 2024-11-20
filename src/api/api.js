@@ -134,3 +134,17 @@ export const fetchEquipment = async (spaceId) => {
 }
 
 
+// Fetch events
+
+export const fetchEvents = async () => {
+    console.log("call fetching events data!");
+    const response = await fetch("/api/v1/event", {
+        credentials: "include",
+    })
+
+    if (!response.ok) {
+        throw new Error("Error fetching events");
+    }
+    const data = await response.json();
+    return data.data;
+};

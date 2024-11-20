@@ -1,30 +1,85 @@
 import { useUser } from "../../../useUser";
 import { useState, useEffect } from "react";
-import { CalendarIcon, ClockIcon } from "@heroicons/react/outline";
+// import { CalendarIcon, ClockIcon } from "@heroicons/react/outline";
+import { fetchEvents } from "../../../api/api";
+import { useTranslation } from "react-i18next";
+import { SearchIcon, AdjustmentsIcon } from "@heroicons/react/solid";
+import PropTypes from "prop-types";
 
-export default function DisplayEvents() {
+const mockeventdata = [
+  {
+    id: "8e54ec74-01a7-41f8-878e-e00df536d0f5",
+    name: "test Event 3",
+    details: "Meeting with John",
+    startsAt: "2024-11-15T15:00:00+00:00",
+    end: "2024-11-15T16:00:00+00:00",
+    status: "pending",
+    duration: "2h",
+  },
+  {
+    id: "b7a9f8e2-29c1-4b88-b7b8-9d607af4823e",
+    name: "Game night",
+    details: "Quarterly team workshop",
+    startsAt: "2024-12-01T09:00:00+00:00",
+    end: "2024-12-01T12:00:00+00:00",
+    status: "granted",
+    duration: "4h",
+  },
+  {
+    id: "f14c6b7e-4d59-48a7-b752-67f104b65b3d",
+    name: "Berry garden",
+    details: "Final submission of project files",
+    startsAt: "2024-11-20T10:00:00+00:00",
+    end: "2024-11-20T11:30:00+00:00",
+    status: "completed",
+    duration: "2h",
+  },
+  {
+    id: "cfc92c78-a63d-4f59-8b4a-38ab72a30952",
+    name: "Movie night",
+    details: "Presentation for client approval",
+    startsAt: "2024-11-22T14:00:00+00:00",
+    end: "2024-11-22T15:30:00+00:00",
+    status: "pending",
+    duration: "1h",
+  },
+  {
+    id: "d5b47f6a-fb3f-41c5-8fc5-d1282c0f7d89",
+    name: "Open mic",
+    details: "Review pull requests and provide feedback",
+    startsAt: "2024-11-18T16:00:00+00:00",
+    end: "2024-11-18T17:00:00+00:00",
+    status: "granted",
+    duration: "2h",
+  },
+  {
+    id: "ed7c842e-7917-46e7-8e5b-45f90e3e6fd3",
+    name: "Art workshop",
+    details: "Team retrospective for the last sprint",
+    startsAt: "2024-11-25T11:00:00+00:00",
+    end: "2024-11-25T12:30:00+00:00",
+    status: "completed",
+    duration: "2h",
+  },
+];
+
+export default function DisplayEvents({ setNavTitle }) {
+  const { t } = useTranslation();
   const [events, setEvents] = useState([]);
   const { user } = useUser();
-  const fetchEvents = () => {
-    console.log("call fetching events data");
-    fetch("/api/v1/event", {
-      credentials: "include",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.message === "Unauthorized") {
-          console.log("User not logged in.");
-        }
-        console.log("event data: ", data);
-        setEvents(data.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching profile info:", error);
-      });
+
+  const loadEvents = async () => {
+    const data = await fetchEvents();
+    setEvents(data);
   };
   useEffect(() => {
-    fetchEvents();
+    loadEvents();
+    setNavTitle(t("events.title"));
   }, []);
+
+  useEffect(() => {
+    console.log("events: ", events);
+  }, [events]);
 
   // Helper function to format event date and time
   const formatEventDateTime = (start, duration) => {
@@ -34,8 +89,11 @@ export default function DisplayEvents() {
       ? new Date(startDate.getTime() + durationMs)
       : startDate;
 
-    // Format date as YYYY-MM-DD
-    const eventDate = startDate.toLocaleDateString();
+    // Format date as YYYY.M.D
+    const year = startDate.getFullYear();
+    const month = startDate.getMonth() + 1; // Months are zero-based
+    const day = startDate.getDate();
+    const eventDate = `${year}.${month}.${day}`;
 
     // Format start time and end time as HH:MM
     const startTime = startDate.toLocaleTimeString([], {
@@ -91,45 +149,89 @@ export default function DisplayEvents() {
     return milliseconds;
   };
 
+  // Define background colors for the cards based on the index
+  const cardBgColors = [
+    "bg-gray-100",
+    "bg-blue-100",
+    "bg-yellow-100",
+    "bg-green-100",
+    "bg-purple-100",
+  ];
+  // Define background colors for status tabs
+  const statusBgColors = {
+    pending: "bg-yellow-300",
+    granted: "bg-green-300",
+    completed: "bg-gray-300",
+    closed: "bg-red-300",
+  };
+
   return (
     <div className="px-8 pt-8">
-      <h1 className="text-2xl font-bold text-black">My events</h1>
+      <div className="flex items-center w-full max-w-sm">
+        {/* Search Input with Icon */}
+        <div className="relative flex-grow">
+          <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+            {/* Search Icon */}
+            <SearchIcon className="size-5"></SearchIcon>
+          </span>
+          <input
+            type="text"
+            placeholder="Search"
+            className="w-full pl-10 pr-3 py-2 border rounded-md focus:ring-1 focus:ring-gray-400 focus:outline-none text-sm"
+          />
+        </div>
+
+        {/* Search Button */}
+        <button className="flex gap-2 items-center ml-2 px-4 py-2 text-white bg-gray-500 rounded-md hover:bg-gray-700 focus:ring-1 focus:ring-gray-500">
+          {/* Button Icon */}
+          <AdjustmentsIcon className="size-4 rotate-90"></AdjustmentsIcon>{" "}
+          Filter
+        </button>
+      </div>
       {user ? (
         events.length > 0 ? (
           <div>
-            <p>
-              you have
-              {events.length == 1 ? " 1 event." : ` ${events.length} events.`}
-            </p>
             <div className="mt-8 flex flex-col gap-4 ">
-              {events.map((event, key) => {
+              {events.concat(mockeventdata).map((event, key) => {
                 const { eventDate, eventTime } = formatEventDateTime(
                   event.startsAt,
                   event.duration
                 );
+
+                const cardBgColor = cardBgColors[key % cardBgColors.length];
+                const statusBgColor =
+                  statusBgColors[event.status] || "bg-gray-300";
                 return (
                   <div
                     key={key}
-                    className="border p-4 shadow rounded-[1rem] bg-white"
+                    className={`border p-4 shadow rounded-[1rem] ${cardBgColor}`}
                   >
                     <div className="flex items-center justify-between">
-                      <div className="font-semibold text-xl ">
-                        {key} - {event.name}
-                      </div>
-                      <div className="bg-yellow-300 text-sm p-1 px-2 rounded-full">
-                        {event.status}
+                      <div className="font-semibold text-xl ">{event.name}</div>
+                      <div
+                        className={`text-sm p-1 px-2 rounded-full ${statusBgColor}`}
+                      >
+                        {event.status === "granted"
+                          ? "Permission granted"
+                          : event.status === "completed"
+                            ? "Completed"
+                            : event.status === "pending"
+                              ? "Permision pending"
+                              : event.status === "closed"
+                                ? "Closed"
+                                : "unknown"}
                       </div>
                     </div>
-                    <hr className="my-2" />
 
                     <div className="flex items-center">
-                      <CalendarIcon className="size-4 text-gray-600 mr-2" />
+                      {/* <CalendarIcon className="size-4 text-gray-600 mr-2" /> */}
                       <span>{eventDate}</span>
                     </div>
                     <div className="flex items-center mt-1">
-                      <ClockIcon className="size-4 text-gray-600 mr-2" />
+                      {/* <ClockIcon className="size-4 text-gray-600 mr-2" /> */}
                       <span>{eventTime}</span>
                     </div>
+                    <div className="mt-8">{event.details}</div>
                   </div>
                 );
               })}
@@ -145,3 +247,7 @@ export default function DisplayEvents() {
     </div>
   );
 }
+
+DisplayEvents.propTypes = {
+  setNavTitle: PropTypes.func.isRequired, // Required
+};

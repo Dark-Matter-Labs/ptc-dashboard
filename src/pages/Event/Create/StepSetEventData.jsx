@@ -199,7 +199,7 @@ StepSetEventData.propTypes = {
   setNextStepButtonText: PropTypes.func.isRequired,
   setIsStepComplete: PropTypes.func,
   permissionEngineAPI: PropTypes.object,
-  currentMonth: PropTypes.date,
+  currentMonth: PropTypes.object,
   setCurrentMonth: PropTypes.func.isRequired,
   selectedDate: PropTypes.string,
   setSelectedDate: PropTypes.func.isRequired,

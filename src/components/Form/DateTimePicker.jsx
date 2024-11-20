@@ -268,7 +268,7 @@ DateTimePicker.propTypes = {
   spaceId: PropTypes.string,
   timezone: PropTypes.string,
   permissionEngineAPI: PropTypes.object,
-  currentMonth: PropTypes.date,
+  currentMonth: PropTypes.object,
   setCurrentMonth: PropTypes.func.isRequired,
   selectedDate: PropTypes.string,
   setSelectedDate: PropTypes.func.isRequired,

@@ -3,7 +3,6 @@ import { TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import { throttle } from "lodash";
 
 function Stepper({
   currentStep,

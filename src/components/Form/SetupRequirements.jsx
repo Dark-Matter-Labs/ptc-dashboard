@@ -1,7 +1,14 @@
 import { EquipmentSelector } from "./EquipmentSelector";
 import PropTypes from "prop-types";
 
-export const SetupRequirements = ({ spaceId, updateEventData, updateEventRuleData, permissionEngineAPI }) => {
+export const SetupRequirements = ({
+  spaceId,
+  updateEventData,
+  updateEventRuleData,
+  permissionEngineAPI,
+  selectedEquipment,
+  setSelectedEquipment,
+}) => {
   return (
     <div className="text-left">
       <hr className="my-6" />
@@ -16,6 +23,8 @@ export const SetupRequirements = ({ spaceId, updateEventData, updateEventRuleDat
           updateEventData={updateEventData}
           updateEventRuleData={updateEventRuleData}
           permissionEngineAPI={permissionEngineAPI}
+          selectedEquipment={selectedEquipment}
+          setSelectedEquipment={setSelectedEquipment}
         />
         {/* Food Allowed selector */}
       </div>
@@ -28,4 +37,6 @@ SetupRequirements.propTypes = {
   updateEventData: PropTypes.func.isRequired,
   updateEventRuleData: PropTypes.func.isRequired,
   permissionEngineAPI: PropTypes.object,
+  selectedEquipment: PropTypes.object,
+  setSelectedEquipment: PropTypes.func.isRequired,
 };

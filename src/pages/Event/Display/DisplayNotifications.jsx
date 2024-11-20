@@ -1,114 +1,79 @@
 import { useUser } from "../../../useUser";
 import { useState, useEffect } from "react";
-import { CalendarIcon, ClockIcon } from "@heroicons/react/outline";
+import { CalendarIcon, MailOpenIcon, MailIcon } from "@heroicons/react/outline";
+import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import * as Type from "../../../lib/PermissionEngine/type";
 
-// TODO. DisplayNotificaitons
-export default function DisplayNotifications() {
-  const [events, setEvents] = useState([]);
+export default function DisplayNotifications({ permissionEngineAPI }) {
+  const navigate = useNavigate();
+  const [notifications, setNotifications] = useState([]);
+  const [me, setMe] = useState(null);
   const { user } = useUser();
-  const fetchEvents = () => {
-    console.log("call fetching events data");
-    fetch("/api/v1/event", {
-      credentials: "include",
-    })
-      .then((response) => response.json())
+
+  const fetchMe = async () => {
+    const me = await permissionEngineAPI.fetchMe();
+    setMe(me);
+  };
+
+  const fetchNotification = async () => {
+    // TODO. add pagination or infinite scroll feature
+    await permissionEngineAPI
+      .fetchNotification({ page: 1, limit: 20 })
       .then((data) => {
-        if (data.message === "Unauthorized") {
-          console.log("User not logged in.");
-        }
-        console.log("event data: ", data);
-        setEvents(data.data);
+        console.log("notification data: ", data);
+        setNotifications(data);
       })
       .catch((error) => {
-        console.error("Error fetching profile info:", error);
+        console.error("Error fetching notification info:", error);
+        navigate("/");
       });
   };
+
   useEffect(() => {
-    fetchEvents();
+    fetchMe();
   }, []);
 
-  // Helper function to format event date and time
-  const formatEventDateTime = (start, duration) => {
-    const startDate = new Date(start);
-    const durationMs = parseDuration(duration);
-    const endDate = durationMs
-      ? new Date(startDate.getTime() + durationMs)
-      : startDate;
-
-    // Format date as YYYY-MM-DD
-    const eventDate = startDate.toLocaleDateString();
-
-    // Format start time and end time as HH:MM
-    const startTime = startDate.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-    const endTime = endDate.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-
-    return { eventDate, eventTime: `${startTime} - ${endTime}` };
-  };
-
-  // Helper function to parse duration and calculate end time
-  const parseDuration = (duration) => {
-    const durationRegex = /(\d+)([dwMyhms])/;
-    const match = duration.match(durationRegex);
-
-    if (!match) return null;
-
-    const value = parseInt(match[1], 10);
-    const unit = match[2];
-
-    let milliseconds = 0;
-
-    switch (unit) {
-      case "d":
-        milliseconds = value * 24 * 60 * 60 * 1000;
-        break;
-      case "w":
-        milliseconds = value * 7 * 24 * 60 * 60 * 1000;
-        break;
-      case "M":
-        milliseconds = value * 30 * 24 * 60 * 60 * 1000; // approx. month as 30 days
-        break;
-      case "y":
-        milliseconds = value * 365 * 24 * 60 * 60 * 1000; // approx. year as 365 days
-        break;
-      case "h":
-        milliseconds = value * 60 * 60 * 1000;
-        break;
-      case "m":
-        milliseconds = value * 60 * 1000;
-        break;
-      case "s":
-        milliseconds = value * 1000;
-        break;
-      default:
-        return null;
+  useEffect(() => {
+    if (me) {
+      fetchNotification();
     }
+  }, [me]);
 
-    return milliseconds;
+  useEffect(() => {
+    notifications.map((notification) => {
+      if (notification.status !== Type.UserNotificationStatus.complete) {
+        permissionEngineAPI.updateNotificationToComplete(notification.id);
+      }
+    });
+  }, [notifications]);
+
+  // Helper function to format notification date and time
+  const formatDateTime = (time) => {
+    const date = new Date(time);
+
+    // Format date as YYYY-MM-DD 00:00:00
+    const dateString = date.toLocaleDateString();
+    const timeString = date.toLocaleTimeString();
+
+    return [dateString, timeString].join(" ");
   };
 
   return (
-    <div className="px-8 pt-8">
-      <h1 className="text-2xl font-bold text-black">My events</h1>
+    <div className="px-8 pt-8 mb-24">
+      <h1 className="text-2xl font-bold text-black">My notifications</h1>
       {user ? (
-        events.length > 0 ? (
+        notifications.length > 0 ? (
           <div>
             <p>
               you have
-              {events.length == 1 ? " 1 event." : ` ${events.length} events.`}
+              {notifications.length == 1
+                ? " 1 notification."
+                : ` ${notifications.length} notifications.`}
             </p>
             <div className="mt-8 flex flex-col gap-4 ">
-              {events.map((event, key) => {
-                const { eventDate, eventTime } = formatEventDateTime(
-                  event.startsAt,
-                  event.duration
-                );
+              {notifications.map((notification, key) => {
+                const dateTimeString = formatDateTime(notification.createdAt);
                 return (
                   <div
                     key={key}
@@ -116,21 +81,28 @@ export default function DisplayNotifications() {
                   >
                     <div className="flex items-center justify-between">
                       <div className="font-semibold text-xl ">
-                        {key} - {event.name}
+                        {notification.subjectPart}
                       </div>
-                      <div className="bg-yellow-300 text-sm p-1 px-2 rounded-full">
-                        {event.status}
-                      </div>
+                      {notification.status ===
+                      Type.UserNotificationStatus.complete ? (
+                        <MailOpenIcon className="size-4 text-gray-600 mr-2" />
+                      ) : (
+                        <MailIcon className="size-4 text-red-400 mr-2" />
+                      )}
                     </div>
                     <hr className="my-2" />
 
                     <div className="flex items-center">
                       <CalendarIcon className="size-4 text-gray-600 mr-2" />
-                      <span>{eventDate}</span>
+                      <span>{dateTimeString}</span>
                     </div>
                     <div className="flex items-center mt-1">
-                      <ClockIcon className="size-4 text-gray-600 mr-2" />
-                      <span>{eventTime}</span>
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            notification?.htmlPart ?? notification?.textPart,
+                        }}
+                      ></div>
                     </div>
                   </div>
                 );
@@ -138,7 +110,7 @@ export default function DisplayNotifications() {
             </div>
           </div>
         ) : (
-          <p>You have no events.</p>
+          <p>You have no notifications.</p>
         )
       ) : (
         // user is not logged in

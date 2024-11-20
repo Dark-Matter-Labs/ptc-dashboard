@@ -14,5 +14,6 @@
 }
 
 .fade-in {
+  z-index: 20;
   animation: fadeIn 1s ease-out forwards;
 }

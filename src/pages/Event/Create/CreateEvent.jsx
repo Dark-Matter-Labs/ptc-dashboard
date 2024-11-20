@@ -15,8 +15,13 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
     Type.RuleBlockType.spaceConsentMethod,
     Type.RuleBlockType.spaceConsentTimeout,
     Type.RuleBlockType.spacePostEventCheck,
-
     Type.RuleBlockType.spacePrivateGuide,
+
+    // TODO. temporary exclude for workshop
+    Type.RuleBlockType.spaceAvailability,
+    Type.RuleBlockType.spaceAvailabilityUnit,
+    Type.RuleBlockType.spaceMaxAvailabilityUnitCount,
+    Type.RuleBlockType.spaceAvailabilityBuffer,
   ];
   const spaceRuleBlockOrderPriority = [
     Type.RuleBlockType.spaceExcludedTopic,
@@ -100,6 +105,21 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
   const [nextStepBtnText, setNextStepButtonText] = useState("Next");
   const [agreements, setAgreements] = useState({});
 
+  // for DateTimePicker
+  const [currentMonth, setCurrentMonth] = useState(new Date()); // Default to the current month
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
+  const [idDateTimeDecided, setDateTimeDecided] = useState(false);
+
+  // for EventThemeSelector
+  const [selectedTopic, setSelectedTopic] = useState(null);
+
+  // for EquipmentSelector
+  const [selectedEquipment, setSelectedEquipment] = useState({});
+
+  // for StepChooseEventRule
+  const [selectedEventRule, setSelectedEventRule] = useState(null);
+
   const updateEventRuleData = (newData) => {
     setEventRuleData((prevData) => ({ ...prevData, ...newData }));
   };
@@ -166,6 +186,18 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
       permissionEngineAPI={permissionEngineAPI}
       isStepComplete={isStepComplete}
       setIsStepComplete={setIsStepComplete}
+      currentMonth={currentMonth}
+      setCurrentMonth={setCurrentMonth}
+      selectedDate={selectedDate}
+      setSelectedDate={setSelectedDate}
+      selectedTime={selectedTime}
+      setSelectedTime={setSelectedTime}
+      idDateTimeDecided={idDateTimeDecided}
+      setDateTimeDecided={setDateTimeDecided}
+      selectedTopic={selectedTopic}
+      setSelectedTopic={setSelectedTopic}
+      selectedEquipment={selectedEquipment}
+      setSelectedEquipment={setSelectedEquipment}
     />,
     <StepChooseEventRule
       key={2}
@@ -181,6 +213,9 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
       permissionEngineAPI={permissionEngineAPI}
       isStepComplete={isStepComplete}
       setIsStepComplete={setIsStepComplete}
+      selectedEventRule={selectedEventRule}
+      setSelectedEventRule={setSelectedEventRule}
+      setAgreements={setAgreements}
     />,
     <StepBrowseRuleBlocks
       key={3}

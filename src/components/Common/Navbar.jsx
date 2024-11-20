@@ -119,9 +119,6 @@ export default function Navbar({
           webSocket.current?.connected,
           webSocket.current?.id
         );
-        if (webSocket) {
-          return;
-        }
       });
 
       webSocket.current.on("disconnect", () => {
@@ -162,7 +159,7 @@ export default function Navbar({
         {notifications
           .filter((item) => item.subject)
           .map((content, index) =>
-            content.subject && content.html ? (
+            content.subject ? (
               <Notification
                 key={index}
                 subject={content.subject}

@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
+<<<<<<< HEAD
 import { useUser } from "../../../useUser";
+=======
+const StepFinalReview = ({ setNavTitle, setIsStepComplete }) => {
+  const { t } = useTranslation();
+>>>>>>> 845aaafa6eb0820824b909fa6079078be7209d37
 
 const temp_eventData = {
   spaceId: "071ad776-0d37-40a5-8a5b-548f7768621c",
@@ -116,6 +121,17 @@ const StepFinalReview = ({ setNavTitle, eventData, permissionEngineAPI }) => {
     return value;
   };
 
+  useEffect(() => {
+    setIsStepComplete(() => {
+      return () => {
+        return {
+          result: true,
+          message: "",
+        };
+      };
+    });
+  }, []);
+
   return (
     <div className="p-4 space-y-4 text-left">
       {/* Final Review */}
@@ -227,4 +243,5 @@ StepFinalReview.propTypes = {
   setNavTitle: PropTypes.func.isRequired, // Required
   eventData: PropTypes.object, // Required
   permissionEngineAPI: PropTypes.object, // Required
+  setIsStepComplete: PropTypes.func.isRequired, // Required
 };

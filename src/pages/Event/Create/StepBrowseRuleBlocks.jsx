@@ -17,6 +17,7 @@ const StepBrowseRuleBlocks = ({
   updateEventRuleData,
   setNextStepButtonText,
   permissionEngineAPI,
+  setIsStepComplete,
 }) => {
   const { t } = useTranslation();
   const [expandedCards, setExpandedCards] = useState({ 0: false }); //{0: true, 2: false}
@@ -103,6 +104,17 @@ const StepBrowseRuleBlocks = ({
   useEffect(() => {
     console.log("allRuleBlocks: ", allRuleBlocks);
   }, [allRuleBlocks]);
+
+  useEffect(() => {
+    setIsStepComplete(() => {
+      return () => {
+        return {
+          result: true,
+          message: "",
+        };
+      };
+    });
+  }, []);
 
   return (
     <div className="p-4 space-y-4 text-left bg-[#fafafb]">
@@ -227,6 +239,7 @@ StepBrowseRuleBlocks.propTypes = {
   spaceRuleBlockExcludedTypes: PropTypes.array,
   spaceRuleBlockOrderPriority: PropTypes.array,
   forceStaticNamedSpaceRuleBlocks: PropTypes.array,
+  setIsStepComplete: PropTypes.func.isRequired,
 };
 
 export default StepBrowseRuleBlocks;

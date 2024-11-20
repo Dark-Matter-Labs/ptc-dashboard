@@ -22,17 +22,20 @@ dayjs.extend(timezone);
 dayjs.extend(abbrTimezone);
 
 const DateTimePicker = ({
-  updateEventData,
   spaceId,
   timezone: spaceTimezone,
   permissionEngineAPI,
+  eventDateTime,
+  setEventDateTime,
+  currentMonth,
+  setCurrentMonth,
+  selectedDate,
+  setSelectedDate,
+  selectedTime,
+  setSelectedTime,
+  idDateTimeDecided,
+  setDateTimeDecided,
 }) => {
-  const [eventDateTime, setEventDateTime] = useState(""); // Store event date in ISO strings format
-  const [currentMonth, setCurrentMonth] = useState(new Date()); // Default to the current month
-  const [selectedDate, setSelectedDate] = useState("");
-  const [selectedTime, setSelectedTime] = useState("");
-  const [decided, setDecided] = useState(false);
-
   // availability
   const [availability, setAvailability] = useState([]);
 
@@ -92,7 +95,7 @@ const DateTimePicker = ({
   };
 
   const flagDecision = () => {
-    setDecided(!decided);
+    setDateTimeDecided(!idDateTimeDecided);
   };
 
   const loadAvailability = async (currentMonth) => {
@@ -103,9 +106,14 @@ const DateTimePicker = ({
         new Date(endOfMonth(currentMonth).getTime()).toISOString()
       );
       const parsedAvailability = data.reduce((acc, slot) => {
-        const date = formatInTimeZone(slot.startTime, spaceTimezone, "yyyy-MM-dd", {
-          timeZone: spaceTimezone,
-        });
+        const date = formatInTimeZone(
+          slot.startTime,
+          spaceTimezone,
+          "yyyy-MM-dd",
+          {
+            timeZone: spaceTimezone,
+          }
+        );
         const timeSlot =
           format(new Date(slot.startTime), "HH:mm") +
           "-" +
@@ -126,10 +134,7 @@ const DateTimePicker = ({
 
   useEffect(() => {
     //update event data when date and time are selected or changed
-    updateEventData({
-      startsAt: eventDateTime,
-      duration: "1h", // Duration is set to 1 hour by default
-    });
+    setEventDateTime(eventDateTime);
   }, [eventDateTime]);
 
   useEffect(() => {
@@ -148,7 +153,7 @@ const DateTimePicker = ({
     <div className="text-left">
       <hr className="my-6" />
       <div className="block mb-2 font-semibold text-xl">Date and time</div>
-      {!decided && (
+      {!idDateTimeDecided && (
         <>
           <div className="border rounded">
             <div className="p-2">
@@ -235,7 +240,7 @@ const DateTimePicker = ({
         </>
       )}
 
-      {decided && selectedDate && selectedTime && (
+      {idDateTimeDecided && selectedDate && selectedTime && (
         <div className="flex justify-between gap-4">
           <button
             onClick={flagDecision}
@@ -258,8 +263,17 @@ const DateTimePicker = ({
 export default DateTimePicker;
 
 DateTimePicker.propTypes = {
-  updateEventData: PropTypes.func.isRequired,
+  setEventDateTime: PropTypes.func.isRequired,
+  eventDateTime: PropTypes.string,
   spaceId: PropTypes.string,
   timezone: PropTypes.string,
   permissionEngineAPI: PropTypes.object,
+  currentMonth: PropTypes.object,
+  setCurrentMonth: PropTypes.func.isRequired,
+  selectedDate: PropTypes.string,
+  setSelectedDate: PropTypes.func.isRequired,
+  selectedTime: PropTypes.string,
+  setSelectedTime: PropTypes.func.isRequired,
+  idDateTimeDecided: PropTypes.bool,
+  setDateTimeDecided: PropTypes.func.isRequired,
 };

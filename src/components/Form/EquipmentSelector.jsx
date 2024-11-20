@@ -7,9 +7,10 @@ export const EquipmentSelector = ({
   spaceId,
   updateEventData,
   permissionEngineAPI,
+  selectedEquipment,
+  setSelectedEquipment,
 }) => {
   const [allEquipment, setAllEquipment] = useState({});
-  const [selectedEquipment, setSelectedEquipment] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleEquipmentChange = (category, item) => {
@@ -78,17 +79,15 @@ export const EquipmentSelector = ({
       selectedSpaceEquipments.push(...categoryEquipments)
     );
     updateEventData({
-      privateRuleBlocks: selectedSpaceEquipments.map(
-        (spaceEquipment) => {
-          return {
-            name: spaceEquipment.name,
-            type: Type.RuleBlockType.spaceEventRequireEquipment,
-            content: [spaceEquipment.id, spaceEquipment.quantity].join(
-              Type.RuleBlockContentDivider.type
-            ),
-          };
-        }
-      ),
+      privateRuleBlocks: selectedSpaceEquipments.map((spaceEquipment) => {
+        return {
+          name: spaceEquipment.name,
+          type: Type.RuleBlockType.spaceEventRequireEquipment,
+          content: [spaceEquipment.id, spaceEquipment.quantity].join(
+            Type.RuleBlockContentDivider.type
+          ),
+        };
+      }),
     });
   }, [selectedEquipment]);
 
@@ -169,4 +168,6 @@ EquipmentSelector.propTypes = {
   updateEventData: PropTypes.func.isRequired,
   updateEventRuleData: PropTypes.func.isRequired,
   permissionEngineAPI: PropTypes.object,
+  selectedEquipment: PropTypes.object,
+  setSelectedEquipment: PropTypes.func.isRequired,
 };

@@ -3,6 +3,7 @@ import { TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import { throttle } from "lodash";
 
 function Stepper({
   currentStep,
@@ -21,9 +22,15 @@ function Stepper({
 
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const sendRequest = async (e) => {
     e.preventDefault(); // Prevent form submission
+    if (isSubmitting === true) {
+      return;
+    } else {
+      setIsSubmitting(true);
+    }
 
     if (currentStep + 1 === numSteps) {
       console.log("Submitting at final review... currentStep ", currentStep);
@@ -45,9 +52,12 @@ function Stepper({
         setErrorMessage(
           "There was an error creating the event. Please try again."
         );
+      } finally {
+        // setIsSubmitting(false);
       }
     }
   };
+
   const nextStep = (e) => {
     e.preventDefault(); // Prevent form submission
     if (isStepComplete) {
@@ -204,6 +214,7 @@ function Stepper({
             </button>
             <button
               onClick={sendRequest}
+              disabled={isSubmitting}
               className="w-full px-4 py-2 bg-green-500 text-white rounded-md"
             >
               Send request

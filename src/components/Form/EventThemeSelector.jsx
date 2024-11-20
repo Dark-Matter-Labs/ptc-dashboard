@@ -7,12 +7,16 @@ export const EventThemeSelector = ({
   updateEventData,
   updateEventRuleData,
   permissionEngineAPI,
+  selectedTopic,
+  setSelectedTopic,
 }) => {
   const [topics, setTopics] = useState([]);
-  const [selectedTopic, setSelectedTopic] = useState(null);
   const loadTopics = async () => {
     try {
-      const data = await permissionEngineAPI.fetchTopics({page: 1, limit: 20});
+      const data = await permissionEngineAPI.fetchTopics({
+        page: 1,
+        limit: 20,
+      });
       setTopics(data);
     } catch (error) {
       console.error("Error fetching topics: ", error);
@@ -67,6 +71,7 @@ export const EventThemeSelector = ({
                   {checked && (
                     <button
                       onClick={(e) => {
+                        e.preventDefault()
                         e.stopPropagation(); // Prevent triggering Radio change
                         setSelectedTopic(null); // Deselect
                       }}
@@ -89,4 +94,6 @@ EventThemeSelector.propTypes = {
   updateEventData: PropTypes.func.isRequired,
   updateEventRuleData: PropTypes.func.isRequired,
   permissionEngineAPI: PropTypes.object,
+  selectedTopic: PropTypes.object,
+  setSelectedTopic: PropTypes.func.isRequired,
 };

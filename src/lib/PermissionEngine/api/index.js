@@ -361,8 +361,21 @@ export class API {
     const response = await this.get("user/me");
 
     return response;
-  }
+  };
 
+  fetchNotification = async (option = { page: 1, limit: 10 }) => {
+    const response = await this.get("user/notification", {}, option);
+
+    return response?.data ?? [];
+  };
+
+  updateNotificationToComplete = async (userNotificationId) => {
+    const response = await this.put("user/notification/:userNotificationId", {
+      userNotificationId,
+    });
+
+    return response;
+  };
   /**
    *
    * @param {CreateRuleBlockBody} body

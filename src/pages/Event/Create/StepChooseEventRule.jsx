@@ -13,13 +13,16 @@ const StepChooseEventRule = ({
   updateEventRuleData,
   setNextStepButtonText,
   permissionEngineAPI,
+  setIsStepComplete,
+  selectedEventRule,
+  setSelectedEventRule,
+  setAgreements,
 }) => {
   const { t } = useTranslation();
 
   const [releventRules, setRelevantRules] = useState([]);
   const [newestRules, setNewestRules] = useState([]);
   const [popularRules, setPopularRules] = useState([]);
-  const [selectedEventRule, setSelectedEventRule] = useState(null);
 
   const handleSelectTemplate = (eventRule) => {
     if (eventRule) {
@@ -143,6 +146,18 @@ const StepChooseEventRule = ({
 
   useEffect(() => {
     setNavTitle(t("create-event.navigation-title"));
+
+    updateEventData({
+      ruleId: null,
+    });
+    updateEventRuleData({
+      ruleBlocks: [],
+      topicIds: [],
+      id: null,
+      name: null,
+    });
+    setSelectedEventRule(null);
+    setAgreements({})
     loadRulesByPopularity();
   }, []);
 
@@ -165,8 +180,21 @@ const StepChooseEventRule = ({
   useEffect(() => {
     if (selectedEventRule) {
       setNextStepButtonText("Use this template");
+    } else {
+      setNextStepButtonText("Next");
     }
   }, [selectedEventRule]);
+
+  useEffect(() => {
+    setIsStepComplete(() => {
+      return () => {
+        return {
+          result: true,
+          message: "",
+        };
+      };
+    });
+  }, []);
 
   return (
     <div className="p-4 text-left">
@@ -363,5 +391,9 @@ StepChooseEventRule.propTypes = {
   updateEventData: PropTypes.func.isRequired,
   updateEventRuleData: PropTypes.func.isRequired,
   setNextStepButtonText: PropTypes.func.isRequired,
+  setIsStepComplete: PropTypes.func.isRequired,
   permissionEngineAPI: PropTypes.object,
+  selectedEventRule: PropTypes.object,
+  setSelectedEventRule: PropTypes.func.isRequired,
+  setAgreements: PropTypes.func.isRequired,
 };

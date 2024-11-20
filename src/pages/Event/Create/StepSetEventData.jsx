@@ -14,18 +14,33 @@ const StepSetEventData = ({
   setIsStepComplete,
   setCurrentStep,
   setNextStepButtonText,
+  eventData,
   updateEventData,
   updateEventRuleData,
   spaceId,
   space,
   permissionEngineAPI,
+  currentMonth,
+  setCurrentMonth,
+  selectedDate,
+  setSelectedDate,
+  selectedTime,
+  setSelectedTime,
+  idDateTimeDecided,
+  setDateTimeDecided,
+  selectedTopic,
+  setSelectedTopic,
+  selectedEquipment,
+  setSelectedEquipment,
 }) => {
   const { t } = useTranslation();
-  const [eventTitle, setEventTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [eventTitle, setEventTitle] = useState(eventData.name);
+  const [description, setDescription] = useState(eventData.details);
+  const [eventDateTime, setEventDateTime] = useState(eventData.startsAt); // Store event date in ISO strings format
 
   useEffect(() => {
     setNavTitle(t("create-event.navigation-title"));
+    setNextStepButtonText("Next")
   });
 
   useEffect(() => {
@@ -80,8 +95,11 @@ const StepSetEventData = ({
     updateEventData({
       name: eventTitle,
       details: description,
+      startsAt: eventDateTime,
+      // TODO. dynamic duration
+      duration: "1h",
     });
-  }, [eventTitle, description]);
+  }, [eventTitle, description, eventDateTime]);
 
   return (
     <div className="p-4 text-left">
@@ -106,6 +124,8 @@ const StepSetEventData = ({
         updateEventData={updateEventData}
         updateEventRuleData={updateEventRuleData}
         permissionEngineAPI={permissionEngineAPI}
+        selectedTopic={selectedTopic}
+        setSelectedTopic={setSelectedTopic}
       />
       {/* Excluded theme */}
       <ExcludedThemeDisplay
@@ -119,10 +139,19 @@ const StepSetEventData = ({
       />
       {/* Date  and time picker */}
       <DateTimePicker
-        updateEventData={updateEventData}
+        setEventDateTime={setEventDateTime}
+        eventDateTime={eventDateTime}
         spaceId={spaceId}
         timezone={space?.timezone}
         permissionEngineAPI={permissionEngineAPI}
+        currentMonth={currentMonth}
+        setCurrentMonth={setCurrentMonth}
+        selectedDate={selectedDate}
+        setSelectedDate={setSelectedDate}
+        selectedTime={selectedTime}
+        setSelectedTime={setSelectedTime}
+        idDateTimeDecided={idDateTimeDecided}
+        setDateTimeDecided={setDateTimeDecided}
       />
       {/* Event description */}
       <hr className="my-6" />
@@ -149,6 +178,8 @@ const StepSetEventData = ({
         updateEventData={updateEventData}
         updateEventRuleData={updateEventRuleData}
         permissionEngineAPI={permissionEngineAPI}
+        selectedEquipment={selectedEquipment}
+        setSelectedEquipment={setSelectedEquipment}
       />
     </div>
   );
@@ -162,9 +193,22 @@ StepSetEventData.propTypes = {
   updateEventRuleData: PropTypes.func.isRequired,
   spaceId: PropTypes.string,
   space: PropTypes.object,
+  eventData: PropTypes.object,
   currentStep: PropTypes.number.isRequired,
   setCurrentStep: PropTypes.func.isRequired,
   setNextStepButtonText: PropTypes.func.isRequired,
   setIsStepComplete: PropTypes.func,
   permissionEngineAPI: PropTypes.object,
+  currentMonth: PropTypes.date,
+  setCurrentMonth: PropTypes.func.isRequired,
+  selectedDate: PropTypes.string,
+  setSelectedDate: PropTypes.func.isRequired,
+  selectedTime: PropTypes.string,
+  setSelectedTime: PropTypes.func.isRequired,
+  idDateTimeDecided: PropTypes.bool,
+  setDateTimeDecided: PropTypes.func.isRequired,
+  selectedTopic: PropTypes.object,
+  setSelectedTopic: PropTypes.func.isRequired,
+  selectedEquipment: PropTypes.object,
+  setSelectedEquipment: PropTypes.func.isRequired,
 };

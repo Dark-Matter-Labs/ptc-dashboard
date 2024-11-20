@@ -10,6 +10,7 @@ export default function BottomDrawer({
   eventRuleBlocks,
   setEventRuleBlocks,
   updateEventRuleData,
+  allRuleBlocks,
 }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -30,6 +31,7 @@ export default function BottomDrawer({
     e.stopPropagation();
     if (title && title !== "" && content && content !== "") {
       const customRuleBlock = {
+        id: `rule-block-${allRuleBlocks.length}`,
         name: title,
         content,
         type: Type.RuleBlockType.spaceEventGeneral,
@@ -189,6 +191,7 @@ BottomDrawer.propTypes = {
   isAddCustomRuleBlockOpen: PropTypes.bool,
   setIsAddCustomRuleBlockOpen: PropTypes.func,
   eventRuleBlocks: PropTypes.array,
+  allRuleBlocks: PropTypes.array,
   setEventRuleBlocks: PropTypes.func.isRequired,
   updateEventRuleData: PropTypes.func.isRequired,
 };

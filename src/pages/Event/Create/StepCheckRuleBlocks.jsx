@@ -416,6 +416,7 @@ const StepCheckRuleBlocks = ({
             eventRuleBlocks={eventRuleBlocks}
             setEventRuleBlocks={setEventRuleBlocks}
             updateEventRuleData={updateEventRuleData}
+            allRuleBlocks={allRuleBlocks}
           />
         ) : (
           ""

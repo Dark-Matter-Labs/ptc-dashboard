@@ -2,33 +2,17 @@ import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { useUser } from "../../../useUser";
+import * as Type from "../../../lib/PermissionEngine/type";
 
 // const { t } = useTranslation();
 
-const temp_eventData = {
-  spaceId: "071ad776-0d37-40a5-8a5b-548f7768621c",
-  topicIds: [
-    "d61ec038-851f-4039-a88b-960264a4dd80",
-    "ac335ffe-3542-45d4-887b-f33010099a82",
-  ],
-  privateRuleBlocks: [
-    {
-      content: "5e406587-f7bb-4bd1-b155-24753310bb36^50",
-      name: "Foldable seating",
-      type: "space_event:require_equipment",
-    },
-  ],
-  startsAt: "2024-11-30T09:00:00.000Z",
-  duration: "1h",
-  details: "Walk around",
-  name: "Daegu Walkers",
-  ruleId: "4e283863-5483-491b-b5e9-027e4f245c25",
-  requestType: "agreed",
-};
 const StepFinalReview = ({
   setIsStepComplete,
   setNavTitle,
+  spaceRule,
   eventData,
+  eventRuleData,
+  agreements,
   permissionEngineAPI,
 }) => {
   const { user } = useUser();
@@ -36,10 +20,14 @@ const StepFinalReview = ({
   const [topics, setTopics] = useState([]);
   const [equipments, setEquipments] = useState({});
   const [rule, setRule] = useState({});
+  const [hasDisagreement, setHasDisagreement] = useState(false);
   useEffect(() => {
     setNavTitle(t("create-event.proposal-final-review"));
-    console.log(temp_eventData.privateRuleBlocks);
-    // console.log("temp_eventData: ", temp_eventData);
+    // Scroll to the top of the page
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Optional: smooth scrolling
+    });
   }, []);
 
   const interpretTopics = async () => {
@@ -69,21 +57,26 @@ const StepFinalReview = ({
     setEquipments(categorizedEquipment);
   };
 
-  const interpretRule = async (ruleId) => {
-    try {
-      const data = await permissionEngineAPI.fetchRuleByRuleId(ruleId);
-      console.log("[api] rule", data);
-
-      setRule(data);
-    } catch (error) {
-      console.error("Error fetching rule: ", error);
-    }
+  const interpretRule = () => {
+    console.log(eventRuleData?.name ?? spaceRule.name);
+    setRule({ name: eventRuleData?.name ?? spaceRule.name });
   };
 
   useEffect(() => {
     interpretTopics();
     interpretEquipments(eventData.privateRuleBlocks);
-    interpretRule(eventData.ruleId);
+    interpretRule();
+    const keys = Object.keys(agreements);
+
+    const hasDisagreement = keys.find((key) => {
+      const agreement = agreements[key];
+      const ruleBlock = spaceRule.ruleBlocks.find(
+        (spaceRuleBlock) => spaceRuleBlock.id === key
+      );
+
+      return agreement.agree === false && ruleBlock;
+    });
+    setHasDisagreement(hasDisagreement);
     console.log("eventData:", eventData);
   }, []);
 
@@ -217,16 +210,14 @@ const StepFinalReview = ({
       <div className="rounded-2xl bg-[#3B3A43] px-4 py-8 text-white">
         <div className="flex justify-between items-center gap-2 mb-4">
           <div className="text-xl w-full">{rule.name}</div>
-          {eventData.requestType ? (
-            eventData.requestType === "agreed" ? (
-              <div className="rounded-full bg-[#3DD598] px-2 py-1 text-[#3B3A43]">
-                Agreed
-              </div>
-            ) : eventData.requestType === "exceptions" ? (
-              <div className="rounded-full bg-[#d5b038] px-2 py-1 text-[#3B3A43]">
-                Exceptions
-              </div>
-            ) : null
+          {hasDisagreement === false ? (
+            <div className="rounded-full bg-[#3DD598] px-2 py-1 text-[#3B3A43]">
+              Agreed
+            </div>
+          ) : eventData.requestType === "exceptions" ? (
+            <div className="rounded-full bg-[#d5b038] px-2 py-1 text-[#3B3A43]">
+              Exceptions
+            </div>
           ) : null}
         </div>
         <div className="font-light text-sm">
@@ -242,7 +233,10 @@ const StepFinalReview = ({
 export default StepFinalReview;
 StepFinalReview.propTypes = {
   setNavTitle: PropTypes.func.isRequired, // Required
+  agreements: PropTypes.object, // Required
+  spaceRule: PropTypes.object, // Required
   eventData: PropTypes.object, // Required
+  eventRuleData: PropTypes.object, // Required
   permissionEngineAPI: PropTypes.object, // Required
   setIsStepComplete: PropTypes.func.isRequired, // Required
 };

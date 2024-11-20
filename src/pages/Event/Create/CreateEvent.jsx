@@ -261,6 +261,9 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
       isStepComplete={isStepComplete}
       setIsStepComplete={setIsStepComplete}
       eventData={eventData}
+      eventRuleData={eventRuleData}
+      spaceRule={spaceRule}
+      agreements={agreements}
     />,
   ];
 
@@ -286,7 +289,7 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
     }
 
     for (const ruleBlock of ruleBlocks) {
-      if (ruleBlock.id) {
+      if (ruleBlock.id && ruleBlock.id.startsWith('rule-block-') === false) {
         newRuleBlocks.push(ruleBlock);
       } else {
         const newRuleBlock =

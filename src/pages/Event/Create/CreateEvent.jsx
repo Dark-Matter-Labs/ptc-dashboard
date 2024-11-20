@@ -118,8 +118,6 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
   // for StepChooseEventRule
   const [selectedEventRule, setSelectedEventRule] = useState(null);
 
-
-
   const updateEventRuleData = (newData) => {
     setEventRuleData((prevData) => ({ ...prevData, ...newData }));
   };

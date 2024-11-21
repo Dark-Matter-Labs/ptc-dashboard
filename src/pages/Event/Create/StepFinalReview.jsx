@@ -4,8 +4,6 @@ import { useTranslation } from "react-i18next";
 import { useUser } from "../../../useUser";
 import * as Type from "../../../lib/PermissionEngine/type";
 
-// const { t } = useTranslation();
-
 const StepFinalReview = ({
   setIsStepComplete,
   setNavTitle,
@@ -43,10 +41,11 @@ const StepFinalReview = ({
     }
   };
 
-  const interpretEquipments = (arrayofEuipments) => {
+  const interpretRequireEquipmentRuleBlocks = (requireEquipmentRuleBlocks) => {
     // Categorize equipment based on `type`
+    // TODO. type here is the type of ruleBlock, not the equipment -> fix needed
     const categorizedEquipment = {};
-    arrayofEuipments.forEach((item) => {
+    requireEquipmentRuleBlocks.forEach((item) => {
       const category = item.type || "uncategorized";
       if (!categorizedEquipment[category]) {
         categorizedEquipment[category] = [];
@@ -64,7 +63,11 @@ const StepFinalReview = ({
 
   useEffect(() => {
     interpretTopics();
-    interpretEquipments(eventData.privateRuleBlocks);
+    interpretRequireEquipmentRuleBlocks(
+      eventData.privateRuleBlocks.filter(
+        (item) => item.type === Type.RuleBlockType.spaceEventRequireEquipment
+      )
+    );
     interpretRule();
     const keys = Object.keys(agreements);
 

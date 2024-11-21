@@ -4,16 +4,19 @@ import { PlusIcon, MinusIcon } from "@heroicons/react/solid";
 import { useTranslation } from "react-i18next";
 import * as Type from "../../../lib/PermissionEngine/type";
 import ExclamationSm from "../../../assets/image/exclamation-sm.svg";
+import { parseRuleBlockContent } from "../../../lib/util";
 
 const StepBrowseRuleBlocks = ({
   setNavTitle,
   spaceRule,
   eventRuleData,
   spaceRuleBlockExcludedTypes,
+  eventRuleBlockPrivateTypes,
   spaceRuleBlockOrderPriority,
   forceStaticNamedSpaceRuleBlocks,
   ruleTypeInterpreter,
   getRuleBlockTypeNameTranslationKey,
+  getRuleBlockTypeDescriptionTranslationKey,
   updateEventRuleData,
   setNextStepButtonText,
   permissionEngineAPI,
@@ -26,6 +29,9 @@ const StepBrowseRuleBlocks = ({
   const spaceRuleBlocks = spaceRule.ruleBlocks;
   const [eventRuleBlocks, setEventRuleBlocks] = useState([]);
   const [allRuleBlocks, setAllRuleBlocks] = useState([]);
+  const [ruleBlockContentById, setRuleBlockContentById] = useState({});
+  const [ruleBlockContentByHash, setRuleBlockContentByHash] = useState({});
+
   const toggleExpand = (e, id) => {
     e.preventDefault();
 
@@ -103,9 +109,14 @@ const StepBrowseRuleBlocks = ({
         return indexA - indexB;
       });
 
-    const combinedBlocks = filteredSpaceRuleBlocks.concat(eventRuleBlocks);
+    const combinedBlocks = filteredSpaceRuleBlocks.concat(
+      eventRuleBlocks.filter(
+        (item) => eventRuleBlockPrivateTypes.includes(item.type) === false
+      )
+    );
     setAllRuleBlocks(combinedBlocks);
   };
+
 
   useEffect(() => {
     console.log("expanded Cards: ", expandedCards);
@@ -131,11 +142,28 @@ const StepBrowseRuleBlocks = ({
   }, []);
 
   useEffect(() => {
+    console.log("parse space rule blocks");
+    spaceRuleBlocks.forEach(async (ruleBlock) => {
+      const content = await parseRuleBlockContent(permissionEngineAPI, ruleBlock);
+      setRuleBlockContentByHash((prev) => ({
+        ...prev,
+        [ruleBlock.hash]: content,
+      }));
+    });
+    console.log("ruleBlockContentByHash", ruleBlockContentByHash);
     combineRuleBlocks();
   }, [spaceRuleBlocks, eventRuleBlocks]);
 
   useEffect(() => {
     console.log("allRuleBlocks: ", allRuleBlocks);
+    allRuleBlocks.forEach(async (ruleBlock) => {
+      const content = await parseRuleBlockContent(permissionEngineAPI, ruleBlock);
+
+      setRuleBlockContentById((prev) => ({
+        ...prev,
+        [ruleBlock.id]: content,
+      }));
+    });
   }, [allRuleBlocks]);
 
   useEffect(() => {
@@ -188,7 +216,28 @@ const StepBrowseRuleBlocks = ({
               {/* Content (only visible when expanded) */}
               {expandedCards[ruleBlock.id] && (
                 <div className="mt-2 text-gray-500 text-sm overflow-auto">
-                  <p>{ruleBlock.content}</p>
+                  {ruleBlock.details ? (
+                    <p>{ruleBlock.details}</p>
+                  ) : forceStaticNamedSpaceRuleBlocks.includes(
+                      ruleBlock.type
+                    ) ? (
+                    <p>
+                      {t(
+                        getRuleBlockTypeDescriptionTranslationKey(
+                          ruleBlock.type
+                        )
+                      )}
+                    </p>
+                  ) : (
+                    ""
+                  )}
+
+                  {/* TODO. parse content by ruleBlock.type */}
+                  <div className="mt-2">
+                    {ruleBlockContentById[ruleBlock.id]
+                      ? ruleBlockContentById[ruleBlock.id]
+                      : ruleBlock.content}
+                  </div>
                   {ruleBlock.type === Type.RuleBlockType.spaceEventException ? (
                     <div className="mt-2 ml-4 w-[300px] p-0 flex flex-col">
                       <div className="flex flex-row justify-center items-center gap-[5px]">
@@ -232,18 +281,28 @@ const StepBrowseRuleBlocks = ({
                                 )?.name}
                           </strong>
                         </p>
-                        <p>
-                          {
-                            // TODO. dynamic content parsing by original spaceRuleBlock type
+                        {
+                          // TODO. dynamic content parsing by original spaceRuleBlock type
+                          ruleBlockContentByHash[
                             spaceRuleBlocks.find(
                               (item) =>
                                 item.hash ===
                                 ruleBlock.content.split(
                                   Type.RuleBlockContentDivider.type
                                 )[0]
-                            )?.content
-                          }
-                        </p>
+                            )?.hash
+                          ]
+                            ? ruleBlockContentByHash[
+                                spaceRuleBlocks.find(
+                                  (item) =>
+                                    item.hash ===
+                                    ruleBlock.content.split(
+                                      Type.RuleBlockContentDivider.type
+                                    )[0]
+                                )?.hash
+                              ]
+                            : ""
+                        }
                       </div>
                     </div>
                   ) : (
@@ -268,8 +327,10 @@ StepBrowseRuleBlocks.propTypes = {
   updateEventRuleData: PropTypes.func.isRequired,
   ruleTypeInterpreter: PropTypes.func.isRequired,
   getRuleBlockTypeNameTranslationKey: PropTypes.func.isRequired,
+  getRuleBlockTypeDescriptionTranslationKey: PropTypes.func.isRequired,
   permissionEngineAPI: PropTypes.object,
   spaceRuleBlockExcludedTypes: PropTypes.array,
+  eventRuleBlockPrivateTypes: PropTypes.array,
   spaceRuleBlockOrderPriority: PropTypes.array,
   forceStaticNamedSpaceRuleBlocks: PropTypes.array,
   setIsStepComplete: PropTypes.func.isRequired,

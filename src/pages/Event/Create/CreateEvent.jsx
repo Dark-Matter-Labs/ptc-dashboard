@@ -18,10 +18,15 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
     Type.RuleBlockType.spacePrivateGuide,
 
     // TODO. temporary exclude for workshop
-    Type.RuleBlockType.spaceAvailability,
+    // Type.RuleBlockType.spaceAvailability,
     Type.RuleBlockType.spaceAvailabilityUnit,
     Type.RuleBlockType.spaceMaxAvailabilityUnitCount,
     Type.RuleBlockType.spaceAvailabilityBuffer,
+  ];
+  const eventRuleBlockPrivateTypes = [
+    Type.RuleBlockType.spaceEventRequireEquipment,
+    Type.RuleBlockType.spaceEventInsurance,
+    Type.RuleBlockType.spaceEventSelfRiskAssesment,
   ];
   const spaceRuleBlockOrderPriority = [
     Type.RuleBlockType.spaceExcludedTopic,
@@ -59,6 +64,10 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
   }
   const getRuleBlockTypeNameTranslationKey = (ruleBlockType) => {
     return `${ruleBlockType.replace(":", "-")}-name`;
+  };
+
+  const getRuleBlockTypeDescriptionTranslationKey = (ruleBlockType) => {
+    return `${ruleBlockType.replace(":", "-")}-description`;
   };
 
   const navigate = useNavigate();
@@ -227,10 +236,14 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
       setNextStepButtonText={setNextStepButtonText}
       permissionEngineAPI={permissionEngineAPI}
       spaceRuleBlockExcludedTypes={spaceRuleBlockExcludedTypes}
+      eventRuleBlockPrivateTypes={eventRuleBlockPrivateTypes}
       spaceRuleBlockOrderPriority={spaceRuleBlockOrderPriority}
       forceStaticNamedSpaceRuleBlocks={forceStaticNamedSpaceRuleBlocks}
       ruleTypeInterpreter={ruleTypeInterpreter}
       getRuleBlockTypeNameTranslationKey={getRuleBlockTypeNameTranslationKey}
+      getRuleBlockTypeDescriptionTranslationKey={
+        getRuleBlockTypeDescriptionTranslationKey
+      }
       isStepComplete={isStepComplete}
       setIsStepComplete={setIsStepComplete}
       agreements={agreements}
@@ -246,10 +259,14 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
       setNextStepButtonText={setNextStepButtonText}
       permissionEngineAPI={permissionEngineAPI}
       spaceRuleBlockExcludedTypes={spaceRuleBlockExcludedTypes}
+      eventRuleBlockPrivateTypes={eventRuleBlockPrivateTypes}
       spaceRuleBlockOrderPriority={spaceRuleBlockOrderPriority}
       forceStaticNamedSpaceRuleBlocks={forceStaticNamedSpaceRuleBlocks}
       ruleTypeInterpreter={ruleTypeInterpreter}
       getRuleBlockTypeNameTranslationKey={getRuleBlockTypeNameTranslationKey}
+      getRuleBlockTypeDescriptionTranslationKey={
+        getRuleBlockTypeDescriptionTranslationKey
+      }
       isStepComplete={isStepComplete}
       setIsStepComplete={setIsStepComplete}
       agreements={agreements}
@@ -291,7 +308,7 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
     }
 
     for (const ruleBlock of ruleBlocks) {
-      if (ruleBlock.id && ruleBlock.id.startsWith('rule-block-') === false) {
+      if (ruleBlock.id && ruleBlock.id.startsWith("rule-block-") === false) {
         newRuleBlocks.push(ruleBlock);
       } else {
         const newRuleBlock =

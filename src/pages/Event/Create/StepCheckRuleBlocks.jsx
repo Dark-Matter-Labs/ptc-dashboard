@@ -13,16 +13,19 @@ import { ToggleSlider } from "../../../components/Common/ToggleSlider";
 import * as Type from "../../../lib/PermissionEngine/type";
 import ExclamationSm from "../../../assets/image/exclamation-sm.svg";
 import BottomDrawer from "../../../components/Common/BottomDrawer";
+import { parseRuleBlockContent } from "../../../lib/util";
 
 const StepCheckRuleBlocks = ({
   setNavTitle,
   spaceRule,
   eventRuleData,
   spaceRuleBlockExcludedTypes,
+  eventRuleBlockPrivateTypes,
   spaceRuleBlockOrderPriority,
   forceStaticNamedSpaceRuleBlocks,
   ruleTypeInterpreter,
   getRuleBlockTypeNameTranslationKey,
+  getRuleBlockTypeDescriptionTranslationKey,
   updateEventRuleData,
   updateEventData,
   setIsStepComplete,
@@ -36,9 +39,15 @@ const StepCheckRuleBlocks = ({
   const spaceRuleBlocks = spaceRule.ruleBlocks;
   const [eventRuleBlocks, setEventRuleBlocks] = useState([]);
   const [allRuleBlocks, setAllRuleBlocks] = useState([]);
+  const [ruleBlockContentById, setRuleBlockContentById] = useState({});
+  const [ruleBlockContentByHash, setRuleBlockContentByHash] = useState({});
   const [isAddCustomRuleBlockOpen, setIsAddCustomRuleBlockOpen] =
     useState(false);
 
+  const capitalizeFirstLetter = (str) => {
+    if (!str) return str; // Return the original string if it's empty
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
   const toggleExpand = (e, id) => {
     e.preventDefault();
 
@@ -154,7 +163,11 @@ const StepCheckRuleBlocks = ({
         return indexA - indexB;
       });
 
-    const combinedBlocks = filteredSpaceRuleBlocks.concat(eventRuleData.ruleBlocks);
+    const combinedBlocks = filteredSpaceRuleBlocks.concat(
+      eventRuleData.ruleBlocks.filter(
+        (item) => eventRuleBlockPrivateTypes.includes(item.type) === false
+      )
+    );
     // open all blocks
     combinedBlocks.map((item) => {
       setExpandedCards((prev) => ({ ...prev, [item.id]: true }));
@@ -167,6 +180,15 @@ const StepCheckRuleBlocks = ({
   }, []);
 
   useEffect(() => {
+    console.log("parse space rule blocks");
+    spaceRuleBlocks.forEach(async (ruleBlock) => {
+      const content = await parseRuleBlockContent(permissionEngineAPI, ruleBlock);
+      setRuleBlockContentByHash((prev) => ({
+        ...prev,
+        [ruleBlock.hash]: content,
+      }));
+    });
+    console.log("ruleBlockContentByHash", ruleBlockContentByHash);
     combineRuleBlocks();
   }, [spaceRuleBlocks, eventRuleBlocks]);
 
@@ -253,6 +275,18 @@ const StepCheckRuleBlocks = ({
     );
   }, [allRuleBlocks]);
 
+  useEffect(() => {
+    console.log("allRuleBlocks: ", allRuleBlocks);
+    allRuleBlocks.forEach(async (ruleBlock) => {
+      const content = await parseRuleBlockContent(permissionEngineAPI, ruleBlock);
+
+      setRuleBlockContentById((prev) => ({
+        ...prev,
+        [ruleBlock.id]: content,
+      }));
+    });
+  }, [allRuleBlocks]);
+
   return (
     <div>
       <div className="p-4 space-y-4 text-left">
@@ -312,9 +346,27 @@ const StepCheckRuleBlocks = ({
               {/* Content (only visible when expanded) */}
               {expandedCards[ruleBlock.id] && (
                 <div className="mt-2 text-gray-400 break-all">
+                  {ruleBlock.details ? (
+                    <p>{ruleBlock.details}</p>
+                  ) : forceStaticNamedSpaceRuleBlocks.includes(
+                      ruleBlock.type
+                    ) ? (
+                    <p>
+                      {t(
+                        getRuleBlockTypeDescriptionTranslationKey(
+                          ruleBlock.type
+                        )
+                      )}
+                    </p>
+                  ) : (
+                    ""
+                  )}
                   {/* TODO. dynamic content parsing by ruleBlock type */}
-                  <p>{ruleBlock.content}</p>
-
+                  <div className="mt-2">
+                    {ruleBlockContentById[ruleBlock.id]
+                      ? ruleBlockContentById[ruleBlock.id]
+                      : ruleBlock.content}
+                  </div>
                   <ToggleSlider
                     id={ruleBlock.id ?? `rule-block-${index}`}
                     handleToggle={handleToggle}
@@ -378,18 +430,28 @@ const StepCheckRuleBlocks = ({
                             )?.name}
                       </strong>
                     </p>
-                    <p>
-                      {
-                        // TODO. dynamic content parsing by original spaceRuleBlock type
+                    {
+                      // TODO. dynamic content parsing by original spaceRuleBlock type
+                      ruleBlockContentByHash[
                         spaceRuleBlocks.find(
                           (item) =>
                             item.hash ===
                             ruleBlock.content.split(
                               Type.RuleBlockContentDivider.type
                             )[0]
-                        )?.content
-                      }
-                    </p>
+                        )?.hash
+                      ]
+                        ? ruleBlockContentByHash[
+                            spaceRuleBlocks.find(
+                              (item) =>
+                                item.hash ===
+                                ruleBlock.content.split(
+                                  Type.RuleBlockContentDivider.type
+                                )[0]
+                            )?.hash
+                          ]
+                        : ""
+                    }
                   </div>
                 </div>
               ) : (
@@ -440,8 +502,10 @@ StepCheckRuleBlocks.propTypes = {
   updateEventData: PropTypes.func.isRequired,
   ruleTypeInterpreter: PropTypes.func.isRequired,
   getRuleBlockTypeNameTranslationKey: PropTypes.func.isRequired,
+  getRuleBlockTypeDescriptionTranslationKey: PropTypes.func.isRequired,
   permissionEngineAPI: PropTypes.object,
   spaceRuleBlockExcludedTypes: PropTypes.array,
+  eventRuleBlockPrivateTypes: PropTypes.array,
   spaceRuleBlockOrderPriority: PropTypes.array,
   forceStaticNamedSpaceRuleBlocks: PropTypes.array,
   agreements: PropTypes.object,

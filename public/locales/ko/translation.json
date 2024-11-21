@@ -32,7 +32,7 @@
   },
   "space-general-name": "공간 규칙 일반 블록",
   "space-general-description": "공간 규칙에 대한 일반적인 규칙 블록",
-  "space-excluded_topic-name": "공간 주제",
+  "space-excluded_topic-name": "제외된 주제",
   "space-excluded_topic-description": "공간에서 제외된 주제",
   "space-guide-name": "공간 가이드",
   "space-guide-description": "공간에 대한 가이드",

@@ -90,7 +90,6 @@ export const Slider = ({
 
   useEffect(() => {
     // Effect to monitor dragging and position
-    console.log(position);
   }, [position]);
 
   return (
@@ -131,7 +130,6 @@ export const Slider = ({
 
 function toText(bgcolor) {
   const string = bgcolor.replace("bg-", "text-");
-  console.log("color string: ", string);
   return string;
 }
 

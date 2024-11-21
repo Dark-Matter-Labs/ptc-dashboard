@@ -18,6 +18,8 @@ const StepBrowseRuleBlocks = ({
   setNextStepButtonText,
   permissionEngineAPI,
   setIsStepComplete,
+  agreements,
+  setAgreements,
 }) => {
   const { t } = useTranslation();
   const [expandedCards, setExpandedCards] = useState({ 0: false }); //{0: true, 2: false}
@@ -46,6 +48,31 @@ const StepBrowseRuleBlocks = ({
     } catch (error) {
       console.error("Error fetching space rule blocks: ", error);
     }
+  };
+
+  const clearCustomRuleBlocks = () => {
+    const spaceRuleBlocks = spaceRule.ruleBlocks;
+    const originalEventRuleBlocks = eventRuleBlocks.filter(
+      (item) => item.id.startsWith("rule-block-") === false
+    );
+    const originalRuleBlockKeys = [
+      ...spaceRuleBlocks,
+      ...originalEventRuleBlocks,
+    ].map((item) => item.id);
+
+    const filteredAgreements = {};
+
+    originalRuleBlockKeys.forEach((key) => {
+      if (agreements[key]) {
+        filteredAgreements[key] = agreements[key];
+      }
+    });
+
+    updateEventRuleData({
+      ruleBlocks: originalEventRuleBlocks,
+    });
+    setEventRuleBlocks(originalEventRuleBlocks);
+    setAgreements(filteredAgreements);
   };
 
   const combineRuleBlocks = () => {
@@ -86,6 +113,11 @@ const StepBrowseRuleBlocks = ({
 
   useEffect(() => {
     setNavTitle(t("create-event.navigation-title"));
+    // Scroll to the top of the page
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Optional: smooth scrolling
+    });
   }, [setNavTitle, t]);
 
   // Update button text based on agreements
@@ -95,6 +127,7 @@ const StepBrowseRuleBlocks = ({
 
   useEffect(() => {
     loadEventRuleBlocks();
+    clearCustomRuleBlocks();
   }, []);
 
   useEffect(() => {
@@ -240,6 +273,8 @@ StepBrowseRuleBlocks.propTypes = {
   spaceRuleBlockOrderPriority: PropTypes.array,
   forceStaticNamedSpaceRuleBlocks: PropTypes.array,
   setIsStepComplete: PropTypes.func.isRequired,
+  agreements: PropTypes.object,
+  setAgreements: PropTypes.func.isRequired,
 };
 
 export default StepBrowseRuleBlocks;

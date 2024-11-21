@@ -233,6 +233,8 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
       getRuleBlockTypeNameTranslationKey={getRuleBlockTypeNameTranslationKey}
       isStepComplete={isStepComplete}
       setIsStepComplete={setIsStepComplete}
+      agreements={agreements}
+      setAgreements={setAgreements}
     />,
     <StepCheckRuleBlocks
       key={4}

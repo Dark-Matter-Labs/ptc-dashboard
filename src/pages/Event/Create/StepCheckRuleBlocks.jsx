@@ -154,7 +154,7 @@ const StepCheckRuleBlocks = ({
         return indexA - indexB;
       });
 
-    const combinedBlocks = filteredSpaceRuleBlocks.concat(eventRuleBlocks);
+    const combinedBlocks = filteredSpaceRuleBlocks.concat(eventRuleData.ruleBlocks);
     // open all blocks
     combinedBlocks.map((item) => {
       setExpandedCards((prev) => ({ ...prev, [item.id]: true }));
@@ -261,13 +261,17 @@ const StepCheckRuleBlocks = ({
           {eventRuleData?.name}
         </div>
 
-      <p className="mb-4">{eventRuleData.details}</p>
-      <button
-        onClick={(e) => handleAgreeAll(e)}
-        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-      >
-        Agree to All Rules
-      </button>
+        <p className="mb-4">{eventRuleData.details}</p>
+        {window.location.host === "localhost" ? (
+          <button
+            onClick={(e) => handleAgreeAll(e)}
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+          >
+            Agree to All Rules
+          </button>
+        ) : (
+          ""
+        )}
 
         <div className="flex flex-col gap-4 text-gray-500">
           {allRuleBlocks.map((ruleBlock, index) => (

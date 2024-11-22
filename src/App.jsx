@@ -61,6 +61,7 @@ function App() {
               <Profile
                 permissionEngineAPI={permissionEngineAPI}
                 currentLanguage={currentLanguage}
+                setNavTitle={setNavTitle}
               />
             }
           />

@@ -58,7 +58,7 @@ const Landing = () => {
       <section
         ref={coverSectionRef}
         data-section="cover"
-        className="bg-[#F9F3F3] h-[100vh] md:h-[100vh] lg:h-[95vh] flex flex-col justify-end items-center pb-4 lg:pb-8 mx-4 rounded-b-3xl relative overflow-hidden"
+        className="bg-[#F9F3F3] h-[100vh] md:h-[100vh] lg:h-[95vh] flex flex-col justify-between items-center pb-4 lg:pb-8 mx-4 rounded-b-3xl relative overflow-hidden"
         style={{
           boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
         }}
@@ -127,7 +127,15 @@ const Landing = () => {
             />
           </svg>
         </div>
-
+        {/* Caresoul questions */}
+        <div className="mt-16 z-10 text-center">
+          <div className="text-center text-4xl font-bold text-[#2F103A]">
+            당신의 이웃에서 무엇을 만들고 싶으신가요?
+          </div>
+          <div className="text-4xl font mt-8 text-[#CDA5EF] uppercase ">
+            What would you love to create in your neightbothood?
+          </div>
+        </div>
         {/* Scroll Button */}
         <button
           onClick={() => scrollToSection(themeSectionRef)} // Fixes immediate execution

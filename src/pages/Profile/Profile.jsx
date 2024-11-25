@@ -1,42 +1,16 @@
 import { useUser } from "../../useUser";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import i18n from "../../i18n";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import { UserIcon, ArrowCircleRightIcon } from "@heroicons/react/solid";
 import { ShareIcon, LocationMarkerIcon } from "@heroicons/react/outline";
-import { events_data, past_events_data } from "../../eventData";
-const cardData = [
-  {
-    id: 1,
-    title: "Cook for Korea",
-    description: "Learn how to cook delicious meals in the Open Kitchen.",
-    image:
-      "https://plus.unsplash.com/premium_photo-1683707120403-9add00a6140e?q=80&w=2371&auto=format&fit=crop",
-  },
-  {
-    id: 2,
-    title: "Pottery with Pham",
-    description: "Unleash your creativity at the Creative Studio.",
-    image:
-      "https://plus.unsplash.com/premium_photo-1705407454980-4b8b64d068b8?q=80&w=2370&auto=format&fit=crop",
-  },
-  {
-    id: 3,
-    title: "7am Yoga Routine",
-    description: "Relax and rejuvenate in the Zen Garden.",
-    image:
-      "https://images.unsplash.com/photo-1510894347713-fc3ed6fdf539?q=80&w=2370&auto=format&fit=crop",
-  },
-];
 const interests = ["Cooking", "Movies", "Education", "Art", "Music", "Hobby"];
-// Reading a8f8520b-bed0-4408-a2f3-9ba00b2fac37
-// Dining 29eff517-2963-418b-a240-ce940290c0cd
 const badges = [
-  { name: "ECO HERO", bgColor: "#71BFA1" },
-  { name: "SPACE VOYAGER", bgColor: "#6B52F4" },
-  { name: "SPOTLESS HOST", bgColor: "#4283F3" },
-  { name: "EVENT ENTHUSIAST", bgColor: "#FF7C7C" },
+  { name: "ECO HERO", bgColor: "bg-[#71BFA1]" },
+  { name: "SPOTLESS HOST", bgColor: "bg-[#4283F3]" },
+  { name: "SPACE VOYAGER", bgColor: "bg-[#6B52F4]" },
+  { name: "EVENT ENTHUSIAST", bgColor: "bg-[#FF7C7C]" },
 ];
 export default function Profile({
   permissionEngineAPI,
@@ -46,6 +20,18 @@ export default function Profile({
   const { user } = useUser();
   const { t } = useTranslation();
   console.log("user: ", user);
+  console.log("currentLanguage: ", currentLanguage);
+  const [profile, setProfile] = useState(null);
+
+  const loadProfile = async () => {
+    try {
+      const me = await permissionEngineAPI.fetchMe();
+      setProfile(me);
+    } catch (error) {
+      console.error("error fetching me: ", error);
+    }
+  };
+
   useEffect(() => {
     if (!i18n) {
       console.error("i18n is not initialized");
@@ -57,14 +43,25 @@ export default function Profile({
     setNavTitle(t("profile.title"));
   }, []);
 
+  useEffect(() => {
+    console.log("updated profile state: ", profile);
+  }, [profile]);
+
   // TODO. add email subscription control
   return (
-    <div className="px-8 pt-8">
-      <h1 className="text-2xl font-bold text-black">{t("profile.title")}</h1>
-      {user ? (
-        <>
+    <div className="relative mb-28">
+      {/* Space Cover Image */}
+      <img
+        className="h-64 w-full object-cover"
+        src="https://s3-alpha-sig.figma.com/img/7a69/ccc2/c686d8b80b324a7e8036f5672361145e?Expires=1733097600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=YONn9j5bfcMkbglxEM0ufRMpdAKHuyfMnfPZWL00Dg5O0Qp83ruFW5UjwSUYXne1IvFDIO3dl-PmNJLkpuNBntpXSqjsN0eVoZgI85mKYEbOR0ktKp1Wr4UITw8FE076jvQotWNHACU7OOfUxQsN~Gr4oiJeJ4Md0IevNg5-BIrKQNYnD1z3lsKEzT2MPOfOwiVHyEV0YVu3WkEu8UezKwUq837hCdUm65sgDslEwq-zStJEY5O05VBdZIhTmGsyHRHdqoIlgtcdYgNmdYPacDaP01UCRmn4iAVk2CagUPMNKWu2nJuIUYgai8YazJeBPO064GSfu1EWVOUK~EbMQQ__"
+        alt="space cover"
+      ></img>
+      {/* Profile Info Section */}
+      <div className="relative px-8 pt-8">
+        {/* Profile Picture */}
+        {profile && (
           <img
-            className="h-120 w-120 flex-none rounded-full bg-gray-50"
+            className="absolute top-[-50px] left-8 h-24 w-24 rounded-full border-4 border-white bg-gray-50"
             src={user.picture}
             alt="user profile image"
           />
@@ -143,25 +140,9 @@ export default function Profile({
     </div>
   );
 }
-const lightenColor = (color, percent) => {
-  const num = parseInt(color.replace("#", ""), 16);
-  const amt = Math.round(255 * percent);
-  const R = (num >> 16) + amt;
-  const G = ((num >> 8) & 0x00ff) + amt;
-  const B = (num & 0x0000ff) + amt;
-  const processedColor = `#${(
-    0x1000000 +
-    (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
-    (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
-    (B < 255 ? (B < 1 ? 0 : B) : 255)
-  )
-    .toString(16)
-    .slice(1)}`;
-
-  return processedColor;
-};
 
 Profile.propTypes = {
   permissionEngineAPI: PropTypes.object,
   currentLanguage: PropTypes.string,
+  setNavTitle: PropTypes.func,
 };

@@ -18,6 +18,7 @@ import { parseRuleBlockContent } from "../../../lib/util";
 const StepCheckRuleBlocks = ({
   setNavTitle,
   spaceRule,
+  eventData,
   eventRuleData,
   spaceRuleBlockExcludedTypes,
   eventRuleBlockPrivateTypes,
@@ -44,10 +45,6 @@ const StepCheckRuleBlocks = ({
   const [isAddCustomRuleBlockOpen, setIsAddCustomRuleBlockOpen] =
     useState(false);
 
-  const capitalizeFirstLetter = (str) => {
-    if (!str) return str; // Return the original string if it's empty
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  };
   const toggleExpand = (e, id) => {
     e.preventDefault();
 
@@ -182,7 +179,10 @@ const StepCheckRuleBlocks = ({
   useEffect(() => {
     console.log("parse space rule blocks");
     spaceRuleBlocks.forEach(async (ruleBlock) => {
-      const content = await parseRuleBlockContent(permissionEngineAPI, ruleBlock);
+      const content = await parseRuleBlockContent(
+        permissionEngineAPI,
+        ruleBlock
+      );
       setRuleBlockContentByHash((prev) => ({
         ...prev,
         [ruleBlock.hash]: content,
@@ -237,6 +237,7 @@ const StepCheckRuleBlocks = ({
                 } else {
                   // Add exception rule block for space rule
                   updateEventRuleData({
+                    name: eventData.name,
                     ruleBlocks: [
                       ...eventRuleData.ruleBlocks,
                       {
@@ -255,6 +256,7 @@ const StepCheckRuleBlocks = ({
               ) {
                 // Delete event rule
                 updateEventRuleData({
+                  name: eventData.name,
                   ruleBlocks: eventRuleData.ruleBlocks.filter(
                     (item) => item.id !== key
                   ),
@@ -278,7 +280,10 @@ const StepCheckRuleBlocks = ({
   useEffect(() => {
     console.log("allRuleBlocks: ", allRuleBlocks);
     allRuleBlocks.forEach(async (ruleBlock) => {
-      const content = await parseRuleBlockContent(permissionEngineAPI, ruleBlock);
+      const content = await parseRuleBlockContent(
+        permissionEngineAPI,
+        ruleBlock
+      );
 
       setRuleBlockContentById((prev) => ({
         ...prev,
@@ -495,6 +500,7 @@ const StepCheckRuleBlocks = ({
 StepCheckRuleBlocks.propTypes = {
   setNavTitle: PropTypes.func.isRequired,
   spaceRule: PropTypes.object,
+  eventData: PropTypes.object,
   eventRuleData: PropTypes.object,
   setNextStepButtonText: PropTypes.func.isRequired,
   setIsStepComplete: PropTypes.func.isRequired,

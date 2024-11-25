@@ -253,6 +253,7 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
       key={4}
       setNavTitle={setNavTitle}
       spaceRule={spaceRule}
+      eventData={eventData}
       eventRuleData={eventRuleData}
       updateEventRuleData={updateEventRuleData}
       updateEventData={updateEventData}

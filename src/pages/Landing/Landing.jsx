@@ -1,42 +1,64 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect, useLayoutEffect } from "react";
 import { ArrowDownIcon } from "@heroicons/react/solid";
 
-const App = () => {
+const Landing = () => {
   const coverSectionRef = useRef(null);
   const themeSectionRef = useRef(null);
   const mapSectionRef = useRef(null);
   const slidesSectionRef = useRef(null);
+  const [currentSection, setCurrentSection] = useState("cover");
 
-  const scrollToCoverSection = () => {
-    if (coverSectionRef.current) {
-      coverSectionRef.current.scrollIntoView({ behavior: "smooth" });
+  useLayoutEffect(() => {
+    const sections = [
+      { id: "cover", ref: coverSectionRef },
+      { id: "theme", ref: themeSectionRef },
+      { id: "map", ref: mapSectionRef },
+      { id: "slides", ref: slidesSectionRef },
+    ];
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setCurrentSection(entry.target.getAttribute("data-section"));
+          }
+        });
+      },
+      { threshold: 0.5 } // Trigger when 50% of the section is visible
+    );
+
+    sections.forEach(({ ref }) => {
+      if (ref.current) {
+        observer.observe(ref.current);
+      }
+    });
+
+    return () => {
+      sections.forEach(({ ref }) => {
+        if (ref.current) {
+          observer.unobserve(ref.current);
+        }
+      });
+    };
+  }, []);
+
+  const scrollToSection = (ref) => {
+    if (ref.current) {
+      ref.current.scrollIntoView({ behavior: "smooth" });
     }
   };
 
-  const scrollToThemeSection = () => {
-    if (themeSectionRef.current) {
-      themeSectionRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
-  const scrollToMapSection = () => {
-    if (mapSectionRef.current) {
-      mapSectionRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
-  // const scrollToSlidesSection = () => {
-  //   if (slidesSectionRef.current) {
-  //     slidesSectionRef.current.scrollIntoView({ behavior: "smooth" });
-  //   }
-  // };
+  useEffect(() => {
+    console.log("current section: ", currentSection);
+  }, [currentSection]);
 
   return (
     <div className="font-sans bg-[#2F103A]">
       {/* Cover Section */}
       <section
         ref={coverSectionRef}
-        className="bg-[#F9F3F3] h-[45vh] md:h-[70vh] lg:h-[95vh] flex flex-col justify-end items-center pb-4 lg:pb-8 mx-4 rounded-b-3xl relative overflow-hidden"
+        data-section="cover"
+        className="bg-[#F9F3F3] h-[100vh] md:h-[100vh] lg:h-[95vh] flex flex-col justify-end items-center pb-4 lg:pb-8 mx-4 rounded-b-3xl relative overflow-hidden"
         style={{
           boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
         }}
@@ -53,6 +75,10 @@ const App = () => {
             viewBox="0 0 100 100"
             preserveAspectRatio="none"
             className="w-full h-full"
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
           >
             {/* streight line */}
             <line
@@ -104,7 +130,7 @@ const App = () => {
 
         {/* Scroll Button */}
         <button
-          onClick={scrollToThemeSection}
+          onClick={() => scrollToSection(themeSectionRef)} // Fixes immediate execution
           className="bg-[#2F103A] text-[#CDA5EF] rounded-full w-12 h-12 md:w-14 md:h-14 flex justify-center items-center hover:bg-[#4a195c] focus:outline-none z-10"
         >
           <ArrowDownIcon
@@ -119,6 +145,7 @@ const App = () => {
       {/* Theme Section */}
       <section
         ref={themeSectionRef}
+        data-section="theme"
         className="bg-[#2F103A] h-screen flex justify-center items-center"
       >
         <h1 className="text-white text-3xl">Theme Section</h1>
@@ -127,14 +154,16 @@ const App = () => {
       {/* Map Section */}
       <section
         ref={mapSectionRef}
+        data-section="map"
         className="bg-[#F9F3F3] h-screen flex justify-center items-center"
       >
         <h1 className="text-purple-900 text-3xl">Map Section</h1>
       </section>
 
-      {/* Section 3 */}
+      {/* Slides Section*/}
       <section
         ref={slidesSectionRef}
+        data-section="slides"
         className="bg-[#2F103A] h-screen flex justify-center items-center"
       >
         <h1 className="text-white text-3xl">Slides Section</h1>
@@ -144,10 +173,12 @@ const App = () => {
       <div className="fixed bottom-2 right-4 flex flex-col items-center z-20">
         {/* Button 1 */}
         <button
-          onClick={scrollToCoverSection}
+          onClick={() => scrollToSection(coverSectionRef)}
           className="w-32 h-32 bg-white text-gray-400 flex items-center justify-center -mt-20"
           style={{
             clipPath: "polygon(50% 0%, 100% 25%, 50% 50%, 0% 25%)",
+            backgroundColor: currentSection === "cover" ? "#AF56EF" : "#fff",
+            color: currentSection === "cover" ? "#FFFFFF" : "#333",
           }}
         >
           <span className="pb-16">Introduction</span>
@@ -155,19 +186,25 @@ const App = () => {
 
         {/* Button 2 */}
         <button
-          onClick={scrollToThemeSection}
+          onClick={() => scrollToSection(themeSectionRef)}
           className="w-32 h-32 bg-white text-gray-400  flex items-center justify-center -mt-20"
           style={{
             clipPath: "polygon(50% 0%, 100% 25%, 50% 50%, 0% 25%)",
+            backgroundColor: currentSection === "theme" ? "#AF56EF" : "#fff",
+            color: currentSection === "theme" ? "#FFFFFF" : "#333",
           }}
         >
           <span className="pb-16">Theme</span>
         </button>
+
+        {/* Button 3 */}
         <button
-          onClick={scrollToMapSection}
+          onClick={() => scrollToSection(mapSectionRef)}
           className="w-32 h-32 bg-white text-gray-400  flex items-center justify-center -mt-20"
           style={{
             clipPath: "polygon(50% 0%, 100% 25%, 50% 50%, 0% 25%)",
+            backgroundColor: currentSection === "map" ? "#AF56EF" : "#fff",
+            color: currentSection === "map" ? "#FFFFFF" : "#333",
           }}
         >
           <span className="pb-16">Map</span>
@@ -177,4 +214,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Landing;

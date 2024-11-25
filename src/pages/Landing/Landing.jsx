@@ -1,5 +1,8 @@
 import { useRef, useState, useEffect, useLayoutEffect } from "react";
-import { ArrowDownIcon } from "@heroicons/react/solid";
+import { ArrowDownIcon } from "@heroicons/react/outline";
+import PtCLogoImgSrc from "../../assets/image/ptc-logo.png";
+import { LandingTheme } from "./LandingTheme";
+import { LandingMap } from "./LandingMap";
 
 const Landing = () => {
   const coverSectionRef = useRef(null);
@@ -58,7 +61,7 @@ const Landing = () => {
       <section
         ref={coverSectionRef}
         data-section="cover"
-        className="bg-[#F9F3F3] h-[100vh] md:h-[100vh] lg:h-[95vh] flex flex-col justify-between items-center pb-4 lg:pb-8 mx-4 rounded-b-3xl relative overflow-hidden"
+        className="bg-[#F9F3F3] h-[100vh] md:h-[100vh] lg:h-[95vh] flex flex-col justify-start gap-20 md:justify-between items-center pb-4 lg:pb-8 mx-4 rounded-b-3xl relative overflow-hidden"
         style={{
           boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
         }}
@@ -128,15 +131,30 @@ const Landing = () => {
           </svg>
         </div>
         {/* Caresoul questions */}
-        <div className="mt-16 z-10 text-center">
-          <div className="text-center text-4xl font-bold text-[#2F103A]">
-            당신의 이웃에서 무엇을 만들고 싶으신가요?
+        <div className="mt-16 z-10 text-center px-20 md:px-40 lg:px-80">
+          <div className=" text-4xl font-light text-[#2F103A]">
+            우리 도시에서 꼭 해보고 싶은 멋진 아이디어가 있나요?
           </div>
-          <div className="text-4xl font mt-8 text-[#CDA5EF] uppercase ">
+          <div className=" text-2xl md:text-4xl  font-light mt-8 text-[#CDA5EF] uppercase ">
             What would you love to create in your neightbothood?
           </div>
         </div>
-        {/* Scroll Button */}
+        {/* Project logo, name and tagline */}
+        <div className="absolute bottom-4 left-4 w-3/4 md:w-1/3 md:bottom-8 md:left-8">
+          <img
+            src={PtCLogoImgSrc}
+            alt="ptc logo"
+            className="w-16 h-16 md:w-24 md:h-24"
+          />
+          <div className="text-[#8F79A2] font-semibold text-xl md:text-2xl mt-4">
+            커뮤니티 주도의 공간 허가 솔루션
+          </div>
+          <div className="text-[#8F79A2] mt-4 text-base">
+            UNLOCKING CITIES&apos; GROWING UNDERUTILISED SPATIAL ASSETS FOR AN
+            EMERGENT CIVIC ECONOMY
+          </div>
+        </div>
+        {/* Scroll button */}
         <button
           onClick={() => scrollToSection(themeSectionRef)} // Fixes immediate execution
           className="bg-[#2F103A] text-[#CDA5EF] rounded-full w-12 h-12 md:w-14 md:h-14 flex justify-center items-center hover:bg-[#4a195c] focus:outline-none z-10"
@@ -151,15 +169,10 @@ const Landing = () => {
       </section>
 
       {/* Theme Section */}
-      <section
-        ref={themeSectionRef}
-        data-section="theme"
-        className="bg-[#2F103A] h-screen flex justify-center items-center"
-      >
-        <h1 className="text-white text-3xl">Theme Section</h1>
-      </section>
+      <LandingTheme themeSectionRef={themeSectionRef}></LandingTheme>
 
       {/* Map Section */}
+      <LandingMap mapSectionRef={mapSectionRef} />
       <section
         ref={mapSectionRef}
         data-section="map"
@@ -178,7 +191,7 @@ const Landing = () => {
       </section>
 
       {/* Rhombus Buttons */}
-      <div className="fixed bottom-2 right-4 flex flex-col items-center z-20">
+      <div className="fixed bottom-4 right-12 flex-col items-center z-20 hidden md:block ">
         {/* Button 1 */}
         <button
           onClick={() => scrollToSection(coverSectionRef)}
@@ -189,7 +202,7 @@ const Landing = () => {
             color: currentSection === "cover" ? "#FFFFFF" : "#333",
           }}
         >
-          <span className="pb-16">Introduction</span>
+          <span className="pb-16 uppercase">Intro</span>
         </button>
 
         {/* Button 2 */}
@@ -202,7 +215,7 @@ const Landing = () => {
             color: currentSection === "theme" ? "#FFFFFF" : "#333",
           }}
         >
-          <span className="pb-16">Theme</span>
+          <span className="pb-16 uppercase">Theme</span>
         </button>
 
         {/* Button 3 */}
@@ -215,7 +228,7 @@ const Landing = () => {
             color: currentSection === "map" ? "#FFFFFF" : "#333",
           }}
         >
-          <span className="pb-16">Map</span>
+          <span className="pb-16 uppercase">Map</span>
         </button>
       </div>
     </div>

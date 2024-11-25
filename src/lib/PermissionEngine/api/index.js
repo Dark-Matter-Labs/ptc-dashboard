@@ -298,7 +298,7 @@ export class API {
       }
     );
 
-    return response ?? [];
+    return response?.data ?? [];
   };
 
   fetchSpaceRule = async (spaceId) => {

@@ -10,6 +10,7 @@ import CreateEvent from "./pages/Event/Create/CreateEvent";
 import DisplayEvents from "./pages/Event/Display/DisplayEvents";
 import DisplayNotifications from "./pages/Event/Display/DisplayNotifications";
 import { API } from "./lib/PermissionEngine";
+import Landing from "./pages/Landing/Landing";
 
 function App() {
   const navigate = useNavigate();
@@ -18,6 +19,9 @@ function App() {
   const [navTitle, setNavTitle] = useState(t("navigation.navigation-title")); // state to track current step
   const location = useLocation();
   const permissionEngineAPI = new API();
+
+  // Determine if Navbar should be shown
+  const showNavbar = location.pathname !== "/landing";
 
   // Reset navTitle when navigating back to "/"
   useEffect(() => {
@@ -39,13 +43,16 @@ function App() {
   return (
     <div>
       <UserProvider>
-        <Navbar
-          navTitle={navTitle}
-          currentLanguage={currentLanguage}
-          handleChangeLanguage={handleChangeLanguage}
-          permissionEngineAPI={permissionEngineAPI}
-        />
+        {showNavbar && (
+          <Navbar
+            navTitle={navTitle}
+            currentLanguage={currentLanguage}
+            handleChangeLanguage={handleChangeLanguage}
+            permissionEngineAPI={permissionEngineAPI}
+          />
+        )}
         <Routes>
+          <Route path="/landing" element={<Landing />} />
           <Route
             path="/space/:spaceId"
             element={

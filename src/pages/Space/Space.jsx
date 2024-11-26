@@ -82,7 +82,7 @@ export default function Space({ space, spaceOwner, currentLanguage }) {
           </div>
           <div className="space-desc">{space?.details}</div>
           {/* <div className="space-connection">273 Connections</div> */}
-          <h3>Space Keywords</h3>
+          <h3>{t("home.space-keywords")}</h3>
           {topics?.map((topic) => (
             <Button key={topic.id} className="tag" id={topic.id}>
               {topic?.name}
@@ -126,7 +126,7 @@ export default function Space({ space, spaceOwner, currentLanguage }) {
           </div>
           <div className="space-owner">
             <UsersIcon className="h-5 w-5 white mr-1 text-gray-400"></UsersIcon>
-            <b>Space owner</b>
+            <b>{t("home.space-owner")}</b>
             {spaceOwner?.name}
             <div className="tag">{capitalizeFirstLetter(spaceOwner?.type)}</div>
           </div>
@@ -154,8 +154,8 @@ export default function Space({ space, spaceOwner, currentLanguage }) {
           </div>
         </div>
         <div className="map-call-to-action">
-          <Button className="become-steward-button" onClick={() => (alert('TBD'))}>Become a Steward</Button>
-          <Button className="browse-rules-button" onClick={() => (alert('TBD'))}>Browse Rules</Button>
+          <Button className="become-steward-button" onClick={() => (alert('TBD'))}>{t("home.join-community")}</Button>
+          <Button className="browse-rules-button" onClick={() => (alert('TBD'))}>{t("home.browse-rules")}</Button>
         </div>
       </div>
     </section>

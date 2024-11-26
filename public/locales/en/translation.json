@@ -15,9 +15,15 @@
   "home": {
     "follow-button": "follow",
     "availability": "Availability",
+    "available": "Available to request events",
+    "get-permission": "Get permission",
     "upcoming-events": "Upcoming events",
     "past-events": "Past events",
-    "registration-date": "Registration date"
+    "registration-date": "Registration date",
+    "space-owner": "Space owner",
+    "space-keywords": "Space Keywords",
+    "join-community": "Join the Community",
+    "browse-rules": "Browse Rules"
   },
   "profile": {
     "title": "Profile Page"

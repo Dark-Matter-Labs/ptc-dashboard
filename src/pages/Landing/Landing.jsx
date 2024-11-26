@@ -12,6 +12,8 @@ const Landing = ({ permissionEngineAPI }) => {
   const slidesSectionRef = useRef(null);
   const [currentSection, setCurrentSection] = useState("cover");
 
+  const [selectedThemes, setSelectedThemes] = useState([]);
+
   useLayoutEffect(() => {
     const sections = [
       { id: "cover", ref: coverSectionRef },
@@ -28,7 +30,7 @@ const Landing = ({ permissionEngineAPI }) => {
           }
         });
       },
-      { threshold: 0.5 } // Trigger when 50% of the section is visible
+      { threshold: 0.5 }, // Trigger when 50% of the section is visible
     );
 
     sections.forEach(({ ref }) => {
@@ -170,7 +172,11 @@ const Landing = ({ permissionEngineAPI }) => {
       </section>
 
       {/* Theme Section */}
-      <LandingTheme themeSectionRef={themeSectionRef}></LandingTheme>
+      <LandingTheme
+        themeSectionRef={themeSectionRef}
+        selectedThemes={selectedThemes}
+        setSelectedThemes={setSelectedThemes}
+      />
 
       {/* Map Section */}
       <LandingMap

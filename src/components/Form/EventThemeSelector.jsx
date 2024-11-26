@@ -9,6 +9,7 @@ export const EventThemeSelector = ({
   permissionEngineAPI,
   selectedTopic,
   setSelectedTopic,
+  currentLanguage,
 }) => {
   const [topics, setTopics] = useState([]);
   const loadTopics = async () => {
@@ -67,11 +68,13 @@ export const EventThemeSelector = ({
                     ${active ? "ring-2  ring-blue-500" : ""}`}
                 >
                   {/* <div className="size-4 mr-1">{topic.icon}</div> */}
-                  <span>{topic.name}</span>
+                  <span>
+                    {topic.translation?.[currentLanguage] ?? topic.name}
+                  </span>
                   {checked && (
                     <button
                       onClick={(e) => {
-                        e.preventDefault()
+                        e.preventDefault();
                         e.stopPropagation(); // Prevent triggering Radio change
                         setSelectedTopic(null); // Deselect
                       }}
@@ -96,4 +99,5 @@ EventThemeSelector.propTypes = {
   permissionEngineAPI: PropTypes.object,
   selectedTopic: PropTypes.object,
   setSelectedTopic: PropTypes.func.isRequired,
+  currentLanguage: PropTypes.string,
 };

@@ -17,6 +17,7 @@ const StepChooseEventRule = ({
   selectedEventRule,
   setSelectedEventRule,
   setAgreements,
+  currentLanguage,
 }) => {
   const { t } = useTranslation();
 
@@ -102,7 +103,15 @@ const StepChooseEventRule = ({
     try {
       const topicNames = permissionEngineAPI
         .fetchTopicsByRuleId(ruleId)
-        .then((res) => res.map((item) => item.name));
+        .then((res) =>
+          res.map((item) => {
+            if (item.translation?.[currentLanguage]) {
+              return item.translation[currentLanguage];
+            } else {
+              return item.name;
+            }
+          })
+        );
       return topicNames;
     } catch (error) {
       console.log("Failed to fetch topics for popularRules: ", error);
@@ -157,7 +166,7 @@ const StepChooseEventRule = ({
       name: null,
     });
     setSelectedEventRule(null);
-    setAgreements({})
+    setAgreements({});
     loadRulesByPopularity();
   }, []);
 
@@ -396,4 +405,5 @@ StepChooseEventRule.propTypes = {
   selectedEventRule: PropTypes.object,
   setSelectedEventRule: PropTypes.func.isRequired,
   setAgreements: PropTypes.func.isRequired,
+  currentLanguage: PropTypes.string,
 };

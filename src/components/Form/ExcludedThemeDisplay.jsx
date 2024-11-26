@@ -3,7 +3,10 @@ import PropTypes from "prop-types";
 
 const excludedTheme = [{ id: "0", name: "Policital Campaigns", icon: "📢" }];
 
-export const ExcludedThemeDisplay = ({permissionEngineAPI}) => {
+export const ExcludedThemeDisplay = ({
+  permissionEngineAPI,
+  currentLanguage,
+}) => {
   const [topics, setTopics] = useState([]);
 
   const loadTopics = async () => {
@@ -28,20 +31,19 @@ export const ExcludedThemeDisplay = ({permissionEngineAPI}) => {
         Excluded themes
       </div>
       <div className="py-1 flex flex-wrap gap-2">
-        {excludedTheme?.map((theme) => (
+        {excludedTheme?.map((topic) => (
           <div
-            key={theme.id}
+            key={topic.id}
             className="flex items-center border cursor-pointer px-4 py-2 rounded-full text-sm font-medium text-gray-500"
           >
-            <div className="size-4 mr-1">{theme.icon}</div>
-            <span>{theme.name}</span>
+            <div className="size-4 mr-1">{topic.icon}</div>
+            <span>{topic.translation?.[currentLanguage] ?? topic.name}</span>
           </div>
         ))}
       </div>
     </div>
   );
 };
-
 
 ExcludedThemeDisplay.propTypes = {
   currentStep: PropTypes.number.isRequired,
@@ -51,4 +53,5 @@ ExcludedThemeDisplay.propTypes = {
   updateEventData: PropTypes.func.isRequired,
   setNextStepButtonText: PropTypes.func.isRequired,
   permissionEngineAPI: PropTypes.object,
+  currentLanguage: PropTypes.string,
 };

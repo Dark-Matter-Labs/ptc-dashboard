@@ -32,6 +32,7 @@ const StepSetEventData = ({
   setSelectedTopic,
   selectedEquipment,
   setSelectedEquipment,
+  currentLanguage,
 }) => {
   const { t } = useTranslation();
   const [eventTitle, setEventTitle] = useState(eventData.name);
@@ -126,6 +127,7 @@ const StepSetEventData = ({
         permissionEngineAPI={permissionEngineAPI}
         selectedTopic={selectedTopic}
         setSelectedTopic={setSelectedTopic}
+        currentLanguage={currentLanguage}
       />
       {/* Excluded theme */}
       <ExcludedThemeDisplay
@@ -136,6 +138,7 @@ const StepSetEventData = ({
         setNavTitle={setNavTitle}
         updateEventData={updateEventData}
         setNextStepButtonText={setNextStepButtonText}
+        currentLanguage={currentLanguage}
       />
       {/* Date  and time picker */}
       <DateTimePicker
@@ -211,4 +214,5 @@ StepSetEventData.propTypes = {
   setSelectedTopic: PropTypes.func.isRequired,
   selectedEquipment: PropTypes.object,
   setSelectedEquipment: PropTypes.func.isRequired,
+  currentLanguage: PropTypes.string,
 };

@@ -10,7 +10,7 @@ import Stepper from "../../../components//Common/Stepper";
 import * as Type from "../../../lib/PermissionEngine/type";
 import PropTypes from "prop-types";
 
-export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
+export default function CreateEvent({ setNavTitle, permissionEngineAPI, currentLanguage }) {
   const spaceRuleBlockExcludedTypes = [
     Type.RuleBlockType.spaceConsentMethod,
     Type.RuleBlockType.spaceConsentTimeout,
@@ -207,6 +207,7 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
       setSelectedTopic={setSelectedTopic}
       selectedEquipment={selectedEquipment}
       setSelectedEquipment={setSelectedEquipment}
+      currentLanguage={currentLanguage}
     />,
     <StepChooseEventRule
       key={2}
@@ -225,6 +226,7 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
       selectedEventRule={selectedEventRule}
       setSelectedEventRule={setSelectedEventRule}
       setAgreements={setAgreements}
+      currentLanguage={currentLanguage}
     />,
     <StepBrowseRuleBlocks
       key={3}
@@ -248,6 +250,7 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
       setIsStepComplete={setIsStepComplete}
       agreements={agreements}
       setAgreements={setAgreements}
+      currentLanguage={currentLanguage}
     />,
     <StepCheckRuleBlocks
       key={4}
@@ -272,6 +275,7 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
       setIsStepComplete={setIsStepComplete}
       agreements={agreements}
       setAgreements={setAgreements}
+      currentLanguage={currentLanguage}
     />,
     // TODO. StepCheckRisks
     <StepFinalReview
@@ -284,6 +288,7 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI }) {
       eventRuleData={eventRuleData}
       spaceRule={spaceRule}
       agreements={agreements}
+      currentLanguage={currentLanguage}
     />,
   ];
 

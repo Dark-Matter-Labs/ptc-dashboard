@@ -400,7 +400,7 @@ const StepCheckRuleBlocks = ({
                   <div className="flex flex-row justify-center items-center gap-[5px]">
                     <img className="h-[16px] w-[16px]" src={ExclamationSm} />
                     <div className="text-[#6b6c78] text-left text-[10px] font-inter flex-col left-[21px] top-[5px] leading-auto w-[279px] flex">
-                      <p>This rule has modified the original space rule:</p>
+                      <p>{t("rules.exception-disclaimer")}:</p>
                     </div>
                   </div>
                   <div className="flex flex-col ml-6">

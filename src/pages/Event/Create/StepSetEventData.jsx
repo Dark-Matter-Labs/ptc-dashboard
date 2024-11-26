@@ -62,7 +62,7 @@ const StepSetEventData = ({
         let result = true;
         try {
           if (!eventData.name || eventData.name === "") {
-            throw new Error("Please set event title");
+            throw new Error(t("create-event.event-title-error"));
           }
           if (
             !eventData?.topicIds ||
@@ -70,13 +70,13 @@ const StepSetEventData = ({
             !eventRuleData.topicIds ||
             eventRuleData?.topicIds?.length === 0
           ) {
-            throw new Error("Please select event theme");
+            throw new Error(t("create-event.event-theme-error"));
           }
           if (!eventData?.startsAt || !eventData?.duration) {
-            throw new Error("Please select event date");
+            throw new Error(t("create-event.event-date-error"));
           }
           if (!eventData.details || eventData.details === "") {
-            throw new Error("Please set event description");
+            throw new Error(t("create-event.event-description-error"));
           }
         } catch (error) {
           result = false;
@@ -107,7 +107,7 @@ const StepSetEventData = ({
       {/* Enter title */}
       <div>
         <label htmlFor="title" className="block mb-2 font-semibold text-xl">
-          Title
+        {t("create-event.event-title")}
         </label>
         <input
           id="title"
@@ -115,7 +115,7 @@ const StepSetEventData = ({
           value={eventTitle}
           onChange={(e) => setEventTitle(e.target.value)}
           className="w-full border rounded p-2"
-          placeholder="Enter event title"
+          placeholder={t("create-event.event-title-placeholder")}
           required
         ></input>
         <hr className="my-6" />
@@ -163,14 +163,14 @@ const StepSetEventData = ({
           htmlFor="event-description"
           className="block mb-2 font-semibold text-xl"
         >
-          Description
+        {t("create-event.event-description")}
         </label>
         <Textarea
           id="event-description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           className="w-full border rounded p-2 min-h-3"
-          placeholder="Enter event description"
+          placeholder={t("create-event.event-description-placeholder")}
         ></Textarea>
       </div>
       {/* Organizer name and email */}

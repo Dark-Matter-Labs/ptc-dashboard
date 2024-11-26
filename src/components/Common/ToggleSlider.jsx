@@ -2,8 +2,10 @@ import { Slider } from "./Slider";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import * as Type from "../../lib/PermissionEngine/type";
+import { useTranslation } from "react-i18next";
 
 export const ToggleSlider = ({ id, handleToggle, agree, ruleBlockTarget }) => {
+  const { t } = useTranslation();
   const [localAgree, setLocalAgree] = useState(agree); // Local state
   const AgreeSliderTexts = {
     inactive: "Slide to agree",

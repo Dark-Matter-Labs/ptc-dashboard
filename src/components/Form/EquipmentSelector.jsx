@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { SearchIcon, PresentationChartBarIcon } from "@heroicons/react/outline";
 import PropTypes from "prop-types";
 import * as Type from "../../lib/PermissionEngine/type";
+import { useTranslation } from "react-i18next";
 
 export const EquipmentSelector = ({
   spaceId,
@@ -10,6 +11,7 @@ export const EquipmentSelector = ({
   selectedEquipment,
   setSelectedEquipment,
 }) => {
+  const { t } = useTranslation();
   const [allEquipment, setAllEquipment] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -101,7 +103,7 @@ export const EquipmentSelector = ({
     <div id="setup-equipments" className="border rounded-md h-auto p-4">
       <div className="flex items-center gap-2 py-2 mb-2">
         <PresentationChartBarIcon className="w-4 h-auto" />
-        <div className="block font-semibold">Equipment</div>
+        <div className="block font-semibold">{t("create-event.equipment")}</div>
       </div>
 
       {/* Search Bar */}
@@ -122,8 +124,8 @@ export const EquipmentSelector = ({
         <div key={category} className="mb-4">
           <div className="flex items-center justify-between gap-2 mb-2">
             <div className="font-semibold flex-grow">
-              {category.charAt(0).toUpperCase() + category.slice(1)} Equipment
-              (select all)
+              {category.charAt(0).toUpperCase() + category.slice(1)} {t("create-event.equipment")} {" "}
+              ({t("select-all")})
             </div>
             <input
               type="checkbox"

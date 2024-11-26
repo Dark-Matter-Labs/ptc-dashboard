@@ -1,6 +1,6 @@
 {
   "navigation": {
-    "navigation-title": "스페이스 대시보드",
+    "navigation-title": "공간 대시보드",
     "profile": "프로필",
     "notifications": "알림",
     "my-events": "나의 이벤트",
@@ -8,7 +8,7 @@
     "my-space": "나의 공간",
     "language": "언어",
     "view-calendar": "캘린더",
-    "propose-event": "이벤트 제안",
+    "propose-event": "활동 신청",
     "logout": "로그아웃"
   },
 
@@ -29,17 +29,44 @@
     "title": "프로필 페이지"
   },
   "events": {
-    "title": "이벤트 페이지"
+    "title": "활동 페이지"
   },
   "create-event": {
-    "navigation-title": "이벤트 제안",
+    "navigation-title": "활동 신청",
+    "event-title": "활동 제목",
+    "event-title-placeholder": "활동 제목을 적어주세요.",
+    "event-title-error": "활동 제목을 지정해주세요.",
+    "event-theme-error": "활동 주제를 선택해주세요.",
+    "event-date-error": "활동 일정을 선택해주세요.",
+    "event-description-error": "활동 설명을 적어주세요.",
+    "event-description": "활동 설명",
+    "event-description-placeholder": "활동을 설명해주세요.",
+    "event-date-time": "활동 일정",
+    "date-time-mon": "월",
+    "date-time-tue": "화",
+    "date-time-wed": "수",
+    "date-time-thu": "목",
+    "date-time-fri": "금",
+    "date-time-sat": "토",
+    "date-time-sun": "일",
+    "organizer-name": "주최자",
+    "organizer-email": "이메일",
+    "setup-requirements": "필요한 물품을 체크하세요",
+    "equipment": "장비 및 물품",
     "an-example-template-title": "예시 템플릿 제목",
     "self-risk-assessment": "자기 위험 평가",
     "proposal-final-review": "제안 최종 검토"
   },
+  "rules": {
+    "exception-disclaimer": "이 규칙은 기본 공간 규칙에서 수정되었습니다",
+    "toggle-slider-agree-inactive": "옆으로 밀어 동의합니다",
+    "toggle-slider-exception-inactive": "예외 사항을 추가하고 싶습니다",
+    "toggle-slider-agree-active": "동의합니다",
+    "toggle-slider-exception-active": "예외 사항을 추가합니다"
+  }, 
   "space-general-name": "공간 규칙 일반 블록",
   "space-general-description": "공간 규칙에 대한 일반적인 규칙 블록",
-  "space-excluded_topic-name": "제외된 주제",
+  "space-excluded_topic-name": "제외된 활동 주제",
   "space-excluded_topic-description": "공간에서 제외된 주제",
   "space-guide-name": "공간 가이드",
   "space-guide-description": "공간에 대한 가이드",
@@ -68,5 +95,6 @@
   "space-max_availability_unit_count-name": "최대 예약 시간 단위 수",
   "space-max_availability_unit_count-description": "최대 예약 가능한 시간 단위 수",
   "space-cancel_deadline-name": "취소 정책",
-  "space-cancel_deadline-description": "행사 취소 마감 시간"
+  "space-cancel_deadline-description": "행사 취소 마감 시간",
+  "select-all": "전체 선택"
 }

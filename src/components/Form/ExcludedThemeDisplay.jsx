@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 const excludedTheme = [{ id: "0", name: "Policital Campaigns", icon: "📢" }];
 
@@ -8,6 +9,7 @@ export const ExcludedThemeDisplay = ({
   currentLanguage,
 }) => {
   const [topics, setTopics] = useState([]);
+  const { t } = useTranslation();
 
   const loadTopics = async () => {
     try {
@@ -28,7 +30,7 @@ export const ExcludedThemeDisplay = ({
   return (
     <div className="text-left">
       <div htmlFor="themes" className="block mb-2 font-semibold">
-        Excluded themes
+      {t("space-excluded_topic-name")}
       </div>
       <div className="py-1 flex flex-wrap gap-2">
         {excludedTheme?.map((topic) => (

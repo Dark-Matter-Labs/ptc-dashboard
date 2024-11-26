@@ -16,6 +16,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import abbrTimezone from "dayjs-abbr-timezone";
+import { useTranslation } from "react-i18next";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -38,7 +39,8 @@ const DateTimePicker = ({
 }) => {
   // availability
   const [availability, setAvailability] = useState([]);
-
+ // translation
+  const { t } = useTranslation();
   // Function to go to the next month
   const handleNextMonth = (e) => {
     e.preventDefault();
@@ -61,7 +63,13 @@ const DateTimePicker = ({
 
   // Weekday names
   // Adjust to start the week on Monday
-  const weekdays = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+  const weekdays = [t("create-event.date-time-mon"),
+  t("create-event.date-time-tue"),
+  t("create-event.date-time-wed"),
+  t("create-event.date-time-thu"),
+  t("create-event.date-time-fri"),
+  t("create-event.date-time-sat"),
+  t("create-event.date-time-sun")];
 
   const getWeekStartOffset = () => {
     const firstDayOfMonth = getDay(startOfMonth(currentMonth));
@@ -152,7 +160,7 @@ const DateTimePicker = ({
   return (
     <div className="text-left">
       <hr className="my-6" />
-      <div className="block mb-2 font-semibold text-xl">Date and time</div>
+      <div className="block mb-2 font-semibold text-xl">{t("create-event.event-date-time")}</div>
       {!idDateTimeDecided && (
         <>
           <div className="border rounded">

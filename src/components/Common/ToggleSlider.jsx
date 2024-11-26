@@ -8,18 +8,18 @@ export const ToggleSlider = ({ id, handleToggle, agree, ruleBlockTarget }) => {
   const { t } = useTranslation();
   const [localAgree, setLocalAgree] = useState(agree); // Local state
   const AgreeSliderTexts = {
-    inactive: "Slide to agree",
-    active: "I agree to this term",
+    inactive: t("rules.toggle-slider-agree-inactive"),
+    active: t("rules.toggle-slider-agree-active"),
   };
   const DisagreeSliderTexts = {
     inactive:
       ruleBlockTarget === Type.RuleTarget.space
-        ? "I need to request an exception"
-        : "I want to delete this rule",
+        ? t("rules.toggle-slider-exception-inactive")
+        : t("rules.toggle-slider-delete-inactive"),
     active:
       ruleBlockTarget === Type.RuleTarget.space
-        ? "I am requesting an exception"
-        : "This rule is deleted",
+        ? t("rules.toggle-slider-exception-active")
+        : t("rules.toggle-slider-delete-active"),
   };
 
   // Sync local state with the agree prop only when it changes

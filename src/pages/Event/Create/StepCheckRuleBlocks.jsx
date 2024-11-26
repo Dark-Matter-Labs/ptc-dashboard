@@ -388,7 +388,7 @@ const StepCheckRuleBlocks = ({
                         handleException(ruleBlock.id, false, e.target.value)
                       }
                       className="w-full border rounded p-2 min-h-3 mt-2"
-                      placeholder="Enter reason for exception"
+                      placeholder={t("rules.exception-reason-placeholder")}
                     ></Textarea>
                   ) : (
                     ""

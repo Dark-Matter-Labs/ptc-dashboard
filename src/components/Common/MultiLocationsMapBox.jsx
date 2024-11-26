@@ -24,7 +24,7 @@ export const MultiLocationsMapBox = ({
     width: option?.width ?? "100%",
     height: option?.height ?? 400,
     initialViewState: {
-      zoom: option?.zoom ?? 15,
+      zoom: option?.zoom ?? 12,
       latitude: Number(locations[0]?.latitude ?? defaultLocation.latitude),
       longitude: Number(locations[0]?.longitude ?? defaultLocation.longitude),
     },

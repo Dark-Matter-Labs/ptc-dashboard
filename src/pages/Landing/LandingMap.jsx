@@ -43,12 +43,12 @@ export const LandingMap = ({ mapSectionRef, permissionEngineAPI }) => {
     loadLocations();
   }, []);
 
-  const currentLanguage = "en";
+  const currentLanguage = "ko";
   return (
     <section
       ref={mapSectionRef}
       data-section="map"
-      className="bg-[#252323] h-screen "
+      className="bg-[#F9F3F3] h-max w-11/12 mx-auto rounded-2xl border-2 border-indigo-500/0"
     >
       <div className="flex flex-col justify-between items-center p-8">
         <div className="text-[#AF56EF] text-base uppercase mt-2">
@@ -61,10 +61,14 @@ export const LandingMap = ({ mapSectionRef, permissionEngineAPI }) => {
           선택한 키워드입니다.
         </div>
       </div>
-      <MultiLocationsMapBox
-        locations={locations}
-        currentLanguage={currentLanguage}
-      />
+
+      <div className="w-full border-4 border-indigo-800/0 h-[450px] rounded-2xl overflow-hidden ">
+        <MultiLocationsMapBox
+          className="w-full h-full"
+          locations={locations}
+          currentLanguage={currentLanguage}
+        />
+      </div>
     </section>
   );
 };

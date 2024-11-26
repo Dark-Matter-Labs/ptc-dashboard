@@ -3,8 +3,9 @@ import { ArrowDownIcon } from "@heroicons/react/outline";
 import PtCLogoImgSrc from "../../assets/image/ptc-logo.png";
 import { LandingTheme } from "./LandingTheme";
 import { LandingMap } from "./LandingMap";
+import PropTypes from "prop-types";
 
-const Landing = () => {
+const Landing = ({ permissionEngineAPI }) => {
   const coverSectionRef = useRef(null);
   const themeSectionRef = useRef(null);
   const mapSectionRef = useRef(null);
@@ -172,14 +173,10 @@ const Landing = () => {
       <LandingTheme themeSectionRef={themeSectionRef}></LandingTheme>
 
       {/* Map Section */}
-      <LandingMap mapSectionRef={mapSectionRef} />
-      <section
-        ref={mapSectionRef}
-        data-section="map"
-        className="bg-[#F9F3F3] h-screen flex justify-center items-center"
-      >
-        <h1 className="text-purple-900 text-3xl">Map Section</h1>
-      </section>
+      <LandingMap
+        mapSectionRef={mapSectionRef}
+        permissionEngineAPI={permissionEngineAPI}
+      />
 
       {/* Slides Section*/}
       <section
@@ -236,3 +233,7 @@ const Landing = () => {
 };
 
 export default Landing;
+
+Landing.propTypes = {
+  permissionEngineAPI: PropTypes.object,
+};

@@ -17,8 +17,8 @@ export const MultiLocationsMapBox = ({
   const defaultStyle = "mapbox://styles/mapbox/streets-v11";
   //defaultLocation in Daegu
   const defaultLocation = {
-    latitude: 35.8709,
-    longitude: 128.6021,
+    latitude: 51.521646,
+    longitude: -0.198941,
   };
   const [viewport] = useState({
     width: option?.width ?? "100%",

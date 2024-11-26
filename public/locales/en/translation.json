@@ -16,7 +16,8 @@
     "follow-button": "follow",
     "availability": "Availability",
     "upcoming-events": "Upcoming events",
-    "past-events": "Past events"
+    "past-events": "Past events",
+    "registration-date": "Registration date"
   },
   "profile": {
     "title": "Profile Page"

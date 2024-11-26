@@ -12,8 +12,10 @@ import PropTypes from "prop-types";
 import * as Type from "../../lib/PermissionEngine/type";
 import { MapBox } from "../../components/Common/MapBox";
 import dayjs from "dayjs";
+import { useTranslation } from "react-i18next";
 
 export default function Space({ space, spaceOwner, currentLanguage }) {
+  const { t } = useTranslation();
   const addressRef = useRef(null);
   const location = {
     longitude: space?.longitude,
@@ -119,7 +121,7 @@ export default function Space({ space, spaceOwner, currentLanguage }) {
         <div className="map-snippet">
           <div className="registration-date">
             <CalendarIcon className="h-5 w-5 white mr-1 text-gray-400"></CalendarIcon>
-            <b>Registration date</b>
+            <b>{t("home.registration-date")}</b>
             {dayjs(space?.createdAt).format("YYYY-MM-DD")}
           </div>
           <div className="space-owner">

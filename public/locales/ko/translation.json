@@ -16,7 +16,8 @@
     "follow-button": "팔로우",
     "availability": "이용 가능 시간",
     "upcoming events": "다가오는 이벤트",
-    "past events": "지난 이벤트"
+    "past events": "지난 이벤트",
+    "registration-date": "등록일자"
   },
   "profile": {
     "title": "프로필 페이지"

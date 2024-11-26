@@ -74,18 +74,18 @@ export const LandingTheme = ({
       </div>
       <div className="bg-diamond-grid my-20 h-screen overflow-scroll mx-0 sm:mx-40">
         <div className=" grid grid-cols-4 sm:grid-cols-6 gap-0">
-          {topics?.map((topic, index) => (
+          {topics?.map((topic) => (
             <Diamond
               className={classNames(
-                selectedThemes.includes(index)
-                  ? `${getColorForIndex(index)} text-[#2F103A]`
+                selectedThemes.includes(topic.id)
+                  ? `${getColorForIndex(topic.id)} text-[#2F103A]`
                   : selectedThemes.length >= 4
                     ? "bg-[#3A1749] text-[#71597C] cursor-not-allowed"
                     : "bg-[#3A1749] text-white",
                 "",
               )}
-              onClick={() => handleClick(index)}
-              key={index}
+              onClick={() => handleClick(topic.id)}
+              key={topic.id}
               label={topic.name}
             />
           ))}

@@ -48,7 +48,7 @@ export const SupportedEventAccessType = ({ accessType }) => {
   }, []);
 
   return (
-    <div className="w-full h-[72px] relative bg-[#92929d] rounded-3xl shadow-inner flex items-center">
+    <div className="w-full h-[72px] relative bg-[#92929d] rounded-3xl shadow-inner flex items-center justify-between">
       <div className="flex flex-col w-[286px] px-4">
         <span
           style={{

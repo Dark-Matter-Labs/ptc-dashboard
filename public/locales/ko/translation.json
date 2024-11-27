@@ -30,6 +30,9 @@
     "self-risk-assessment": "자기 위험 평가",
     "proposal-final-review": "제안 최종 검토"
   },
+  "rule-dashboard": {
+    "navigation-title": "규칙 대시보드"
+  },
   "space-general-name": "공간 규칙 일반 블록",
   "space-general-description": "공간 규칙에 대한 일반적인 규칙 블록",
   "space-excluded_topic-name": "제외된 주제",

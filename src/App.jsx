@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import i18n from "./i18n";
 import SpaceDashboard from "./pages/Space/SpaceDashboard";
+import RuleDashboard from "./pages/Rule/RuleDashboard";
 import Profile from "./pages/Profile/Profile";
 import Navbar from "./components/Common/Navbar";
 import CreateEvent from "./pages/Event/Create/CreateEvent";
@@ -86,6 +87,16 @@ function App() {
             path="/event/new/:spaceId"
             element={
               <CreateEvent
+                setNavTitle={setNavTitle}
+                permissionEngineAPI={permissionEngineAPI}
+                currentLanguage={currentLanguage}
+              />
+            }
+          />
+          <Route
+            path="/rule/:ruleId"
+            element={
+              <RuleDashboard
                 setNavTitle={setNavTitle}
                 permissionEngineAPI={permissionEngineAPI}
                 currentLanguage={currentLanguage}

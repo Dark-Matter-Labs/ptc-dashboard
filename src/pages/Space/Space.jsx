@@ -12,9 +12,11 @@ import PropTypes from "prop-types";
 import * as Type from "../../lib/PermissionEngine/type";
 import { MapBox } from "../../components/Common/MapBox";
 import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
 
 export default function Space({ space, spaceOwner, currentLanguage }) {
   const addressRef = useRef(null);
+  const navigate = useNavigate();
   const location = {
     longitude: space?.longitude,
     latitude: space?.latitude,
@@ -153,7 +155,7 @@ export default function Space({ space, spaceOwner, currentLanguage }) {
         </div>
         <div className="map-call-to-action">
           {/* <Button className="become-steward-button" onClick={() => (alert('TBD'))}>Become a Steward</Button> */}
-          <Button className="browse-rules-button" onClick={() => (alert('TBD'))}>Browse Rules</Button>
+          <Button className="browse-rules-button" onClick={() => (navigate(`/rule/${space.ruleId}`))}>Browse Rules</Button>
         </div>
       </div>
     </section>

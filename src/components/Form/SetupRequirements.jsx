@@ -1,5 +1,6 @@
 import { EquipmentSelector } from "./EquipmentSelector";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 export const SetupRequirements = ({
   spaceId,
@@ -9,12 +10,13 @@ export const SetupRequirements = ({
   selectedEquipment,
   setSelectedEquipment,
 }) => {
+  const { t } = useTranslation();
   return (
     <div className="text-left">
       <hr className="my-6" />
 
       {/* Setup Requirements */}
-      <div className="block mb-2 font-semibold text-xl">Setup Requirements</div>
+      <div className="block mb-2 font-semibold text-xl">{t("create-event.setup-requirements")}</div>
       <div id="setup-requirements" className="h-auto flex flex-col gap-4">
         {/* Noise level selector*/}
         {/* Equipment selector */}

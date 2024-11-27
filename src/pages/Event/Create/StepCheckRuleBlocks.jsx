@@ -106,10 +106,10 @@ const StepCheckRuleBlocks = ({
     });
     console.log("hasDisagreements? ::: ", hasDisagreement);
     if (hasDisagreement) {
-      setNextStepButtonText("Request exception");
+      setNextStepButtonText(t("navigation.request-exception-button"));
       updateEventData({ requestType: "exceptions" });
     } else {
-      setNextStepButtonText("Next");
+      setNextStepButtonText(t("navigation.next-button"));
       updateEventData({ requestType: "agreed" });
     }
   }, [agreements, setNextStepButtonText]);
@@ -388,7 +388,7 @@ const StepCheckRuleBlocks = ({
                         handleException(ruleBlock.id, false, e.target.value)
                       }
                       className="w-full border rounded p-2 min-h-3 mt-2"
-                      placeholder="Enter reason for exception"
+                      placeholder={t("rules.exception-reason-placeholder")}
                     ></Textarea>
                   ) : (
                     ""
@@ -400,7 +400,7 @@ const StepCheckRuleBlocks = ({
                   <div className="flex flex-row justify-center items-center gap-[5px]">
                     <img className="h-[16px] w-[16px]" src={ExclamationSm} />
                     <div className="text-[#6b6c78] text-left text-[10px] font-inter flex-col left-[21px] top-[5px] leading-auto w-[279px] flex">
-                      <p>This rule has modified the original space rule:</p>
+                      <p>{t("rules.exception-disclaimer")}:</p>
                     </div>
                   </div>
                   <div className="flex flex-col ml-6">
@@ -473,8 +473,7 @@ const StepCheckRuleBlocks = ({
               src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC8AAAASCAYAAADLw4ffAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACTSURBVHgB7ZYxDoAgDEVbuYBH8Ah6AxnYPYo38SzODHoUvYEjAwnWwb2JCa1JX1K6dHiBwAeBQYxxQcTJOTd47y9QQsOc60spXc65B0Vw5VVi8lKYvBS/lsdned5xajN8gHLgqJ0D786f8BHKgTal1EJFkDNEJ7NRG6l8CGEHJdiFlcLkpTB5KbjyK9VF//kDFHEDbSci7pHSsJkAAAAASUVORK5CYII="
             />
             <div className="left-[97.58px] top-[24px] w-[174px] h-[45px] text-gray-400 text-left font-inter text-[12px] tracking-[0.1px] leading-none flex items-center justify-center">
-              Adding a new rule will require your event to be reviewed by the
-              community
+            {t("rules.new-rule-review-message")}
             </div>
           </div>
         </div>

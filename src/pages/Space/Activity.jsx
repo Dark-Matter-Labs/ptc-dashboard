@@ -4,10 +4,12 @@ import { Button } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
 import Today from "./Today";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 import { events_data, past_events_data } from "../../eventData";
 
 export default function Activity({ spaceId }) {
+  const { t } = useTranslation();
   const [events, setEvents] = useState([]);
   const [pastEvents, setPastEvents] = useState([]);
   let navigate = useNavigate();
@@ -33,13 +35,13 @@ export default function Activity({ spaceId }) {
         <h1>Availability</h1>
         <div className="permissioning-container">
           <div className="permissioning">
-            <h1>Availability</h1>
-            <div>Available to register for activities</div>
+            <h1>{t("home.availability")}</h1>
+            <div>{t("home.available")}</div>
             <Button
               onClick={() => gotoCreateEvent(`/event/new/${spaceId}`)}
               className="get-permission-button"
             >
-              Get permission
+              {t("home.get-permission")}
             </Button>
           </div>
         </div>

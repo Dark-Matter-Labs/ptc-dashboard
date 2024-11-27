@@ -12,9 +12,11 @@ import PropTypes from "prop-types";
 import * as Type from "../../lib/PermissionEngine/type";
 import { MapBox } from "../../components/Common/MapBox";
 import dayjs from "dayjs";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 export default function Space({ space, spaceOwner, currentLanguage }) {
+  const { t } = useTranslation();
   const addressRef = useRef(null);
   const navigate = useNavigate();
   const location = {
@@ -82,7 +84,7 @@ export default function Space({ space, spaceOwner, currentLanguage }) {
           </div>
           <div className="space-desc">{space?.details}</div>
           {/* <div className="space-connection">273 Connections</div> */}
-          <h3>Space Keywords</h3>
+          <h3>{t("home.space-keywords")}</h3>
           {topics?.map((topic) => (
             <Button key={topic.id} className="tag" id={topic.id}>
               {topic?.name}
@@ -121,12 +123,12 @@ export default function Space({ space, spaceOwner, currentLanguage }) {
         <div className="map-snippet">
           <div className="registration-date">
             <CalendarIcon className="h-5 w-5 white mr-1 text-gray-400"></CalendarIcon>
-            <b>Registration date</b>
+            <b>{t("home.registration-date")}</b>
             {dayjs(space?.createdAt).format("YYYY-MM-DD")}
           </div>
           <div className="space-owner">
             <UsersIcon className="h-5 w-5 white mr-1 text-gray-400"></UsersIcon>
-            <b>Space owner</b>
+            <b>{t("home.space-owner")}</b>
             {spaceOwner?.name}
             <div className="tag">{capitalizeFirstLetter(spaceOwner?.type)}</div>
           </div>

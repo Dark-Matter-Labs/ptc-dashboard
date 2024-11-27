@@ -3,6 +3,7 @@ import { Button, Textarea, Input } from "@headlessui/react";
 import "../../assets/css/Drawer.css";
 import PropTypes from "prop-types";
 import * as Type from "../../lib/PermissionEngine/type";
+import { useTranslation } from "react-i18next";
 
 export default function BottomDrawer({
   isAddCustomRuleBlockOpen,
@@ -12,6 +13,7 @@ export default function BottomDrawer({
   updateEventRuleData,
   allRuleBlocks,
 }) {
+  const { t } = useTranslation();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [position, setPosition] = useState(0); // Tracks vertical position
@@ -119,7 +121,7 @@ export default function BottomDrawer({
           <div className="self-stretch h-[31px] flex-col justify-start items-start gap-[11px] flex">
             <div className="justify-start items-center gap-2 inline-flex">
               <div className="text-[#1e1e1e] text-2xl font-semibold font-['Inter'] leading-[31.20px]">
-                Add a new event rule
+                {t("rules.add-new-rule")}
               </div>
             </div>
           </div>
@@ -129,7 +131,7 @@ export default function BottomDrawer({
             <div className="self-stretch h-[75px] flex-col justify-center items-start gap-[25px] flex">
               <div className="self-stretch h-[75px] flex-col justify-start items-start gap-2.5 flex">
                 <div className="self-stretch text-[#1e1e1e] text-lg font-semibold font-['Inter'] leading-normal">
-                  Title
+                {t("rules.new-rule-title")}
                 </div>
                 <div className="self-stretch px-4 py-3 bg-[#fafafb] rounded-xl border border-[#d8d8dd] justify-start items-center gap-1 inline-flex">
                   <div className="grow shrink basis-0 h-[18px] justify-start items-center gap-[7.06px] flex">
@@ -138,7 +140,7 @@ export default function BottomDrawer({
                         id="add-custom-rule-block-name"
                         value={title}
                         onChange={handleTitleChange}
-                        placeholder="Title"
+                        placeholder={t("create-event.event-title-placeholder")}
                         className="grow shrink basis-0 text-[#979797] font-normal font-['Roboto'] leading-[18.35px] bg-[#fafafb]"
                       ></Input>
                     </div>
@@ -149,7 +151,7 @@ export default function BottomDrawer({
             <div className="self-stretch h-[160px] flex-col justify-center items-start gap-2.5 flex">
               <div className="self-stretch h-[160px] flex-col justify-start items-start gap-2.5 flex">
                 <div className="self-stretch text-[#1e1e1e] text-lg font-semibold font-['Inter'] leading-normal">
-                  Description
+                {t("rules.new-rule-description")}
                 </div>
                 <div className="w-[329px] justify-start items-start gap-[5.26px] inline-flex">
                   <div className="grow shrink basis-0 h-[91px] px-3.5 py-3.5 bg-[#fafafb] rounded-xl border border-[#d8d8dd] flex-col justify-start items-start gap-[8.77px] inline-flex">
@@ -159,7 +161,7 @@ export default function BottomDrawer({
                           id="add-custom-rule-block-content"
                           value={content}
                           onChange={handleContentChange}
-                          placeholder="Describe your custom template"
+                          placeholder={t("create-event.event-description-placeholder")}
                           className="self-stretch h-full text-[#979797] text-sm font-normal font-['Inter'] bg-[#fafafb]"
                         ></Textarea>
                       </div>
@@ -177,7 +179,7 @@ export default function BottomDrawer({
                 onClick={handleSaveClick}
                 className="text-center text-white text-xs font-normal font-['Roboto'] leading-[18px]"
               >
-                Save
+                {t("navigation.save-button")}
               </Button>
             </div>
           </div>

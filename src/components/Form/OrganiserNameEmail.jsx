@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { Input } from "@headlessui/react";
+import { useTranslation } from "react-i18next";
 
 export const OrganiserNameEmail = () => {
+  const { t } = useTranslation();
   const [organizerName, setOrganizerName] = useState(""); // should be populated with user's name
   const [emailAddress, setEmailAddress] = useState(""); // should be populated with user's email
   const handleFetchMe = () => {
@@ -32,7 +34,7 @@ export const OrganiserNameEmail = () => {
         htmlFor="organizer-name"
         className="block mb-2 font-semibold text-xl"
       >
-        Organizer name
+        {t("create-event.organizer-name")}
       </label>
       <Input
         disabled
@@ -46,7 +48,7 @@ export const OrganiserNameEmail = () => {
       <div className="my-6" />
       {/* Email address */}
       <div htmlFor="email-adress" className="block mb-2 font-semibold text-xl">
-        Email address
+      {t("create-event.organizer-email")}
       </div>
 
       <Input

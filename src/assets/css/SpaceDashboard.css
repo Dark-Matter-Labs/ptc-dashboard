@@ -89,5 +89,6 @@
 }
 
 .bg-diamond-grid {
-  background: url("/bg-grid.svg");
+  background: url("/bg-grid.svg") repeat;
+  background-size: cover;;
 }

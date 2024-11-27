@@ -4,7 +4,6 @@ import Map, { Marker } from "react-map-gl";
 import mapboxgl from "mapbox-gl";
 import PropTypes from "prop-types";
 import { accessToken } from "../../lib/mapbox";
-// import { LocationMarkerIcon } from "@heroicons/react/solid";
 import MapPinGreenImgSrc from "../../assets/image/map-pin-green.svg";
 
 mapboxgl.accessToken = accessToken;
@@ -40,34 +39,25 @@ export const MultiLocationsMapBox = ({
   });
   const navigate = useNavigate();
 
-  const [, setListedLocations] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
-  const loadSpaceInfomation = async () => {
-    // Fetch space information using spaceId
+  const [selectedLocationInfo, setSelectedLocationInfo] = useState(null);
+
+  const loadSpaceInformation = async () => {
+    // Fetch space information for the selected location
     try {
-      const spaceInfos = await Promise.all(
-        locations.map(async (location) => {
-          console.log("space id: ", location.id);
-          const spaceInfo = await permissionEngineAPI.fetchSpace(location.id);
-          console.log("fetched space info: ", spaceInfo);
-          return spaceInfo;
-        })
+      console.log("[MAPBOX] selected space Id: ", selectedLocation.id);
+      const spaceInfo = await permissionEngineAPI.fetchSpace(
+        selectedLocation.id
       );
+      console.log("[MAPBOX] fetched space info: ", spaceInfo);
 
-      setListedLocations(spaceInfos);
+      // adding images from the space to selected location object
+      setSelectedLocationInfo({
+        ...selectedLocation,
+        image: spaceInfo.spaceImages[0].link,
+      });
 
-      // console.log("fetched space infos: ", spaceInfos);
-      // const selectedSpaceInfo = selectedLocation
-      //   ? spaceInfos.find((info) => info.id === selectedLocation.id)
-      //   : null;
-
-      // if (selectedSpaceInfo) {
-      //   setSelectedLocation(selectedSpaceInfo);
-      //   console.log(
-      //     "(multi map) updated selected location: ",
-      //     selectedLocation
-      //   );
-      // }
+      console.log("[MAPBOX] adding space photo: ", spaceInfo.spaceImages[0]);
     } catch (error) {
       console.error("Error fetching space information: ", error);
     }
@@ -77,20 +67,25 @@ export const MultiLocationsMapBox = ({
   }, [currentLanguage]);
 
   useEffect(() => {
-    console.log("(multi map) locations: ", locations);
-    loadSpaceInfomation();
+    // Fetch space information using locations
+    console.log("[MAPBOX] locations: ", locations);
+    // loadSpaceInfomation();
+    // console.log("(multi map) locations: [after]", locations);
   }, [locations]);
 
   useEffect(() => {
-    mapRef.current?.scrollZoom.disable();
-    return () => {
-      mapRef.current?.remove();
-    };
-  }, []);
+    // when locatoin is selected, fetch more information for this location
+    console.log("[MAPBOX] selected location: ", selectedLocation);
+    loadSpaceInformation();
+  }, [selectedLocation]);
+
+  useEffect(() => {
+    // when locatoin is selected, fetch more information for this location
+    console.log("[MAPBOX] selected location info: ", selectedLocationInfo);
+  }, [selectedLocationInfo]);
 
   return (
     <Map ref={mapRef} {...viewport} mapboxAccessToken={mapboxgl.accessToken}>
-      {/* Add a Marker */}
       {locations.map((loc, index) => (
         <Marker
           key={index}
@@ -101,7 +96,6 @@ export const MultiLocationsMapBox = ({
             setSelectedLocation(loc);
           }}
         >
-          {/* <LocationMarkerIcon className="h-12 w-12 white mr-1 text-red-600" /> */}
           <img src={MapPinGreenImgSrc} className="h-7 w-7" alt="map pin" />
         </Marker>
       ))}
@@ -109,12 +103,19 @@ export const MultiLocationsMapBox = ({
       {/* Popup Panel at Bottom */}
       {selectedLocation && (
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-full h-fit bg-white shadow-lg rounded-lg overflow-hidden">
+          {/* Close Button */}
+          <button
+            className="absolute top-2 right-2 bg-gray-300 text-gray-600 font-semibold rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-400 z-40"
+            onClick={() => setSelectedLocation(null)}
+          >
+            close
+          </button>
+
           {/* Image Section */}
           <div className="h-1/3 w-full">
             <img
               src={
-                selectedLocation.photos?.[0] ||
-                "https://via.placeholder.com/150"
+                selectedLocationInfo?.image || "https://via.placeholder.com/150"
               }
               alt={selectedLocation.name}
               className="w-full h-full object-cover"
@@ -124,23 +125,35 @@ export const MultiLocationsMapBox = ({
           {/* Details Section */}
           <div className="h-2/3 p-4 flex flex-col justify-between">
             <div>
-              <h3 className="text-lg font-bold text-gray-800">
+              <h3 className="text-2xl font-bold text-[#431F51] ">
                 {selectedLocation.name}
               </h3>
               <p className="text-sm text-gray-600 mt-2">
                 {selectedLocation.details}
               </p>
-              {selectedLocation.topic?.name && (
-                <p className="text-xs text-gray-500 mt-1">
-                  Topic: {selectedLocation.topic.name}
-                </p>
+              {selectedLocation.topics && (
+                <div className="mt-4">
+                  <div className="font-semibold text-gray-600">
+                    이 공간의 키워드
+                  </div>
+                  <div className="text-xs text-gray-500 mt-1 flex flex-wrap gap-y-2 gap-2">
+                    {selectedLocation.topics.map((topic, index) => (
+                      <div
+                        className="bg-[#431F51] px-4 py-2 rounded-full text-white  w-fit"
+                        key={index}
+                      >
+                        {topic.name}
+                      </div>
+                    ))}
+                  </div>
+                </div>
               )}
             </div>
             <button
               className="bg-[#AF56EF] w-full text-white font-semibold rounded-md py-2 px-4 self-start mt-4"
               onClick={() => navigate(`/space/${selectedLocation.id}`)}
             >
-              See More
+              더 보러가기
             </button>
           </div>
         </div>

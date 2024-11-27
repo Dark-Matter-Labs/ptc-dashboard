@@ -153,7 +153,7 @@ export default function Rule({
       </div>
 
       <p className="mb-4">{rule?.details}</p>
-      <div className="flex flex-col gap-4 p-2 mb-5 text-gray-500">
+      <div className="flex flex-col gap-4 p-2 mb-20 text-gray-500">
         {ruleBlocks?.map((ruleBlock) => {
           return (
             <div

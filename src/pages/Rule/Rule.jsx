@@ -98,7 +98,8 @@ export default function Rule({
     ruleBlocks?.forEach(async (ruleBlock) => {
       const content = await parseRuleBlockContent(
         permissionEngineAPI,
-        ruleBlock
+        ruleBlock,
+        t,
       );
 
       setRuleBlockContentById((prev) => ({

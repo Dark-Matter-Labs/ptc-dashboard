@@ -4,13 +4,14 @@ import "../../assets/css/RuleDashboard.css";
 import Rule from "./Rule";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-import { handleLogin } from "../../lib/util";
+import { useUser } from "../../useUser";
 
 export default function RuleDashboard({
   permissionEngineAPI,
   currentLanguage,
   setNavTitle,
 }) {
+  const { user } = useUser();
   const navigate = useNavigate();
   const { t } = useTranslation();
   let { ruleId } = useParams();
@@ -26,13 +27,8 @@ export default function RuleDashboard({
       setRule(fetchedRule);
       setRuleAuthor(fetchedRuleAuthor);
     } catch (error) {
-      if (error.message === "Error: 401") {
-        alert("Please log in");
-        handleLogin();
-      } else {
-        console.error("Error fetching rule: ", error);
-        navigate("/");
-      }
+      console.error("Error fetching rule: ", error);
+      navigate("/");
     }
   };
 
@@ -45,12 +41,16 @@ export default function RuleDashboard({
 
   return (
     <>
-      <Rule
-        rule={rule}
-        ruleAuthor={ruleAuthor}
-        permissionEngineAPI={permissionEngineAPI}
-        currentLanguage={currentLanguage}
-      ></Rule>
+      {user ? (
+        <Rule
+          rule={rule}
+          ruleAuthor={ruleAuthor}
+          permissionEngineAPI={permissionEngineAPI}
+          currentLanguage={currentLanguage}
+        ></Rule>
+      ) : (
+        <div className="mt-2">Please log in to see the rule.</div>
+      )}
     </>
   );
 }

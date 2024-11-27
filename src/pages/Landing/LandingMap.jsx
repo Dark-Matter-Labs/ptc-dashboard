@@ -8,13 +8,10 @@ export const LandingMap = ({
   selectedThemes,
 }) => {
   const [locations, setLocations] = useState([]);
+  const [topics, setTopics] = useState([]);
 
-  // receive an array of topic id from theme selector
-  const topicIds = [
-    "e361cb09-e808-479f-b7ee-c2100f2fd4b0", // common
-  ];
+  const topicIds = selectedThemes;
 
-  // filtered locations
   const loadLocations = async () => {
     try {
       const response = await permissionEngineAPI.filterSpaceByTopics(topicIds);
@@ -29,6 +26,32 @@ export const LandingMap = ({
       setLocations(convertedLocations);
     } catch (error) {
       console.error("error fetching me: ", error);
+    }
+  };
+
+  const loadTopics = async () => {
+    try {
+      // Map selected themes to their corresponding topics names
+      const mappedTopics = await Promise.all(
+        selectedThemes.map(async (themeId) => {
+          try {
+            const response = await permissionEngineAPI.fetchTopicById(themeId);
+            console.log("Fetching topic by id: ", response);
+            return { id: themeId, name: response.name };
+          } catch (error) {
+            console.error("Error fetching topic by id: ", error);
+            return null;
+          }
+        })
+      );
+
+      // Remove any null values (failed fetches)
+      const validTopics = mappedTopics.filter(Boolean);
+
+      console.log("Mapped topics: ", validTopics);
+      setTopics(validTopics); // Update state with the mapped topics
+    } catch (error) {
+      console.error("Error fetching topics: ", error);
     }
   };
   // filtered locations in Daegu
@@ -46,6 +69,7 @@ export const LandingMap = ({
     loadLocations();
   }, []);
   useEffect(() => {
+    loadTopics();
     console.log("selected themese:  ", selectedThemes);
   }, [selectedThemes]);
 
@@ -65,6 +89,16 @@ export const LandingMap = ({
         </div>
         <div className="text-[#918C96] font-semibold mt-4">
           선택한 키워드입니다.
+        </div>
+        <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-2 w-full">
+          {topics.map((topic, index) => (
+            <div
+              key={index}
+              className=" rounded-full px-4 py-2 bg-[#433648] text-white w-fit "
+            >
+              {topic.name}
+            </div>
+          ))}
         </div>
       </div>
 

@@ -181,7 +181,8 @@ const StepCheckRuleBlocks = ({
     spaceRuleBlocks.forEach(async (ruleBlock) => {
       const content = await parseRuleBlockContent(
         permissionEngineAPI,
-        ruleBlock
+        ruleBlock,
+        t
       );
       setRuleBlockContentByHash((prev) => ({
         ...prev,
@@ -225,7 +226,7 @@ const StepCheckRuleBlocks = ({
               const agreement = agreements[key];
               if (agreement.agree == null) {
                 throw new Error(
-                  "Please answer to all the rule blocks in the list"
+                  t("rule-block-response-error")
                 );
               } else if (
                 agreement.agree === false &&
@@ -233,7 +234,7 @@ const StepCheckRuleBlocks = ({
               ) {
                 const { desiredValue, reason } = agreement;
                 if (!reason) {
-                  throw new Error("Please provide reason for exception");
+                  throw new Error(t("rules.exception-reason-error"));
                 } else {
                   // Add exception rule block for space rule
                   updateEventRuleData({
@@ -282,7 +283,8 @@ const StepCheckRuleBlocks = ({
     allRuleBlocks.forEach(async (ruleBlock) => {
       const content = await parseRuleBlockContent(
         permissionEngineAPI,
-        ruleBlock
+        ruleBlock,
+        t
       );
 
       setRuleBlockContentById((prev) => ({

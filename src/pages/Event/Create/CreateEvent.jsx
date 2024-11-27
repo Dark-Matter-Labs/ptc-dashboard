@@ -9,8 +9,10 @@ import StepFinalReview from "./StepFinalReview";
 import Stepper from "../../../components//Common/Stepper";
 import * as Type from "../../../lib/PermissionEngine/type";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 export default function CreateEvent({ setNavTitle, permissionEngineAPI, currentLanguage }) {
+  const { t } = useTranslation();
   const spaceRuleBlockExcludedTypes = [
     Type.RuleBlockType.spaceConsentMethod,
     Type.RuleBlockType.spaceConsentTimeout,
@@ -55,11 +57,11 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI, currentL
   ];
   function ruleTypeInterpreter(input) {
     if (input.startsWith("space_event:")) {
-      return "Event rule";
+      return t("rules.rule-type-event-rule");
     } else if (input.startsWith("space:")) {
-      return "Space rule";
+      return t("rules.rule-type-space-rule");
     } else {
-      return "Unknown";
+      return t("rules.rule-type-unknown");
     }
   }
   const getRuleBlockTypeNameTranslationKey = (ruleBlockType) => {

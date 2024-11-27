@@ -11,10 +11,14 @@
     "propose-event": "Propose an event",
     "logout": "Log Out",
     "back-button": "Back",
+    "use-this-template-button": "Use this template",
     "request-exception-button": "Request exception",
     "submit-button": "Submit",
     "next-button": "Next",
-    "save-button": "Save"
+    "save-button": "Save",
+    "confirm-button": "Confirm",
+    "cancel-button": "Cancel",
+    "send-request": "Send request"
   },
 
   "home": {
@@ -34,13 +38,29 @@
     "title": "Profile Page"
   },
   "events": {
-    "title": "Event Page"
+    "title": "Event Page",
+    "my-events": "My events",
+    "no-events": "You have no events.",
+    "you-have": "You have",
+    "event": "event",
+    "events": "events",
+    "pending": "Permission Pending",
+    "permission_requested": "Permission Requested",
+    "permission_granted": "Permission Granted",
+    "permission_rejected": "Permission Rejected",
+    "cancelled": "Cancelled",
+    "running": "Live",
+    "closed": "Pending Completion",
+    "complete": "Completed",
+    "complete_with_issue": "Issue Reported",
+    "complete_with_issue_resolved": "Issue Resolved"
   },
   "create-event": {
     "navigation-title": "Propose an event",
     "event-title": "Title",
     "event-title-placeholder": "Please enter a title",
     "event-title-error": "Please set event title",
+    "event-theme": "Theme",
     "event-theme-error": "Please set event theme",
     "event-date-error": "Please set event date",
     "event-description-error": "Please set event description",
@@ -58,9 +78,12 @@
     "organizer-email": "Email",
     "setup-requirements": "Setup requirements",
     "equipment": "Equipment",
+    "rule-template": "Rule template",
     "an-example-template-title": "Template Title",
     "self-risk-assessment": "Self-risk assessment",
-    "proposal-final-review": "Proposal final review"
+    "proposal-final-review": "Proposal final review",
+    "event-created-success": "Event Created Successfully!",
+    "event-created-continue": "Your event has been created. Click confirm to continue."
   },
   "rules": {
     "exception-disclaimer": "This rule has modified the original space rule",
@@ -74,7 +97,14 @@
     "new-rule-review-message": "Adding a new rule will require your event to be reviewed by the community",
     "add-new-rule": "Add a new rule",
     "new-rule-title": "Title",
-    "new-rule-description": "Description"
+    "new-rule-description": "Description",
+    "rule-type-space-rule": "Space Rule",
+    "rule-type-event-rule": "Event Rule",
+    "rule-type-unknown": "Unknown",
+    "reason-input": "Reason",
+    "exception-reason-error": "Please provide a reason for exception",
+    "rule-block-response-error": "Please respond to all the rules",
+    "proposal-summary": "Proposal"
   }, 
   "space-general-name": "General rule block for space rules",
   "space-general-description": "General rule block for space rules",
@@ -93,11 +123,26 @@
   "space-pre_permission_check-name": "A checklist question for review before granting permissions",
   "space-pre_permission_check-description": "A checklist question for review before granting permissions",
   "space-allowed_event_access_type-name": "Supported event types",
+  "space-allowed_event_access_type-public-free-description": "Free and open to everyone",
+  "space-allowed_event_access_type-private-free-description": "Invitation only",
+  "space-allowed_event_access_type-public-paid-description": "Anyone can buy tickets",
+  "public": "Public",
+  "private": "Private",
+  "paid": "Paid",
+  "free": "Free",
+  "event": "Event",
+  "space-allowed_event_access_type-private-paid-description": "Invitation only, with tickets",
   "space-allowed_event_access_type-description": "Allowed event access types in space",
   "space-max_attendee-name": "Maximum capacity",
   "space-max_attendee-description": "Allowed maximum number of attendee in an event",
   "space-max_noise_level-name": "Noise levels",
   "space-max_noise_level-description": "Allowed maximum level of noise in an event",
+  "space-max_noise_level-high": "High",
+  "space-max_noise_level-high-description": "Loud noise such as amplified music, large concerts, or events with powerful sound systems and speakers is allowed.",
+  "space-max_noise_level-medium": "Medium",
+  "space-max_noise_level-medium-description": "Moderate noise such as background music, live speaking, or performances with microphones.",
+  "space-max_noise_level-low": "Low",
+  "space-max_noise_level-low-description": "Minimal noise such as soft background music, quiet conversations, or activities that maintain a peaceful environment is required.",
   "space-availability-name": "Opening hours",
   "space-availability-description": "Space availability list by day",
   "space-availability_buffer-name": "Buffer between events",
@@ -108,5 +153,6 @@
   "space-max_availability_unit_count-description": "Maximum booking unit count",
   "space-cancel_deadline-name": "Cancellation policy",
   "space-cancel_deadline-description": "Cancellation deadline for an event",
-  "select-all": "select all"
+  "select-all": "select all",
+  "login-error": "Please log in"
 }

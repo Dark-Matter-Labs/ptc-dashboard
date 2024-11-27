@@ -155,3 +155,7 @@ export const parseRuleBlockContent = async (permissionEngineAPI, ruleBlock) => {
 
   return parsedContent;
 };
+
+export const handleLogin = () => {
+  window.location.href = "/api/v1/auth/google";
+};

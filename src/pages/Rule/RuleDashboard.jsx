@@ -4,6 +4,7 @@ import "../../assets/css/RuleDashboard.css";
 import Rule from "./Rule";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
+import { handleLogin } from "../../lib/util";
 
 export default function RuleDashboard({
   permissionEngineAPI,
@@ -25,8 +26,13 @@ export default function RuleDashboard({
       setRule(fetchedRule);
       setRuleAuthor(fetchedRuleAuthor);
     } catch (error) {
-      console.error("Error fetching rule: ", error);
-      navigate("/");
+      if (error.message === "Error: 401") {
+        alert("Please log in");
+        handleLogin();
+      } else {
+        console.error("Error fetching rule: ", error);
+        navigate("/");
+      }
     }
   };
 

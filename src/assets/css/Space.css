@@ -65,6 +65,7 @@
   align-items: center;
 }
 .space-data .space-snippet .space-desc {
+  white-space: pre-line;
   color: #92929d;
 }
 .space-data .space-snippet .space-connection {

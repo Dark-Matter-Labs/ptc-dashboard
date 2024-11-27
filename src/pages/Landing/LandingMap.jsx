@@ -2,7 +2,11 @@ import PropTypes from "prop-types";
 
 import { MultiLocationsMapBox } from "../../components/Common/MultiLocationsMapBox";
 import { useEffect, useState } from "react";
-export const LandingMap = ({ mapSectionRef, permissionEngineAPI }) => {
+export const LandingMap = ({
+  mapSectionRef,
+  permissionEngineAPI,
+  selectedThemes,
+}) => {
   const [locations, setLocations] = useState([]);
 
   // receive an array of topic id from theme selector
@@ -39,9 +43,11 @@ export const LandingMap = ({ mapSectionRef, permissionEngineAPI }) => {
   // ];
 
   useEffect(() => {
-    console.log("in landing map useEffect: ");
     loadLocations();
   }, []);
+  useEffect(() => {
+    console.log("selected themese:  ", selectedThemes);
+  }, [selectedThemes]);
 
   const currentLanguage = "ko";
   return (
@@ -76,4 +82,5 @@ export const LandingMap = ({ mapSectionRef, permissionEngineAPI }) => {
 LandingMap.propTypes = {
   mapSectionRef: PropTypes.object,
   permissionEngineAPI: PropTypes.object,
+  selectedThemes: PropTypes.array,
 };

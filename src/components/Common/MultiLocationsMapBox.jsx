@@ -39,6 +39,13 @@ export const MultiLocationsMapBox = ({
     mapRef.current?.setLanguage(currentLanguage);
   }, [currentLanguage]);
 
+  useEffect(() => {
+    mapRef.current?.scrollZoom.disable();
+    return () => {
+      mapRef.curren?.remove();
+    };
+  }, []);
+
   return (
     <Map ref={mapRef} {...viewport} mapboxAccessToken={mapboxgl.accessToken}>
       {/* Add a Marker */}

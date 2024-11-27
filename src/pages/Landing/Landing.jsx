@@ -30,7 +30,7 @@ const Landing = ({ permissionEngineAPI }) => {
           }
         });
       },
-      { threshold: 0.5 }, // Trigger when 50% of the section is visible
+      { threshold: 0.5 } // Trigger when 50% of the section is visible
     );
 
     sections.forEach(({ ref }) => {
@@ -182,6 +182,7 @@ const Landing = ({ permissionEngineAPI }) => {
       <LandingMap
         mapSectionRef={mapSectionRef}
         permissionEngineAPI={permissionEngineAPI}
+        selectedThemes={selectedThemes}
       />
 
       {/* Slides Section*/}

@@ -10,7 +10,12 @@ import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 import { parseRuleBlockContent, capitalizeFirstLetter } from "../../lib/util";
 
-export default function Rule({ rule, ruleAuthor, permissionEngineAPI }) {
+export default function Rule({
+  rule,
+  ruleAuthor,
+  currentLanguage,
+  permissionEngineAPI,
+}) {
   const { t } = useTranslation();
   const [expandedCards, setExpandedCards] = useState({ 0: false }); //{0: true, 2: false}
   const [ruleBlocks, setRuleBlocks] = useState([]);
@@ -122,7 +127,7 @@ export default function Rule({ rule, ruleAuthor, permissionEngineAPI }) {
           <h3>Rule Keywords</h3>
           {topics?.map((topic) => (
             <Button key={topic.id} className="tag" id={topic.id}>
-              {topic?.name}
+              {topic.translation?.[currentLanguage] ?? topic.name}
             </Button>
           ))}
           <div className="rule-call-to-action"></div>
@@ -146,7 +151,7 @@ export default function Rule({ rule, ruleAuthor, permissionEngineAPI }) {
       </div>
 
       <p className="mb-4">{rule?.details}</p>
-      <div className="flex flex-col gap-4 p-2 text-gray-500">
+      <div className="flex flex-col gap-4 p-2 mb-5 text-gray-500">
         {ruleBlocks?.map((ruleBlock) => {
           return (
             <div

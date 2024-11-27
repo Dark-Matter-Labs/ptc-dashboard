@@ -302,7 +302,7 @@ export class API {
   };
 
   filterSpaceByTopics = async (topics) => {
-    const topicIdsString = topics.map((topic) => topic.id).join("&topicIds=");
+    const topicIdsString = topics.map((topic) => `&topicIds=${topic}`).join("");
     console.log("topicIdsString: ", topicIdsString);
     const response = await this.get(`space/${topicIdsString}`);
     console.log("response filterSpaceByTopics(): ", response);

@@ -124,7 +124,7 @@ export default function Rule({
             {ruleAuthor?.name}
           </div>
           <div className="rule-desc">{rule?.details}</div>
-          <h3>Rule Keywords</h3>
+          <h3>{t("rule-dashboard.rule-keywords")}</h3>
           {topics?.map((topic) => (
             <Button key={topic.id} className="tag" id={topic.id}>
               {topic.translation?.[currentLanguage] ?? topic.name}
@@ -137,12 +137,12 @@ export default function Rule({
         <div className="metadata-snippet">
           <div className="registration-date">
             <CalendarIcon className="h-5 w-5 white mr-1 text-gray-400"></CalendarIcon>
-            <b>Registration date</b>
+            <b>{t("rule-dashboard.registration-date")}</b>
             {dayjs(rule?.createdAt).format("YYYY-MM-DD")}
           </div>
           <div className="rule-author">
             <UsersIcon className="h-5 w-5 white mr-1 text-gray-400"></UsersIcon>
-            <b>Rule author</b>
+            <b>{t("rule-dashboard.rule-author")}</b>
             {ruleAuthor?.name}
             <div className="tag">{capitalizeFirstLetter(ruleAuthor?.type)}</div>
           </div>

@@ -77,7 +77,10 @@
     "new-rule-description": "Description"
   }, 
   "rule-dashboard": {
-    "navigation-title": "Rule Dashboard"
+    "navigation-title": "Rule Dashboard",
+    "registration-date": "Registration date",
+    "rule-author": "Rule Author",
+    "rule-keywords": "Rule Keywords"
   },
   "space-general-name": "General rule block for space rules",
   "space-general-description": "General rule block for space rules",

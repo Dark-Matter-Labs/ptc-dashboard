@@ -37,6 +37,8 @@ export default function Rule({
     Type.RuleBlockType.spaceGuide,
   ];
   const forceStaticNamedSpaceRuleBlocks = [
+    Type.RuleBlockType.spaceConsentMethod,
+    Type.RuleBlockType.spaceConsentTimeout,
     Type.RuleBlockType.spaceExcludedTopic,
     Type.RuleBlockType.spaceCancelDeadline,
     Type.RuleBlockType.spaceAllowedEventAccessType,

@@ -82,8 +82,10 @@ export const parseRuleBlockContent = async (permissionEngineAPI, ruleBlock) => {
       break;
     case Type.RuleBlockType.spaceAvailability:
       parsedContent = (
-        <SpaceAvailabilityRuleBlockContent items={content.split(Type.RuleBlockContentDivider.array)} />
-      )
+        <SpaceAvailabilityRuleBlockContent
+          items={content.split(Type.RuleBlockContentDivider.array)}
+        />
+      );
       break;
     case Type.RuleBlockType.spaceAvailabilityBuffer:
       break;
@@ -129,7 +131,18 @@ export const parseRuleBlockContent = async (permissionEngineAPI, ruleBlock) => {
         />
       );
       break;
-
+    case Type.RuleBlockType.spaceConsentMethod: {
+      const [operator, percent, flag] = content.split(
+        Type.RuleBlockContentDivider.operator
+      );
+      parsedContent = (
+        <KeyValueRuleBlockContent
+          keyString="Consent"
+          valueString={`${operator} ${percent}% ${flag}`}
+        />
+      );
+      break;
+    }
     case Type.RuleBlockType.spaceEventBenefit:
     case Type.RuleBlockType.spaceEventRisk:
     case Type.RuleBlockType.spaceGeneral:

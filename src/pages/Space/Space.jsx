@@ -152,7 +152,7 @@ export default function Space({ space, spaceOwner, currentLanguage }) {
           </div>
         </div>
         <div className="map-call-to-action">
-          <Button className="become-steward-button" onClick={() => (alert('TBD'))}>Become a Steward</Button>
+          {/* <Button className="become-steward-button" onClick={() => (alert('TBD'))}>Become a Steward</Button> */}
           <Button className="browse-rules-button" onClick={() => (alert('TBD'))}>Browse Rules</Button>
         </div>
       </div>

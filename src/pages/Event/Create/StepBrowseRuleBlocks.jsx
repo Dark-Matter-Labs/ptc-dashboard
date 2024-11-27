@@ -133,7 +133,7 @@ const StepBrowseRuleBlocks = ({
 
   // Update button text based on agreements
   useEffect(() => {
-    setNextStepButtonText("Use this template");
+    setNextStepButtonText(t("navigation.use-this-template-button"));
   }, [setNextStepButtonText]);
 
   useEffect(() => {
@@ -144,7 +144,7 @@ const StepBrowseRuleBlocks = ({
   useEffect(() => {
     console.log("parse space rule blocks");
     spaceRuleBlocks.forEach(async (ruleBlock) => {
-      const content = await parseRuleBlockContent(permissionEngineAPI, ruleBlock);
+      const content = await parseRuleBlockContent(permissionEngineAPI, ruleBlock, t);
       setRuleBlockContentByHash((prev) => ({
         ...prev,
         [ruleBlock.hash]: content,
@@ -157,7 +157,7 @@ const StepBrowseRuleBlocks = ({
   useEffect(() => {
     console.log("allRuleBlocks: ", allRuleBlocks);
     allRuleBlocks.forEach(async (ruleBlock) => {
-      const content = await parseRuleBlockContent(permissionEngineAPI, ruleBlock);
+      const content = await parseRuleBlockContent(permissionEngineAPI, ruleBlock, t);
 
       setRuleBlockContentById((prev) => ({
         ...prev,

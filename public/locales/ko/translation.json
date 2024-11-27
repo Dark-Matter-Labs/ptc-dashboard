@@ -11,11 +11,15 @@
     "propose-event": "활동 신청",
     "logout": "로그아웃",
     "back-button": "이전으로",
+    "use-this-template-button": "이 템플릿을 사용합니다",
     "request-exception-button": "예외 사항을 추가하여 활동을 신청합니다",
     "submit-event": "활동 신청하기",
     "submit-button": "등록",
     "next-button": "다음",
-    "save-button": "저장"
+    "save-button": "저장",
+    "confirm-button": "확인",
+    "cancel-button": "취소",
+    "send-request": "신청하기"
   },
 
   "home": {
@@ -35,13 +39,29 @@
     "title": "프로필 페이지"
   },
   "events": {
-    "title": "활동 페이지"
+    "title": "활동 페이지",
+    "my-events": "나의 활동 목록",
+    "no-events": "활동이 없습니다.",
+    "you-have": "활동이",
+    "event": "개 있습니다",
+    "events": "개 있습니다",
+    "pending": "대기중",
+    "permission_requested": "검토중",
+    "permission_granted": "승인 완료",
+    "permission_rejected": "승인 거부",
+    "cancelled": "취소됨",
+    "running": "진행중",
+    "closed": "완료 대기",
+    "complete": "완료됨",
+    "complete_with_issue": "문제 발생",
+    "complete_with_issue_resolved": "문제 해결"
   },
   "create-event": {
     "navigation-title": "활동 신청",
     "event-title": "활동 제목",
     "event-title-placeholder": "제목을 적어주세요.",
     "event-title-error": "활동 제목을 적어주세요.",
+    "event-theme": "활동 주제",
     "event-theme-error": "활동 주제를 선택해주세요.",
     "event-date-error": "활동 일정을 선택해주세요.",
     "event-description-error": "활동 설명을 적어주세요.",
@@ -59,9 +79,12 @@
     "organizer-email": "이메일",
     "setup-requirements": "필요한 물품을 체크하세요",
     "equipment": "장비 및 물품",
+    "rule-template": "규칙 템플릿",
     "an-example-template-title": "예시 템플릿 제목",
     "self-risk-assessment": "자기 위험 평가",
-    "proposal-final-review": "제안 최종 검토"
+    "proposal-final-review": "제안 최종 검토",
+    "event-created-success": "활동이 성공적으로 등록되었습니다!",
+    "event-created-continue": "활동이 등록되었습니다. 계속하려면 확인을 클릭하세요."
   },
   "rules": {
     "exception-disclaimer": "이 규칙은 기본 공간 규칙에서 수정되었습니다",
@@ -71,11 +94,18 @@
     "toggle-slider-exception-active": "예외 사항을 추가합니다",
     "toggle-slider-delete-inactive": "이 규칙을 삭제하고 싶습니다",
     "toggle-slider-delete-active": "이 규칙을 삭제합니다",
-    "exception-reason-placeholder": "예외 사항을 요청하는 이유를 적어주세요.",
+    "exception-reason-placeholder": "이유를 적어주세요.",
     "new-rule-review-message": "새로운 규칙을 추가하면 활동이 커뮤니티의 검토를 거치게 됩니다.",
     "add-new-rule": "새로운 규칙 만들기",
     "new-rule-title": "제목",
-    "new-rule-description": "설명"
+    "new-rule-description": "설명",
+    "rule-type-space-rule": "공간 규칙",
+    "rule-type-event-rule": "활동 규칙",
+    "rule-type-unknown": "미분류",
+    "reason-input": "이유",
+    "exception-reason-error": "예외 사항을 요청하는 이유를 적어주세요.",
+    "rule-block-response-error": "모든 규칙에 응답해주세요.",
+    "proposal-summary": "활동 신청 확인"
   }, 
   "rule-dashboard": {
     "navigation-title": "규칙 대시보드",
@@ -100,11 +130,26 @@
   "space-pre_permission_check-name": "권한 부여 전 검토 체크리스트",
   "space-pre_permission_check-description": "권한 부여 전에 검토할 체크리스트 질문",
   "space-allowed_event_access_type-name": "지원되는 행사 유형",
+  "public": "공개",
+  "private": "비공개",
+  "paid": "유료",
+  "free": "무료",
+  "event": "활동",
+  "space-allowed_event_access_type-public-free-description": "누구나 제한없이 참가 가능",
+  "space-allowed_event_access_type-private-free-description": "초대받은 사람만 참가 가능",
+  "space-allowed_event_access_type-public-paid-description": "누구나 티켓을 구입할 수 있음",
+  "space-allowed_event_access_type-private-paid-description": "초대받은 티켓 소지자만 입장 가능",
   "space-allowed_event_access_type-description": "공간에서 허용되는 행사 접근 유형",
   "space-max_attendee-name": "최대 수용 인원",
   "space-max_attendee-description": "행사에서 허용되는 최대 참석 인원",
   "space-max_noise_level-name": "소음 수준",
   "space-max_noise_level-description": "행사에서 허용되는 최대 소음 수준",
+  "space-max_noise_level-high": "높음",
+  "space-max_noise_level-high-description": "콘서트, 대규모 인원, 앰프를 사용하는 음악 등 큰 소음이 예상되는 활동.",
+  "space-max_noise_level-medium": "중간",
+  "space-max_noise_level-medium-description": "배경 음악, 마이크를 사용한 발표, 공연 등 중간 정도의 소음.",
+  "space-max_noise_level-low": "낮음",
+  "space-max_noise_level-low-description": "회의, 워크숍, 토론 등 조용한 활동. 일상적 대화 수준의 소음.",
   "space-availability-name": "운영 시간",
   "space-availability-description": "요일별 공간 이용 가능 시간",
   "space-availability_buffer-name": "행사 간격 시간",
@@ -114,6 +159,7 @@
   "space-max_availability_unit_count-name": "최대 예약 시간 단위 수",
   "space-max_availability_unit_count-description": "최대 예약 가능한 시간 단위 수",
   "space-cancel_deadline-name": "취소 정책",
-  "space-cancel_deadline-description": "행사 취소 마감 시간",
-  "select-all": "전체 선택"
+  "space-cancel_deadline-description": "취소 기한",
+  "select-all": "전체 선택",
+  "login-error": "로그인을 해주세요"
 }

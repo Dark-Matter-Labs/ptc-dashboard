@@ -2,7 +2,7 @@ import { useState } from "react";
 const eventTypes = [
   {
     title: "Public Free Event",
-    description: "Free & open to everyone.",
+    description: "Free and open to everyone",
     imageUrl:
       "https://images.unsplash.com/photo-1559223607-a43c990c692c?q=80&w=2370&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },

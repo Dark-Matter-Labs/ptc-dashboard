@@ -8,7 +8,7 @@ export const capitalizeFirstLetter = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-export const parseRuleBlockContent = async (permissionEngineAPI, ruleBlock) => {
+export const parseRuleBlockContent = async (permissionEngineAPI, ruleBlock, t) => {
   const { type, content } = ruleBlock;
   let parsedContent = content;
 
@@ -19,7 +19,7 @@ export const parseRuleBlockContent = async (permissionEngineAPI, ruleBlock) => {
         <div className="h-[79px] w-full px-[15px] py-[13px] bg-[#fafafb] rounded-lg flex-col justify-start items-start gap-2.5 inline-flex">
           <div className="h-[53px] flex-col justify-start items-start gap-2 flex">
             <div className="self-stretch text-[#44444f] text-xs font-semibold font-['Inter'] capitalize">
-              Excluded theme
+            {t("space-excluded_topic-name")}
             </div>
             <div className="self-stretch justify-start items-center gap-1.5 inline-flex">
               <div className="px-3.5 py-1.5 rounded-[60px] border border-[#bcbcc8] justify-center items-center gap-[5px] flex">
@@ -55,7 +55,7 @@ export const parseRuleBlockContent = async (permissionEngineAPI, ruleBlock) => {
     case Type.RuleBlockType.spaceMaxAttendee:
       parsedContent = (
         <KeyValueRuleBlockContent
-          keyString="Maximum capacity"
+          keyString={t("space-max_attendee-name")}
           valueString={content}
         />
       );
@@ -65,15 +65,15 @@ export const parseRuleBlockContent = async (permissionEngineAPI, ruleBlock) => {
         <div className="h-[86px] p-3 bg-[#92929d] rounded-[20px] justify-start items-start gap-[8.69px] inline-flex">
           <div className="grow shrink basis-0 flex-col justify-start items-center gap-2 inline-flex">
             <div className="text-center text-white text-s font-semibold font-['Inter']">
-              {capitalizeFirstLetter(content)}
+              {t(`space-max_noise_level-${content.toLowerCase()}`)}
             </div>
             <div className="self-stretch text-center text-white text-[11px] font-normal font-['Inter']">
               {content === "high"
-                ? "Loud noise such as amplified music, large concerts, or events with powerful sound systems and speakers is allowed."
+                ? t("space-max_noise_level-high-description")
                 : content === "medium"
-                  ? "Moderate noise such as background music, live speaking, or performances with microphones."
+                  ? t("space-max_noise_level-medium-description")
                   : content === "low"
-                    ? "Minimal noise such as soft background music, quiet conversations, or activities that maintain a peaceful environment is required."
+                    ? t("space-max_noise_level--description")
                     : ""}
             </div>
           </div>
@@ -117,7 +117,7 @@ export const parseRuleBlockContent = async (permissionEngineAPI, ruleBlock) => {
 
       parsedContent = (
         <KeyValueRuleBlockContent
-          keyString="Cancellation deadline"
+          keyString={t("space-cancel_deadline-description")}
           valueString={valueString}
         />
       );
@@ -126,7 +126,7 @@ export const parseRuleBlockContent = async (permissionEngineAPI, ruleBlock) => {
     case Type.RuleBlockType.spaceEventException:
       parsedContent = (
         <KeyValueRuleBlockContent
-          keyString="Reason"
+          keyString={t("rules.reason-input")}
           valueString={content.split(Type.RuleBlockContentDivider.type)[2]}
         />
       );

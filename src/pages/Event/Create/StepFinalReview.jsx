@@ -139,17 +139,17 @@ const StepFinalReview = ({
           id="risk-assessment"
           className="text-3xl block mb-2 font-semibold "
         >
-          Proposal final review
+          {t("rules.proposal-summary")}
         </div>
       </div>
       {/* Title */}
       <div className="py-4">
-        <p className="mb-4">Event title</p>
+        <p className="mb-4">{t("create-event.event-title")}</p>
         <div className="text-2xl font-semibold">{eventData.name}</div>
       </div>
       <hr />
       {/* Event themes */}
-      <p className="mb-4">Event themes</p>
+      <p className="mb-4">{t("create-event.event-theme")}</p>
       <div className="text-base font-semibold flex items-center gap-2">
         {topics.length > 0
           ? topics.map((topic, index) => (
@@ -163,7 +163,7 @@ const StepFinalReview = ({
       </div>
       <hr className="my-6"></hr>
       {/* Date and time */}
-      <p className="mb-4">Date and time</p>
+      <p className="mb-4">{t("create-event.event-date-time")}</p>
       <div className="flex justify-between gap-4">
         <div className="w-full items-center text-center bg-gray-200 p-2 px-4 rounded-xl text-gray-900">
           {date}
@@ -175,18 +175,18 @@ const StepFinalReview = ({
       <hr className="my-6"></hr>
       {/* Event description */}
       <div className="py-4">
-        <p className="mb-4">Event description</p>
+        <p className="mb-4">{t("create-event.event-description")}</p>
         <div className="text-base font-semibold">{eventData.details}</div>
       </div>
       <hr />
       {/* Organizer name and email */}
-      <p className="mb-4">Organizer name</p>
+      <p className="mb-4">{t("create-event.organizer-name")}</p>
       <p className="text-xl font-semibold">{user.name}</p>
-      <p className="mb-4">Email address</p>
+      <p className="mb-4">{t("create-event.organizer-email")}</p>
       <p className="text-xl font-semibold">{user.email}</p>
       <hr className="my-6"></hr>
       {/* Requested equipments */}
-      <p className="mb-4">Requested equipments</p>
+      <p className="mb-4">{t("create-event.equipment")}</p>
       {/* Render all equipment categories */}
       {Object.keys(equipments).map((category, index) => (
         <div key={index} className="mb-4">
@@ -209,7 +209,7 @@ const StepFinalReview = ({
         </div>
       ))}
       <hr className="my-6"></hr>
-      <p className="mb-4">Rules template</p>
+      <p className="mb-4">{t("create-event.rule-template")}</p>
       <div className="rounded-2xl bg-[#3B3A43] px-4 py-8 text-white">
         <div className="flex justify-between items-center gap-2 mb-4">
           <div className="text-xl w-full">{rule.name}</div>

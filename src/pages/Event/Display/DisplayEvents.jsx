@@ -4,8 +4,10 @@ import { CalendarIcon, ClockIcon } from "@heroicons/react/outline";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import * as Type from "../../../lib/PermissionEngine/type";
+import { useTranslation } from "react-i18next";
 
 export default function DisplayEvents({ permissionEngineAPI }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [events, setEvents] = useState([]);
   const [me, setMe] = useState(null);
@@ -107,13 +109,13 @@ export default function DisplayEvents({ permissionEngineAPI }) {
 
   return (
     <div className="px-8 pt-8 mb-24">
-      <h1 className="text-2xl font-bold text-black">My events</h1>
+      <h1 className="text-2xl font-bold text-black">{t("events.my-events")}</h1>
       {user ? (
         events.length > 0 ? (
           <div>
             <p>
-              you have
-              {events.length == 1 ? " 1 event." : ` ${events.length} events.`}
+            {t("events.you-have")}
+              {events.length == 1 ? ` 1 ${t("events.event")}.` : ` ${events.length} ${t("events.events")}.`}
             </p>
             <div className="mt-8 flex flex-col gap-4 ">
               {events.map((event, key) => {
@@ -153,7 +155,7 @@ export default function DisplayEvents({ permissionEngineAPI }) {
                       <div
                         className={`${eventStatusColor} text-sm p-1 px-4 rounded-full`}
                       >
-                        {event.status}
+                        {t(`events.${event.status}`)}
                       </div>
                     </div>
                     <hr className="my-2" />
@@ -172,11 +174,11 @@ export default function DisplayEvents({ permissionEngineAPI }) {
             </div>
           </div>
         ) : (
-          <p>You have no events.</p>
+          <p>{t("events.no-events")}</p>
         )
       ) : (
         // user is not logged in
-        <p>Please log in.</p>
+        <p>{t("login-error")}</p>
       )}
     </div>
   );

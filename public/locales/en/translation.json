@@ -9,7 +9,12 @@
     "language": "Language",
     "view-calendar": "View calendar",
     "propose-event": "Propose an event",
-    "logout": "Log Out"
+    "logout": "Log Out",
+    "back-button": "Back",
+    "request-exception-button": "Request exception",
+    "submit-button": "Submit",
+    "next-button": "Next",
+    "save-button": "Save"
   },
 
   "home": {
@@ -34,7 +39,7 @@
   "create-event": {
     "navigation-title": "Propose an event",
     "event-title": "Title",
-    "event-title-placeholder": "Please enter the title of your event",
+    "event-title-placeholder": "Please enter a title",
     "event-title-error": "Please set event title",
     "event-theme-error": "Please set event theme",
     "event-date-error": "Please set event date",
@@ -65,7 +70,11 @@
     "toggle-slider-exception-active": "I am requesting an exception",
     "toggle-slider-delete-inactive": "I want to delete this rule",
     "toggle-slider-delete-active": "This rule will be deleted",
-    "exception-reason-placeholder": "Please write down your reasons for requesting an exception"
+    "exception-reason-placeholder": "Please write down your reasons for requesting an exception",
+    "new-rule-review-message": "Adding a new rule will require your event to be reviewed by the community",
+    "add-new-rule": "Add a new rule",
+    "new-rule-title": "Title",
+    "new-rule-description": "Description"
   }, 
   "space-general-name": "General rule block for space rules",
   "space-general-description": "General rule block for space rules",

@@ -44,9 +44,10 @@ export default function Navbar({
   const handleCloseButton = () => {
     const spaceId = localStorage.getItem("spaceId");
     if (spaceId) {
-      navigate(`space/${spaceId}`);
+      // navigate(`space/${spaceId}`);
+      window.location.href = `/space/${spaceId}`;
     } else {
-      navigate("/");
+      window.location.href = "/";
     }
   };
 

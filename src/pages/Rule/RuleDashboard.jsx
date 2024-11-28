@@ -28,7 +28,13 @@ export default function RuleDashboard({
       setRuleAuthor(fetchedRuleAuthor);
     } catch (error) {
       console.error("Error fetching rule: ", error);
-      navigate("/");
+      const spaceId = localStorage.getItem("spaceId");
+
+      if (spaceId) {
+        navigate(`/space/${spaceId}`);
+      } else {
+        navigate("/");
+      }
     }
   };
 

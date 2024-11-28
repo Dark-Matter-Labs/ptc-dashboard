@@ -45,6 +45,7 @@ export default function SpaceDashboard({
   };
 
   useEffect(() => {
+    localStorage.setItem("spaceId", spaceId);
     // Scroll to the top of the page
     window.scrollTo({
       top: 0,

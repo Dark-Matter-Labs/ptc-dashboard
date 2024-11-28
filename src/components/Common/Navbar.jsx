@@ -2,6 +2,7 @@ import { useUser } from "../../useUser";
 import { useEffect, useState, useRef } from "react";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import { ChevronDownIcon, XIcon, MenuIcon } from "@heroicons/react/solid";
+import { useNavigate } from "react-router-dom";
 import {
   HomeIcon,
   UserIcon,
@@ -31,6 +32,7 @@ export default function Navbar({
   currentLanguage,
   handleChangeLanguage,
 }) {
+  const navigate = useNavigate();
   const { user, setUser } = useUser();
   const { t } = useTranslation();
   const [dynamicTitle, setDynamicTitle] = useState(navTitle);
@@ -39,6 +41,14 @@ export default function Navbar({
   const webSocket = useRef(null);
 
   // TODO. set prevPage state -> x button behavior
+  const handleCloseButton = () => {
+    const spaceId = localStorage.getItem("spaceId");
+    if (spaceId) {
+      navigate(`space/${spaceId}`);
+    } else {
+      navigate("/");
+    }
+  };
 
   useEffect(() => {
     setDynamicTitle(navTitle);
@@ -483,10 +493,7 @@ export default function Navbar({
       </h1>
       {/* Close Button for smaller screens */}
       {navTitle !== t("navigation.navigation-title") && (
-        <button
-          onClick={() => (window.location.href = "/")}
-          className=" text-gray-700 order-3"
-        >
+        <button onClick={handleCloseButton} className=" text-gray-700 order-3">
           <XIcon className="h-4 w-4 text-gray-600" aria-hidden="true" />
         </button>
       )}

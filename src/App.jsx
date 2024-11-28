@@ -55,7 +55,12 @@ function App() {
         <Routes>
           <Route
             path="/landing"
-            element={<Landing permissionEngineAPI={permissionEngineAPI} />}
+            element={
+              <Landing
+                permissionEngineAPI={permissionEngineAPI}
+                currentLanguage={currentLanguage}
+              />
+            }
           />
           <Route
             path="/space/:spaceId"

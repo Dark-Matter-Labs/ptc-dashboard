@@ -5,7 +5,7 @@ import { LandingTheme } from "./LandingTheme";
 import { LandingMap } from "./LandingMap";
 import PropTypes from "prop-types";
 
-const Landing = ({ permissionEngineAPI }) => {
+const Landing = ({ permissionEngineAPI, currentLanguage }) => {
   const coverSectionRef = useRef(null);
   const themeSectionRef = useRef(null);
   const mapSectionRef = useRef(null);
@@ -176,6 +176,7 @@ const Landing = ({ permissionEngineAPI }) => {
         themeSectionRef={themeSectionRef}
         selectedThemes={selectedThemes}
         setSelectedThemes={setSelectedThemes}
+        currentLanguage={currentLanguage}
       />
 
       {/* Map Section */}
@@ -243,4 +244,5 @@ export default Landing;
 
 Landing.propTypes = {
   permissionEngineAPI: PropTypes.object,
+  currentLanguage: PropTypes.string,
 };

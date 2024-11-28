@@ -28,6 +28,7 @@ export const LandingTheme = ({
   themeSectionRef,
   selectedThemes,
   setSelectedThemes,
+  currentLanguage,
 }) => {
   // const { t } = useTranslation();
   const [topics, setTopics] = useState();
@@ -90,7 +91,7 @@ export const LandingTheme = ({
               )}
               onClick={() => handleClick(topic.id)}
               key={topic.id}
-              label={topic.name}
+              label={topic.translation?.[currentLanguage] ?? topic.name}
             />
             }
         })}
@@ -104,4 +105,5 @@ LandingTheme.propTypes = {
   themeSectionRef: PropTypes.object,
   selectedThemes: PropTypes.array,
   setSelectedThemes: PropTypes.func,
+  currentLanguage: PropTypes.string,
 };

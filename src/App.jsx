@@ -16,7 +16,7 @@ import Landing from "./pages/Landing/Landing";
 function App() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
+  const [currentLanguage, setCurrentLanguage] = useState("ko");
   const [navTitle, setNavTitle] = useState(t("navigation.navigation-title")); // state to track current step
   const location = useLocation();
   const permissionEngineAPI = new API();

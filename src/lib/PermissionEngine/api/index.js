@@ -258,6 +258,12 @@ export class API {
     return response?.data ?? [];
   };
 
+  fetchSpaceAssignedTopics = async (option = { page: 1, limit: 10 }) => {
+    const response = await this.get("topic/space", {}, option);
+
+    return response?.data ?? [];
+  };
+
   fetchTopicById = async (topicId) => {
     const response = await this.get("topic/:topicId", { topicId });
 

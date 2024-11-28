@@ -28,8 +28,8 @@ export const MultiLocationsMapBox = ({
     height: option?.height ?? 400,
     initialViewState: {
       zoom: option?.zoom ?? 11,
-      latitude: Number(locations[0]?.latitude ?? defaultLocation.latitude),
-      longitude: Number(locations[0]?.longitude ?? defaultLocation.longitude),
+      latitude: Number(locations?.[0]?.latitude ?? defaultLocation.latitude),
+      longitude: Number(locations?.[0]?.longitude ?? defaultLocation.longitude),
     },
     mapStyle:
       currentLanguage === "en"
@@ -43,9 +43,12 @@ export const MultiLocationsMapBox = ({
   const [selectedLocationInfo, setSelectedLocationInfo] = useState(null);
 
   const loadSpaceInformation = async () => {
+    if (!selectedLocation?.id) {
+      return;
+    }
     // Fetch space information for the selected location
     try {
-      console.log("[MAPBOX] selected space Id: ", selectedLocation.id);
+      console.log("[MAPBOX] selected space Id: ", selectedLocation?.id);
       const spaceInfo = await permissionEngineAPI.fetchSpace(
         selectedLocation.id
       );
@@ -86,7 +89,7 @@ export const MultiLocationsMapBox = ({
 
   return (
     <Map ref={mapRef} {...viewport} mapboxAccessToken={mapboxgl.accessToken}>
-      {locations.map((loc, index) => (
+      {locations?.map((loc, index) => (
         <Marker
           key={index}
           latitude={Number(loc?.latitude ?? defaultLocation.latitude)}

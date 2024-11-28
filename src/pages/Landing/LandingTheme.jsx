@@ -35,7 +35,7 @@ export const LandingTheme = ({
 
   const fetchTopics = async () => {
     await permissionEngineAPI
-      .fetchTopics({ page: 1, limit: 20 })
+      .fetchSpaceAssignedTopics({ page: 1, limit: 20 })
       .then((data) => {
         setTopics(data);
       });

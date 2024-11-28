@@ -34,14 +34,14 @@ export const LandingMap = ({
   // Filter and load locations based on pagination and themes
   const filterLocations = async () => {
     try {
-      const response = await permissionEngineAPI.fetchSpaces({
-        page: 1,
-        limit: 10,
-        topicIds: selectedThemes || [],
-      });
-      console.log("Filtered spaces: ", response.data);
+      const params = { page: 1, limit: 10 };
+      if (selectedThemes && selectedThemes.length > 0) {
+        params.topicIds = selectedThemes;
+      }
+      const response = await permissionEngineAPI.fetchSpaces(params);
+      console.log("Filtered spaces: ", response);
 
-      const convertedLocations = response.data;
+      const convertedLocations = response;
       setLocations(convertedLocations);
     } catch (error) {
       console.error("Error filtering locations: ", error);

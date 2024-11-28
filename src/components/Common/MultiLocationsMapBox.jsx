@@ -105,7 +105,7 @@ export const MultiLocationsMapBox = ({
 
       {/* Popup Panel at Bottom */}
       {selectedLocation && (
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-full h-fit bg-white shadow-lg rounded-lg overflow-hidden">
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-full h-full bg-white shadow-lg rounded-lg overflow-scroll">
           {/* Image Section */}
           <div className="h-1/3 w-full">
             <img
@@ -118,7 +118,16 @@ export const MultiLocationsMapBox = ({
           </div>
 
           {/* Details Section */}
-          <div className="h--[60vh] md:h-2/3 p-4 flex flex-col justify-between">
+          <div
+            className="h-full p-4 flex flex-col justify-between overflow-scroll"
+            style={{
+              height: "60vh",
+              minHeight: "60vh",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
+          >
             <div>
               <div className="flex flex-row justify-between">
                 <h3 className="text-2xl font-bold text-[#431F51] ">

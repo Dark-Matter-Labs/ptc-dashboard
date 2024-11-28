@@ -16,7 +16,7 @@ import Landing from "./pages/Landing/Landing";
 function App() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState("ko");
+  const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
   const [navTitle, setNavTitle] = useState(t("navigation.navigation-title")); // state to track current step
   const location = useLocation();
   const permissionEngineAPI = new API();
@@ -33,6 +33,7 @@ function App() {
       console.log("at route /event/new, ", t("create-event.navigation-title"));
       setNavTitle(t("create-event.navigation-title")); // Reset to default when on home page
     }
+    handleChangeLanguage("ko");
   }, [location.pathname, t]); // Re-run when the route changes
 
   const handleChangeLanguage = (lng) => {

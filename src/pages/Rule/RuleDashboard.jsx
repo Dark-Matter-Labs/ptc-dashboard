@@ -33,6 +33,14 @@ export default function RuleDashboard({
   };
 
   useEffect(() => {
+    // Scroll to the top of the page
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Optional: smooth scrolling
+    });
+  }, []);
+
+  useEffect(() => {
     console.log("ruleId", ruleId);
 
     setNavTitle(t("rule-dashboard.navigation-title"));

@@ -45,6 +45,14 @@ export default function SpaceDashboard({
   };
 
   useEffect(() => {
+    // Scroll to the top of the page
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Optional: smooth scrolling
+    });
+  }, []);
+
+  useEffect(() => {
     console.log("spaceId", spaceId);
 
     loadSpace();

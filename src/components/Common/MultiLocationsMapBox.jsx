@@ -118,7 +118,7 @@ export const MultiLocationsMapBox = ({
           </div>
 
           {/* Details Section */}
-          <div className="h-2/3 p-4 flex flex-col justify-between">
+          <div className="h--[60vh] md:h-2/3 p-4 flex flex-col justify-between">
             <div>
               <div className="flex flex-row justify-between">
                 <h3 className="text-2xl font-bold text-[#431F51] ">

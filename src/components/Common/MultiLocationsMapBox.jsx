@@ -106,14 +106,6 @@ export const MultiLocationsMapBox = ({
       {/* Popup Panel at Bottom */}
       {selectedLocation && (
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-full h-fit bg-white shadow-lg rounded-lg overflow-hidden">
-          {/* Close Button */}
-          <button
-            className="absolute top-2 right-2 bg-gray-300 text-gray-600 font-semibold rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-400 z-40"
-            onClick={() => setSelectedLocation(null)}
-          >
-            close
-          </button>
-
           {/* Image Section */}
           <div className="h-1/3 w-full">
             <img
@@ -128,9 +120,18 @@ export const MultiLocationsMapBox = ({
           {/* Details Section */}
           <div className="h-2/3 p-4 flex flex-col justify-between">
             <div>
-              <h3 className="text-2xl font-bold text-[#431F51] ">
-                {selectedLocation.name}
-              </h3>
+              <div className="flex flex-row justify-between">
+                <h3 className="text-2xl font-bold text-[#431F51] ">
+                  {selectedLocation.name}
+                </h3>
+                {/* Close Button */}
+                <button
+                  className="top-2 right-2 bg-gray-300 text-gray-600 font-semibold rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-400 z-40"
+                  onClick={() => setSelectedLocation(null)}
+                >
+                  close
+                </button>
+              </div>
               <p className="text-sm text-gray-600 mt-2">
                 {selectedLocation.details}
               </p>

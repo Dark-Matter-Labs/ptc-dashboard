@@ -87,7 +87,7 @@ export default function Space({ space, spaceOwner, currentLanguage }) {
           <h3>{t("home.space-keywords")}</h3>
           {topics?.map((topic) => (
             <Button key={topic.id} className="tag" id={topic.id}>
-              {topic?.name}
+              {topic?.translation[currentLanguage] ?? topic?.name}
             </Button>
           ))}
           <div className="space-call-to-action">

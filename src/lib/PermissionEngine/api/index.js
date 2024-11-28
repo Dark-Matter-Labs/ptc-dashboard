@@ -301,6 +301,14 @@ export class API {
     return response?.data ?? [];
   };
 
+  filterSpaceByTopics = async (topics) => {
+    const topicIdsString = topics.map((topic) => `&topicIds=${topic}`).join("");
+    console.log("topicIdsString: ", topicIdsString);
+    const response = await this.get(`space/${topicIdsString}`);
+    console.log("response filterSpaceByTopics(): ", response);
+    return response;
+  }
+
   fetchSpaceRule = async (spaceId) => {
     const response = await this.get("rule/space/:spaceId", {
       spaceId,

@@ -11,6 +11,7 @@ import CreateEvent from "./pages/Event/Create/CreateEvent";
 import DisplayEvents from "./pages/Event/Display/DisplayEvents";
 import DisplayNotifications from "./pages/Event/Display/DisplayNotifications";
 import { API } from "./lib/PermissionEngine";
+import Landing from "./pages/Landing/Landing";
 
 function App() {
   const navigate = useNavigate();
@@ -20,11 +21,14 @@ function App() {
   const location = useLocation();
   const permissionEngineAPI = new API();
 
+  // Determine if Navbar should be shown
+  const showNavbar = location.pathname !== "/landing";
+
   // Reset navTitle when navigating back to "/"
   useEffect(() => {
     if (location.pathname === "/") {
       setNavTitle(t("navigation.navigation-title")); // Reset to default when on home page
-      navigate("/space/1");
+      navigate("/landing");
     } else if (location.pathname === "/event/new") {
       console.log("at route /event/new, ", t("create-event.navigation-title"));
       setNavTitle(t("create-event.navigation-title")); // Reset to default when on home page
@@ -40,13 +44,19 @@ function App() {
   return (
     <div>
       <UserProvider>
-        <Navbar
-          navTitle={navTitle}
-          currentLanguage={currentLanguage}
-          handleChangeLanguage={handleChangeLanguage}
-          permissionEngineAPI={permissionEngineAPI}
-        />
+        {showNavbar && (
+          <Navbar
+            navTitle={navTitle}
+            currentLanguage={currentLanguage}
+            handleChangeLanguage={handleChangeLanguage}
+            permissionEngineAPI={permissionEngineAPI}
+          />
+        )}
         <Routes>
+          <Route
+            path="/landing"
+            element={<Landing permissionEngineAPI={permissionEngineAPI} />}
+          />
           <Route
             path="/space/:spaceId"
             element={

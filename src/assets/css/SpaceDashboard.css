@@ -60,3 +60,35 @@
   font-size: 0.9rem;
   color: #727a90;
 }
+
+.diamond {
+  width: 178.48px;
+  height: 101.14px;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.diamond:hover {
+  z-index: 999;
+}
+
+.diamond.hide {
+  background: #2f103a;
+  color: #2f103a;
+}
+
+@media screen and (max-width: 600px) {
+  .diamond {
+    width: 109.16px;
+    height: 62.2px;
+  }
+}
+
+.bg-diamond-grid {
+  background: url("/bg-grid.svg") repeat;
+  background-size: cover;;
+}

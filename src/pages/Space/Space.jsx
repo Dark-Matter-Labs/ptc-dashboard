@@ -14,9 +14,11 @@ import { MapBox } from "../../components/Common/MapBox";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../useUser";
 
 export default function Space({ space, spaceOwner, currentLanguage }) {
   const { t } = useTranslation();
+  const { user } = useUser();
   const addressRef = useRef(null);
   const navigate = useNavigate();
   const location = {
@@ -37,6 +39,14 @@ export default function Space({ space, spaceOwner, currentLanguage }) {
   }
 
   const topics = space?.spaceTopics?.map((item) => item.topic) ?? [];
+
+  const handleBrowseRule = () => {
+    if (user) {
+      navigate(`/rule/${space.ruleId}`);
+    } else {
+      alert("Please log in");
+    }
+  };
 
   const handleCopyAddress = () => {
     const textToCopy = addressRef.current.innerText; // Get the innerText of the element
@@ -157,7 +167,9 @@ export default function Space({ space, spaceOwner, currentLanguage }) {
         </div>
         <div className="map-call-to-action">
           {/* <Button className="become-steward-button" onClick={() => (alert('TBD'))}>Become a Steward</Button> */}
-          <Button className="browse-rules-button" onClick={() => (navigate(`/rule/${space.ruleId}`))}>Browse Rules</Button>
+          <Button className="browse-rules-button" onClick={handleBrowseRule}>
+            Browse Rules
+          </Button>
         </div>
       </div>
     </section>

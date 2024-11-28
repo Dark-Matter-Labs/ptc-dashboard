@@ -113,7 +113,7 @@ export const LandingMap = ({
               key={index}
               className="rounded-full px-4 py-2 bg-[#431F51] text-white w-fit"
             >
-              {topic.name}
+              {topic.translation?.[currentLanguage] ?? topic.name}
             </div>
           ))}
         </div>

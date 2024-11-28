@@ -132,7 +132,7 @@ export const MultiLocationsMapBox = ({
                   close
                 </button>
               </div>
-              <p className="text-sm text-gray-600 mt-2">
+              <p className="text-sm text-gray-600 mt-2 whitespace-pre-line">
                 {selectedLocation.details}
               </p>
               {selectedLocation.topics && (

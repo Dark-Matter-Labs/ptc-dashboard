@@ -38,6 +38,8 @@ export default function Navbar({
   const [notifications, setNotifications] = useState([]);
   const webSocket = useRef(null);
 
+  // TODO. set prevPage state -> x button behavior
+
   useEffect(() => {
     setDynamicTitle(navTitle);
   }, [navTitle, currentLanguage, t]);

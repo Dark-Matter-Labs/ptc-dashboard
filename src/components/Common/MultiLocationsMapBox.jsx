@@ -155,7 +155,7 @@ export const MultiLocationsMapBox = ({
                         className="bg-[#431F51] px-4 py-2 rounded-full text-white  w-fit"
                         key={index}
                       >
-                        {topic.name}
+                        {topic.translation[currentLanguage] ?? topic.name}
                       </div>
                     ))}
                   </div>

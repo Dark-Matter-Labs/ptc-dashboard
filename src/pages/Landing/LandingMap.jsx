@@ -56,7 +56,7 @@ export const LandingMap = ({
           try {
             const response = await permissionEngineAPI.fetchTopicById(themeId);
             console.log(`Fetched topic (${themeId}): `, response);
-            return { id: themeId, name: response.name };
+            return { id: themeId, name: response?.translation?.[currentLanguage] ?? response.name };
           } catch (error) {
             console.error(`Error fetching topic (${themeId}): `, error);
             return null;

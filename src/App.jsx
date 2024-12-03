@@ -9,7 +9,7 @@ import Profile from "./pages/Profile/Profile";
 import Navbar from "./components/Common/Navbar";
 import CreateEvent from "./pages/Event/Create/CreateEvent";
 import DisplayEvents from "./pages/Event/Display/DisplayEvents";
-import DisplayNotifications from "./pages/Event/Display/DisplayNotifications";
+import DisplayNotifications from "./pages/Notification/Display/DisplayNotifications";
 import { API } from "./lib/PermissionEngine";
 import Landing from "./pages/Landing/Landing";
 

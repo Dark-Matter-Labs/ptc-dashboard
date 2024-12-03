@@ -1,120 +1,479 @@
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useUser } from "../../../useUser";
-import Step1 from "./Step1";
-import Step2 from "./Step2";
-import Step3 from "./Step3";
-import Step4 from "./Step4";
-import Step5 from "./Step5";
-import Step7 from "./Step7";
+import StepSetEventData from "./StepSetEventData";
+import StepChooseEventRule from "./StepChooseEventRule";
+import StepBrowseRuleBlocks from "./StepBrowseRuleBlocks";
+import StepCheckRuleBlocks from "./StepCheckRuleBlocks";
+import StepFinalReview from "./StepFinalReview";
 import Stepper from "../../../components//Common/Stepper";
+import * as Type from "../../../lib/PermissionEngine/type";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
-export default function CreateEvent({ setNavTitle, spaceId, spaceRuleId }) {
+export default function CreateEvent({ setNavTitle, permissionEngineAPI, currentLanguage }) {
+  const { t } = useTranslation();
+  const spaceRuleBlockExcludedTypes = [
+    Type.RuleBlockType.spaceConsentMethod,
+    Type.RuleBlockType.spaceConsentTimeout,
+    Type.RuleBlockType.spacePostEventCheck,
+    Type.RuleBlockType.spacePrivateGuide,
+
+    // TODO. temporary exclude for workshop
+    // Type.RuleBlockType.spaceAvailability,
+    Type.RuleBlockType.spaceAvailabilityUnit,
+    Type.RuleBlockType.spaceMaxAvailabilityUnitCount,
+    Type.RuleBlockType.spaceAvailabilityBuffer,
+  ];
+  const eventRuleBlockPrivateTypes = [
+    Type.RuleBlockType.spaceEventRequireEquipment,
+    Type.RuleBlockType.spaceEventInsurance,
+    Type.RuleBlockType.spaceEventSelfRiskAssesment,
+  ];
+  const spaceRuleBlockOrderPriority = [
+    Type.RuleBlockType.spaceExcludedTopic,
+    Type.RuleBlockType.spaceCancelDeadline,
+    Type.RuleBlockType.spaceAllowedEventAccessType,
+    Type.RuleBlockType.spaceMaxAttendee,
+    Type.RuleBlockType.spaceMaxNoiseLevel,
+    Type.RuleBlockType.spacePrePermissionCheck,
+    Type.RuleBlockType.spaceGeneral,
+    Type.RuleBlockType.spaceAvailability,
+    Type.RuleBlockType.spaceAvailabilityUnit,
+    Type.RuleBlockType.spaceMaxAvailabilityUnitCount,
+    Type.RuleBlockType.spaceAvailabilityBuffer,
+    Type.RuleBlockType.spaceGuide,
+  ];
+  const forceStaticNamedSpaceRuleBlocks = [
+    Type.RuleBlockType.spaceExcludedTopic,
+    Type.RuleBlockType.spaceCancelDeadline,
+    Type.RuleBlockType.spaceAllowedEventAccessType,
+    Type.RuleBlockType.spaceMaxAttendee,
+    Type.RuleBlockType.spaceMaxNoiseLevel,
+    Type.RuleBlockType.spaceAvailability,
+    Type.RuleBlockType.spaceAvailabilityUnit,
+    Type.RuleBlockType.spaceMaxAvailabilityUnitCount,
+    Type.RuleBlockType.spaceAvailabilityBuffer,
+  ];
+  function ruleTypeInterpreter(input) {
+    if (input.startsWith("space_event:")) {
+      return t("rules.rule-type-event-rule");
+    } else if (input.startsWith("space:")) {
+      return t("rules.rule-type-space-rule");
+    } else {
+      return t("rules.rule-type-unknown");
+    }
+  }
+  const getRuleBlockTypeNameTranslationKey = (ruleBlockType) => {
+    return `${ruleBlockType.replace(":", "-")}-name`;
+  };
+
+  const getRuleBlockTypeDescriptionTranslationKey = (ruleBlockType) => {
+    return `${ruleBlockType.replace(":", "-")}-description`;
+  };
+
+  const navigate = useNavigate();
+  let { spaceId } = useParams();
+  const [space, setSpace] = useState(null);
   const { user } = useUser();
-  const [eventData, setEventData] = useState({
-    name: "", // to be collected from form
+  const [spaceRule, setSpaceRule] = useState(null);
+  const [eventRuleData, setEventRuleData] = useState({
+    // TODO. declare type for eventRuleData
+    // id: null,
+    // name: null, // to be collected from form
+    // parentRuleId: null,
+
     spaceId: spaceId,
-    ruleId: spaceRuleId,
-    duration: "", // to be collected from form
-    startsAt: "", // to be collected from form
-    templateId: "", // to be collected from form
-    templateRuleBlocks: [],
+    ruleBlocks: [],
+    target: Type.RuleTarget.spaceEvent,
+    topicIds: [],
   });
+  const [eventData, setEventData] = useState({
+    spaceId: spaceId,
+    // TODO. declare type for eventData
+    // name: null, // to be collected from form
+    // ruleId: null,
+    // duration: null, // to be collected from form
+    // startsAt: null, // to be collected from form
+    // externalServiceId: null,
+    // details: null,
+    // link: null,
+    // callbackLink: null,
+    // images: [],
+    topicIds: [],
+    privateRuleBlocks: [],
+    requestType: null,
+  });
+  // eslint-disable-next-line no-unused-vars
   const [alertMessage, setAlertMessage] = useState(null);
-  const [currentStep, setCurrentStep] = useState(4);
+  const [isStepComplete, setIsStepComplete] = useState(() => {
+    return {
+      result: true,
+      message: "",
+    };
+  });
+  const [currentStep, setCurrentStep] = useState(0);
   const [nextStepBtnText, setNextStepButtonText] = useState("Next");
+  const [agreements, setAgreements] = useState({});
+
+  // for DateTimePicker
+  const [currentMonth, setCurrentMonth] = useState(new Date()); // Default to the current month
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
+  const [idDateTimeDecided, setDateTimeDecided] = useState(false);
+
+  // for EventThemeSelector
+  const [selectedTopic, setSelectedTopic] = useState(null);
+
+  // for EquipmentSelector
+  const [selectedEquipment, setSelectedEquipment] = useState({});
+
+  // for StepChooseEventRule
+  const [selectedEventRule, setSelectedEventRule] = useState(null);
+
+  const updateEventRuleData = (newData) => {
+    setEventRuleData((prevData) => ({ ...prevData, ...newData }));
+  };
   const updateEventData = (newData) => {
     setEventData((prevData) => ({ ...prevData, ...newData }));
   };
+
+  const loadSpace = async () => {
+    try {
+      if (!spaceId) {
+        throw new Error("There is no spaceId");
+      }
+      const space = await permissionEngineAPI.fetchSpace(spaceId);
+      console.log("the space: ", space);
+
+      setSpace(space);
+    } catch (error) {
+      console.error(`Error fetching space`, error);
+      navigate("/");
+    }
+  };
+
+  const loadSpaceRule = async () => {
+    try {
+      if (!spaceId) {
+        navigate(`/`);
+      }
+      const spaceRule = await permissionEngineAPI.fetchSpaceRule(spaceId);
+      console.log("the spaceRule: ", spaceRule);
+
+      setSpaceRule(spaceRule);
+    } catch (error) {
+      console.error(`Error fetching space rule`, error);
+    }
+  };
+
   useEffect(() => {
     console.log("event data: ", eventData);
   }, [eventData]);
 
+  useEffect(() => {
+    console.log("isStepComplete: ", isStepComplete);
+  }, [isStepComplete]);
+
+  useEffect(() => {
+    loadSpace();
+    loadSpaceRule();
+  }, []);
+
   // Define the steps content array
   const content = [
-    <Step1
+    <StepSetEventData
       key={1}
       spaceId={spaceId}
+      space={space}
       setNavTitle={setNavTitle}
+      eventData={eventData}
+      eventRuleData={eventRuleData}
+      updateEventRuleData={updateEventRuleData}
       updateEventData={updateEventData}
+      currentStep={currentStep}
+      setCurrentStep={setCurrentStep}
+      setNextStepButtonText={setNextStepButtonText}
+      permissionEngineAPI={permissionEngineAPI}
+      isStepComplete={isStepComplete}
+      setIsStepComplete={setIsStepComplete}
+      currentMonth={currentMonth}
+      setCurrentMonth={setCurrentMonth}
+      selectedDate={selectedDate}
+      setSelectedDate={setSelectedDate}
+      selectedTime={selectedTime}
+      setSelectedTime={setSelectedTime}
+      idDateTimeDecided={idDateTimeDecided}
+      setDateTimeDecided={setDateTimeDecided}
+      selectedTopic={selectedTopic}
+      setSelectedTopic={setSelectedTopic}
+      selectedEquipment={selectedEquipment}
+      setSelectedEquipment={setSelectedEquipment}
+      currentLanguage={currentLanguage}
     />,
-    <Step2
+    <StepChooseEventRule
       key={2}
       spaceId={spaceId}
+      spaceRule={spaceRule}
+      topicIds={eventData?.topicIds ?? []}
       currentStep={currentStep}
       setCurrentStep={setCurrentStep}
       setNavTitle={setNavTitle}
       setNextStepButtonText={setNextStepButtonText}
+      updateEventRuleData={updateEventRuleData}
       updateEventData={updateEventData}
+      permissionEngineAPI={permissionEngineAPI}
+      isStepComplete={isStepComplete}
+      setIsStepComplete={setIsStepComplete}
+      selectedEventRule={selectedEventRule}
+      setSelectedEventRule={setSelectedEventRule}
+      setAgreements={setAgreements}
+      currentLanguage={currentLanguage}
     />,
-    <Step3
+    <StepBrowseRuleBlocks
       key={3}
       spaceId={spaceId}
-      spaceRuleId={spaceRuleId}
+      spaceRule={spaceRule}
+      eventRuleData={eventRuleData}
+      updateEventRuleData={updateEventRuleData}
       setNavTitle={setNavTitle}
       setNextStepButtonText={setNextStepButtonText}
-      templateId={eventData.templateId}
-      // templateRuleBlocks={eventData.templateRuleBlocks}
+      permissionEngineAPI={permissionEngineAPI}
+      spaceRuleBlockExcludedTypes={spaceRuleBlockExcludedTypes}
+      eventRuleBlockPrivateTypes={eventRuleBlockPrivateTypes}
+      spaceRuleBlockOrderPriority={spaceRuleBlockOrderPriority}
+      forceStaticNamedSpaceRuleBlocks={forceStaticNamedSpaceRuleBlocks}
+      ruleTypeInterpreter={ruleTypeInterpreter}
+      getRuleBlockTypeNameTranslationKey={getRuleBlockTypeNameTranslationKey}
+      getRuleBlockTypeDescriptionTranslationKey={
+        getRuleBlockTypeDescriptionTranslationKey
+      }
+      isStepComplete={isStepComplete}
+      setIsStepComplete={setIsStepComplete}
+      agreements={agreements}
+      setAgreements={setAgreements}
+      currentLanguage={currentLanguage}
     />,
-    <Step4
+    <StepCheckRuleBlocks
       key={4}
       setNavTitle={setNavTitle}
-      spaceRuleId={spaceRuleId}
+      spaceRule={spaceRule}
+      eventData={eventData}
+      eventRuleData={eventRuleData}
+      updateEventRuleData={updateEventRuleData}
+      updateEventData={updateEventData}
       setNextStepButtonText={setNextStepButtonText}
-      templateId={eventData.templateId}
-      templateRuleBlocks={eventData.templateRuleBlocks}
+      permissionEngineAPI={permissionEngineAPI}
+      spaceRuleBlockExcludedTypes={spaceRuleBlockExcludedTypes}
+      eventRuleBlockPrivateTypes={eventRuleBlockPrivateTypes}
+      spaceRuleBlockOrderPriority={spaceRuleBlockOrderPriority}
+      forceStaticNamedSpaceRuleBlocks={forceStaticNamedSpaceRuleBlocks}
+      ruleTypeInterpreter={ruleTypeInterpreter}
+      getRuleBlockTypeNameTranslationKey={getRuleBlockTypeNameTranslationKey}
+      getRuleBlockTypeDescriptionTranslationKey={
+        getRuleBlockTypeDescriptionTranslationKey
+      }
+      isStepComplete={isStepComplete}
+      setIsStepComplete={setIsStepComplete}
+      agreements={agreements}
+      setAgreements={setAgreements}
+      currentLanguage={currentLanguage}
     />,
-    <Step5 key={5} setNavTitle={setNavTitle} />,
-    <Step7 key={7} setNavTitle={setNavTitle} />,
+    // TODO. StepCheckRisks
+    <StepFinalReview
+      key={5}
+      setNavTitle={setNavTitle}
+      permissionEngineAPI={permissionEngineAPI}
+      isStepComplete={isStepComplete}
+      setIsStepComplete={setIsStepComplete}
+      eventData={eventData}
+      eventRuleData={eventRuleData}
+      spaceRule={spaceRule}
+      agreements={agreements}
+      currentLanguage={currentLanguage}
+    />,
   ];
 
+  const createEventRuleBlocks = async (ruleBlocks) => {
+    const newRuleBlocks = [];
+
+    if (ruleBlocks.find((item) => !item.name)) {
+      throw new Error("There are ruleBlocks without name");
+    }
+    if (ruleBlocks.find((item) => !item.type)) {
+      throw new Error("There are ruleBlocks without type");
+    }
+    if (ruleBlocks.find((item) => !item.content)) {
+      throw new Error("There are ruleBlocks without content");
+    }
+    if (
+      ruleBlocks.find(
+        (item) =>
+          item.type === Type.RuleBlockType.spaceEventInsurance && !item.file
+      )
+    ) {
+      throw new Error("spaceEventInsurance ruleBlocks need a file");
+    }
+
+    for (const ruleBlock of ruleBlocks) {
+      if (ruleBlock.id && ruleBlock.id.startsWith("rule-block-") === false) {
+        newRuleBlocks.push(ruleBlock);
+      } else {
+        const newRuleBlock =
+          await permissionEngineAPI.createRuleBlock(ruleBlock);
+        newRuleBlocks.push(newRuleBlock);
+      }
+    }
+
+    updateEventRuleData({
+      ruleBlocks: newRuleBlocks,
+    });
+
+    return newRuleBlocks;
+  };
+
+  const createEventRule = async (ruleBlocks) => {
+    const { name, topicIds } = eventRuleData;
+
+    if (!name) {
+      throw new Error("Event rule has no name");
+    }
+
+    if (topicIds.find((item) => typeof item !== "string")) {
+      throw new Error("There are non-string typed item in topicIds");
+    }
+
+    if (ruleBlocks.find((item) => !item.id)) {
+      throw new Error(`RuleBlock without id is found`);
+    }
+
+    const newEventRule = await permissionEngineAPI.createRule({
+      name: eventRuleData.name,
+      target: Type.RuleTarget.spaceEvent,
+      ruleBlockIds: ruleBlocks.map((item) => item.id),
+    });
+
+    updateEventRuleData(newEventRule);
+    updateEventData({ ruleId: newEventRule });
+
+    return newEventRule;
+  };
+
+  const createEvent = async (eventData) => {
+    const {
+      name,
+      spaceId,
+      ruleId,
+      duration,
+      startsAt,
+      externalServiceId,
+      details,
+      link,
+      callbackLink,
+      images,
+      topicIds,
+    } = eventData;
+
+    if (!spaceId) {
+      throw new Error("Event has no spaceId");
+    }
+
+    if (!ruleId) {
+      throw new Error("Event has no ruleId");
+    }
+
+    if (!duration) {
+      throw new Error("Event has no duration");
+    }
+
+    if (!startsAt) {
+      throw new Error("Event has no startsAt");
+    }
+
+    if (topicIds.find((item) => typeof item !== "string")) {
+      throw new Error("There are non-string typed item in topicIds");
+    }
+
+    const newEvent = await permissionEngineAPI.createSpaceEvent({
+      name,
+      spaceId,
+      ruleId,
+      duration,
+      startsAt,
+      externalServiceId,
+      details,
+      link,
+      callbackLink,
+      images,
+      topicIds,
+    });
+
+    updateEventData(newEvent);
+
+    return newEvent;
+  };
+
+  const createEventPermissionRequest = async (eventData) => {
+    const { id } = eventData;
+
+    if (!id) {
+      throw new Error("Event not created");
+    }
+
+    const newPermissionRequest =
+      await permissionEngineAPI.createEventPermissionRequest({
+        spaceEventId: id,
+      });
+
+    return newPermissionRequest;
+  };
+
+  /**
+   *
+   * @returns Promise<{ success: boolean, message: string, permissionRequest: any }>
+   */
   const handleSubmit = async () => {
     // e.preventDefault(); // Prevent form submission
 
     console.log("[CreateEvent] form submission: at CreateEvent component");
+    let result = { success: true, message: "Event created successfully" };
 
-    // Form validation
-    const formData = new FormData();
-    if (eventData.spaceId) formData.append("spaceId", eventData.spaceId);
-    if (eventData.startsAt) formData.append("startsAt", eventData.startsAt);
-    if (eventData.name) formData.append("name", eventData.name);
-    if (eventData.duration) formData.append("duration", eventData.duration);
-    if (eventData.ruleId) formData.append("ruleId", eventData.ruleId);
+    //API call
+    try {
+      const spaceEventRuleBlocks = await createEventRuleBlocks([
+        ...eventRuleData.ruleBlocks,
+        ...eventData.privateRuleBlocks,
+      ]);
+      const spaceEventRule = await createEventRule(spaceEventRuleBlocks);
+      const spaceEvent = await createEvent({
+        ...eventData,
+        ruleId: spaceEventRule.id,
+      });
+      const permissionRequest = await createEventPermissionRequest(spaceEvent);
+      result.permissionRequest = permissionRequest;
+      result.message += `: permission request id (${permissionRequest?.id})`;
 
-    console.log("Form data:", formData);
-
-    //API call to post event
-    if (eventData.name && eventData.startsAt && eventData.duration) {
-      try {
-        const response = await fetch("/api/v1/event", {
-          method: "POST",
-          headers: {
-            accept: "*/*",
-          },
-          body: formData,
-        });
-        if (response.ok) {
-          const result = await response.json();
-          setAlertMessage("Event created successfully!");
-          console.log("Event created successfully:", result);
-          return { success: true, message: "Event created successfully" };
-        } else {
-          console.error("Failed to create event:", response.statusText);
-          return { success: false, message: "Failed to create event" };
-        }
-      } catch (error) {
-        console.error("Error creating event:", error);
-        return { success: false, message: "An unexpected error occurred." };
+      if (!permissionRequest?.id) {
+        throw new Error(
+          `Failed to create permission request: ${JSON.stringify(permissionRequest)}`
+        );
       }
-    } else {
-      console.error("Form data is not complete.");
-      return { success: false, message: "Form data is not complete." };
+    } catch (error) {
+      console.error("Error creating event:", error);
+      result = { success: false, message: "An unexpected error occurred." };
     }
+
+    return result;
   };
 
   useEffect(() => {
     console.log("eventData: ", eventData);
   }, [eventData]);
+
+  useEffect(() => {
+    console.log("agreements: ", agreements);
+  }, [agreements]);
+
   return (
     <form className="text-center pt-2">
       {/* {spaceId} */}
@@ -125,6 +484,10 @@ export default function CreateEvent({ setNavTitle, spaceId, spaceRuleId }) {
         {user ? (
           <Stepper
             currentStep={currentStep}
+            eventData={eventData}
+            eventRuleData={eventRuleData}
+            agreements={agreements}
+            isStepComplete={isStepComplete}
             setCurrentStep={setCurrentStep}
             numSteps={content.length} // Dynamically calculate steps
             stepContents={content}
@@ -140,8 +503,9 @@ export default function CreateEvent({ setNavTitle, spaceId, spaceRuleId }) {
     </form>
   );
 }
+
 CreateEvent.propTypes = {
   setNavTitle: PropTypes.func.isRequired, // Required
-  spaceId: PropTypes.string,
-  spaceRuleId: PropTypes.string,
+  permissionEngineAPI: PropTypes.object,
+  currentLanguage: PropTypes.string,
 };

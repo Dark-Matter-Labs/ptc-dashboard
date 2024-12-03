@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react";
-import { fetchTopics } from "../../api/api";
+import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 const excludedTheme = [{ id: "0", name: "Policital Campaigns", icon: "📢" }];
-export const ExcludedThemeDisplay = () => {
+
+export const ExcludedThemeDisplay = ({
+  permissionEngineAPI,
+  currentLanguage,
+}) => {
   const [topics, setTopics] = useState([]);
+  const { t } = useTranslation();
 
   const loadTopics = async () => {
     try {
-      const data = await fetchTopics();
+      const data = await permissionEngineAPI.fetchTopics();
       setTopics(data);
     } catch (error) {
       console.error("Error fetching topics: ", error);
@@ -24,19 +30,30 @@ export const ExcludedThemeDisplay = () => {
   return (
     <div className="text-left">
       <div htmlFor="themes" className="block mb-2 font-semibold">
-        Excluded themes
+      {t("space-excluded_topic-name")}
       </div>
       <div className="py-1 flex flex-wrap gap-2">
-        {excludedTheme?.map((theme) => (
+        {excludedTheme?.map((topic) => (
           <div
-            key={theme.id}
+            key={topic.id}
             className="flex items-center border cursor-pointer px-4 py-2 rounded-full text-sm font-medium text-gray-500"
           >
-            <div className="size-4 mr-1">{theme.icon}</div>
-            <span>{theme.name}</span>
+            <div className="size-4 mr-1">{topic.icon}</div>
+            <span>{topic.translation?.[currentLanguage] ?? topic.name}</span>
           </div>
         ))}
       </div>
     </div>
   );
+};
+
+ExcludedThemeDisplay.propTypes = {
+  currentStep: PropTypes.number.isRequired,
+  spaceId: PropTypes.string,
+  setCurrentStep: PropTypes.func.isRequired,
+  setNavTitle: PropTypes.func.isRequired,
+  updateEventData: PropTypes.func.isRequired,
+  setNextStepButtonText: PropTypes.func.isRequired,
+  permissionEngineAPI: PropTypes.object,
+  currentLanguage: PropTypes.string,
 };

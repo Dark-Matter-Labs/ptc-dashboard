@@ -1,7 +1,8 @@
 import { useUser } from "../../useUser";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import { ChevronDownIcon, XIcon, MenuIcon } from "@heroicons/react/solid";
+import { useNavigate } from "react-router-dom";
 import {
   HomeIcon,
   UserIcon,
@@ -23,16 +24,32 @@ import {
 import { useTranslation } from "react-i18next";
 import i18n from "../../i18n";
 import PropTypes from "prop-types";
+import { io } from "socket.io-client";
+import { Notification } from "./Notification";
 
 export default function Navbar({
   navTitle,
   currentLanguage,
   handleChangeLanguage,
 }) {
+  const navigate = useNavigate();
   const { user, setUser } = useUser();
   const { t } = useTranslation();
   const [dynamicTitle, setDynamicTitle] = useState(navTitle);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const webSocket = useRef(null);
+
+  // TODO. set prevPage state -> x button behavior
+  const handleCloseButton = () => {
+    const spaceId = localStorage.getItem("spaceId");
+    if (spaceId) {
+      // navigate(`space/${spaceId}`);
+      window.location.href = `/space/${spaceId}`;
+    } else {
+      window.location.href = "/";
+    }
+  };
 
   useEffect(() => {
     setDynamicTitle(navTitle);
@@ -100,9 +117,74 @@ export default function Navbar({
     }
     console.log("in Navbar: ", { navTitle }); // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!webSocket.current) {
+      webSocket.current = io(`${window.location.origin}:3000`, {
+        transports: ["websocket"],
+        withCredentials: true,
+        autoConnect: true,
+      });
+
+      webSocket.current.on("connect", () => {
+        console.log(
+          "webSocket.current.connected",
+          webSocket.current?.connected,
+          webSocket.current?.id
+        );
+      });
+
+      webSocket.current.on("disconnect", () => {
+        console.log("webSocket disconnected");
+        webSocket.current = null;
+      });
+
+      // Listen for notifications
+      webSocket.current.on("receive_notification", (message) => {
+        try {
+          // try to parse message
+          message = JSON.parse(message);
+          // eslint-disable-next-line no-unused-vars
+        } catch (e) {
+          /* empty */
+        }
+        setNotifications((prev) => [...prev, message]);
+        setTimeout(() => {
+          // Notifications: remove the first item
+          setNotifications(notifications.slice(1));
+        }, 4000);
+      });
+    }
+
+    return () => {
+      if (webSocket.current && webSocket.current.connected) {
+        webSocket.current.disconnect();
+      }
+    };
+  }, [notifications]);
+
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+
   return (
-    <div className="w-full h-24 lg:h-20 flex items-center justify-between px-6 bg-white ">
+    <div className="w-full h-24 lg:h-20 flex items-center justify-between px-6 bg-white sticky top-0 z-10">
+      {/* Test notification handling */}
+      <div className="w-full h-auto absolute left-0 flex justify-center items-center">
+        {notifications
+          .filter((item) => item.subject)
+          .map((content, index) =>
+            content.subject ? (
+              <Notification
+                key={index}
+                subject={content.subject}
+                html={content.html}
+                text={content.text}
+              />
+            ) : (
+              ""
+            )
+          )}
+      </div>
+
       {/* Dropdown Menu  */}
       <ul
         className={`flex items-center ${navTitle == t("navigation.navigation-title") ? "order-1 lg:order-2" : "order-1"}`}
@@ -124,14 +206,14 @@ export default function Navbar({
                     src={
                       user?.picture
                         ? user.picture
-                        : "https://raw.githubusercontent.com/Dark-Matter-Labs/ptc-dashboard/main/src/assets/image/user-profile.png"
+                        : "https://permissioning-the-city.s3.ap-northeast-2.amazonaws.com/0e92e6a3-56b8-40f7-ac9a-7688bc36ed21_user-profile.png"
                     }
                     className="hidden md:block h-12 w-12 flex-none rounded-full bg-gray-50"
                     onError={(e) => {
                       console.log("picture error: ", e);
                       // Fallback image if the user picture fails to load
                       e.target.src =
-                        "https://raw.githubusercontent.com/Dark-Matter-Labs/ptc-dashboard/main/src/assets/image/user-profile.png";
+                        "https://permissioning-the-city.s3.ap-northeast-2.amazonaws.com/0e92e6a3-56b8-40f7-ac9a-7688bc36ed21_user-profile.png";
                     }}
                   />
                   <div className="text-left hidden lg:block md:block">
@@ -174,7 +256,7 @@ export default function Navbar({
                       alt="User"
                       src={
                         user?.picture ||
-                        "https://raw.githubusercontent.com/Dark-Matter-Labs/ptc-dashboard/main/src/assets/image/user-profile.png"
+                        "https://permissioning-the-city.s3.ap-northeast-2.amazonaws.com/0e92e6a3-56b8-40f7-ac9a-7688bc36ed21_user-profile.png"
                       }
                       className="h-16 w-16 rounded-full bg-gray-100"
                     />
@@ -212,7 +294,7 @@ export default function Navbar({
                       {t("navigation.notifications")}
                     </a>
                     <a
-                      href="/events"
+                      href="/profile/events"
                       className={`pl-8 space-y-8 py-4 flex items-center gap-3 text-gray-900 ${location.pathname === "/events" ? "bg-slate-200" : "text-gray-900"}`}
                     >
                       <CalendarIcon className="w-4 h-4 text-gray-400 "></CalendarIcon>
@@ -412,10 +494,7 @@ export default function Navbar({
       </h1>
       {/* Close Button for smaller screens */}
       {navTitle !== t("navigation.navigation-title") && (
-        <button
-          onClick={() => (window.location.href = "/")}
-          className=" text-gray-700 order-3"
-        >
+        <button onClick={handleCloseButton} className=" text-gray-700 order-3">
           <XIcon className="h-4 w-4 text-gray-600" aria-hidden="true" />
         </button>
       )}

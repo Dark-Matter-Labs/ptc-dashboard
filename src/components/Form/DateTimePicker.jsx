@@ -7,30 +7,52 @@ import {
   startOfMonth,
   endOfMonth,
   eachDayOfInterval,
+  getDay,
 } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/outline";
 import PropTypes from "prop-types";
-import { fetchAvailability } from "../../api/api";
-const DateTimePicker = ({ updateEventData, spaceId }) => {
-  const [eventDateTime, setEventDateTime] = useState(""); // Store event date in ISO strings format
-  const [currentMonth, setCurrentMonth] = useState(new Date()); // Default to the current month
-  const [selectedDate, setSelectedDate] = useState("");
-  const [selectedTime, setSelectedTime] = useState("");
-  const [decided, setDecided] = useState(false);
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import abbrTimezone from "dayjs-abbr-timezone";
+import { useTranslation } from "react-i18next";
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(abbrTimezone);
+
+const DateTimePicker = ({
+  spaceId,
+  timezone: spaceTimezone,
+  permissionEngineAPI,
+  eventDateTime,
+  setEventDateTime,
+  currentMonth,
+  setCurrentMonth,
+  selectedDate,
+  setSelectedDate,
+  selectedTime,
+  setSelectedTime,
+  idDateTimeDecided,
+  setDateTimeDecided,
+}) => {
   // availability
   const [availability, setAvailability] = useState([]);
-
+ // translation
+  const { t } = useTranslation();
   // Function to go to the next month
   const handleNextMonth = (e) => {
     e.preventDefault();
     setCurrentMonth(addMonths(currentMonth, 1));
+    loadAvailability(addMonths(currentMonth, 1));
   };
 
   // Function to go to the previous month
   const handlePrevMonth = (e) => {
     e.preventDefault();
     setCurrentMonth(subMonths(currentMonth, 1));
+    loadAvailability(subMonths(currentMonth, 1));
   };
 
   // Get all the days in the current month
@@ -40,12 +62,26 @@ const DateTimePicker = ({ updateEventData, spaceId }) => {
   });
 
   // Weekday names
-  const weekdays = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+  // Adjust to start the week on Monday
+  const weekdays = [t("create-event.date-time-mon"),
+  t("create-event.date-time-tue"),
+  t("create-event.date-time-wed"),
+  t("create-event.date-time-thu"),
+  t("create-event.date-time-fri"),
+  t("create-event.date-time-sat"),
+  t("create-event.date-time-sun")];
+
+  const getWeekStartOffset = () => {
+    const firstDayOfMonth = getDay(startOfMonth(currentMonth));
+    // Adjust for Monday as the start of the week (Sunday is 0, so subtract 1)
+    return firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
+  };
 
   // Handle date click
   const handleDateClick = (date) => {
     const formattedDate = format(date, "yyyy-MM-dd");
-    console.log("Selected Date (formattedDate): ", formattedDate);
+    console.log(availability[formattedDate]);
+
     setSelectedDate(formattedDate);
     if (formattedDate && selectedTime) {
       notifySetter(formattedDate, selectedTime);
@@ -53,7 +89,6 @@ const DateTimePicker = ({ updateEventData, spaceId }) => {
   };
 
   const handleTimeSlotClick = (slot) => {
-    console.log("Selected Time Slot: ", slot);
     setSelectedTime(slot);
     if (selectedDate && slot) {
       notifySetter(selectedDate, slot);
@@ -63,29 +98,39 @@ const DateTimePicker = ({ updateEventData, spaceId }) => {
   const notifySetter = (date, time) => {
     if (date && time) {
       flagDecision();
-      console.log("Setter notified with date and time:", date, time);
-      // Format to ISO string
       setEventDateTime(`${date}T${time.split("-")[0]}:00.000Z`);
     }
   };
 
   const flagDecision = () => {
-    console.log("set decided from ", decided, " to ", !decided);
-    setDecided(!decided);
+    setDateTimeDecided(!idDateTimeDecided);
   };
 
-  const loadAvailability = async () => {
+  const loadAvailability = async (currentMonth) => {
     try {
-      const data = await fetchAvailability(spaceId);
+      const data = await permissionEngineAPI.fetchAvailability(
+        spaceId,
+        new Date(startOfMonth(currentMonth).getTime()).toISOString(),
+        new Date(endOfMonth(currentMonth).getTime()).toISOString()
+      );
       const parsedAvailability = data.reduce((acc, slot) => {
-        const date = format(new Date(slot.startTime), "yyyy-MM-dd");
+        const date = formatInTimeZone(
+          slot.startTime,
+          spaceTimezone,
+          "yyyy-MM-dd",
+          {
+            timeZone: spaceTimezone,
+          }
+        );
         const timeSlot =
           format(new Date(slot.startTime), "HH:mm") +
           "-" +
           format(new Date(slot.endTime), "HH:mm");
 
         if (!acc[date]) acc[date] = [];
-        acc[date].push(timeSlot);
+        if (dayjs() <= dayjs(slot.startTime).tz(spaceTimezone)) {
+          acc[date] = [...acc[date].sort(), timeSlot].sort();
+        }
 
         return acc;
       }, {});
@@ -97,16 +142,15 @@ const DateTimePicker = ({ updateEventData, spaceId }) => {
 
   useEffect(() => {
     //update event data when date and time are selected or changed
-    updateEventData({
-      startsAt: eventDateTime,
-      duration: "1h", // Duration is set to 1 hour by default
-    });
+    setEventDateTime(eventDateTime);
   }, [eventDateTime]);
 
   useEffect(() => {
     // load availability
-    loadAvailability();
-  }, []);
+    if (!availability || availability.length === 0) {
+      loadAvailability(currentMonth);
+    }
+  }, [availability]);
 
   useEffect(() => {
     // load availability
@@ -116,11 +160,11 @@ const DateTimePicker = ({ updateEventData, spaceId }) => {
   return (
     <div className="text-left">
       <hr className="my-6" />
-      <div className="block mb-2 font-semibold text-xl">Date and time</div>
-      {!decided && (
+      <div className="block mb-2 font-semibold text-xl">{t("create-event.event-date-time")}</div>
+      {!idDateTimeDecided && (
         <>
           <div className="border rounded">
-            <div className="p-2 ">
+            <div className="p-2">
               <div className="text-center font-bold text-lg mb-2">
                 {format(currentMonth, "yyyy")}
               </div>
@@ -151,6 +195,12 @@ const DateTimePicker = ({ updateEventData, spaceId }) => {
                 ))}
               </div>
               <div className="grid grid-cols-7 gap-2 text-center">
+                {/* Add offset for the first day of the month */}
+                {Array(getWeekStartOffset())
+                  .fill("")
+                  .map((_, i) => (
+                    <div key={i}></div>
+                  ))}
                 {daysInMonth.map((date) => {
                   const formattedDate = format(date, "yyyy-MM-dd");
                   const isAvailable = availability[formattedDate]?.length > 0;
@@ -198,7 +248,7 @@ const DateTimePicker = ({ updateEventData, spaceId }) => {
         </>
       )}
 
-      {decided && selectedDate && selectedTime && (
+      {idDateTimeDecided && selectedDate && selectedTime && (
         <div className="flex justify-between gap-4">
           <button
             onClick={flagDecision}
@@ -221,6 +271,17 @@ const DateTimePicker = ({ updateEventData, spaceId }) => {
 export default DateTimePicker;
 
 DateTimePicker.propTypes = {
-  updateEventData: PropTypes.func.isRequired,
+  setEventDateTime: PropTypes.func.isRequired,
+  eventDateTime: PropTypes.string,
   spaceId: PropTypes.string,
+  timezone: PropTypes.string,
+  permissionEngineAPI: PropTypes.object,
+  currentMonth: PropTypes.object,
+  setCurrentMonth: PropTypes.func.isRequired,
+  selectedDate: PropTypes.string,
+  setSelectedDate: PropTypes.func.isRequired,
+  selectedTime: PropTypes.string,
+  setSelectedTime: PropTypes.func.isRequired,
+  idDateTimeDecided: PropTypes.bool,
+  setDateTimeDecided: PropTypes.func.isRequired,
 };

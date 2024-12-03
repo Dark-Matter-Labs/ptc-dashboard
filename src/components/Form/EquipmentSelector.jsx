@@ -1,11 +1,18 @@
 import { useState, useEffect } from "react";
 import { SearchIcon, PresentationChartBarIcon } from "@heroicons/react/outline";
-import { fetchEquipment } from "../../api/api";
 import PropTypes from "prop-types";
+import * as Type from "../../lib/PermissionEngine/type";
+import { useTranslation } from "react-i18next";
 
-export const EquipmentSelector = ({ spaceId }) => {
+export const EquipmentSelector = ({
+  spaceId,
+  updateEventData,
+  permissionEngineAPI,
+  selectedEquipment,
+  setSelectedEquipment,
+}) => {
+  const { t } = useTranslation();
   const [allEquipment, setAllEquipment] = useState({});
-  const [selectedEquipment, setSelectedEquipment] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleEquipmentChange = (category, item) => {
@@ -26,15 +33,14 @@ export const EquipmentSelector = ({ spaceId }) => {
   };
 
   const handleSelectAll = (category) => {
+    setSearchTerm("");
     setSelectedEquipment((prev) => {
       const isAllSelected =
         (selectedEquipment[category] || []).length ===
         (allEquipment[category] || []).length;
       return {
         ...prev,
-        [category]: isAllSelected
-          ? []
-          : allEquipment[category].map((eq) => eq.name),
+        [category]: isAllSelected ? [] : allEquipment[category],
       };
     });
   };
@@ -45,7 +51,7 @@ export const EquipmentSelector = ({ spaceId }) => {
 
   const loadEquipments = async () => {
     try {
-      const data = await fetchEquipment(spaceId);
+      const data = await permissionEngineAPI.fetchEquipment(spaceId);
       console.log("[api] space equipment", data);
 
       // Categorize equipment based on `type`
@@ -55,10 +61,7 @@ export const EquipmentSelector = ({ spaceId }) => {
         if (!categorizedEquipment[category]) {
           categorizedEquipment[category] = [];
         }
-        categorizedEquipment[category].push({
-          name: item.name,
-          quantity: item.quantity,
-        });
+        categorizedEquipment[category].push(item);
       });
 
       console.log("Categorized Equipment:", categorizedEquipment);
@@ -72,6 +75,24 @@ export const EquipmentSelector = ({ spaceId }) => {
     loadEquipments();
   }, [spaceId]);
 
+  useEffect(() => {
+    const selectedSpaceEquipments = [];
+    Object.values(selectedEquipment).map((categoryEquipments) =>
+      selectedSpaceEquipments.push(...categoryEquipments)
+    );
+    updateEventData({
+      privateRuleBlocks: selectedSpaceEquipments.map((spaceEquipment) => {
+        return {
+          name: spaceEquipment.name,
+          type: Type.RuleBlockType.spaceEventRequireEquipment,
+          content: [spaceEquipment.id, spaceEquipment.quantity].join(
+            Type.RuleBlockContentDivider.type
+          ),
+        };
+      }),
+    });
+  }, [selectedEquipment]);
+
   const getFilteredEquipment = (category) => {
     return (allEquipment[category] || []).filter((item) =>
       item.name.toLowerCase().includes(searchTerm)
@@ -82,7 +103,7 @@ export const EquipmentSelector = ({ spaceId }) => {
     <div id="setup-equipments" className="border rounded-md h-auto p-4">
       <div className="flex items-center gap-2 py-2 mb-2">
         <PresentationChartBarIcon className="w-4 h-auto" />
-        <div className="block font-semibold">Equipment</div>
+        <div className="block font-semibold">{t("create-event.equipment")}</div>
       </div>
 
       {/* Search Bar */}
@@ -103,8 +124,8 @@ export const EquipmentSelector = ({ spaceId }) => {
         <div key={category} className="mb-4">
           <div className="flex items-center justify-between gap-2 mb-2">
             <div className="font-semibold flex-grow">
-              {category.charAt(0).toUpperCase() + category.slice(1)} Equipment
-              (select all)
+              {category.charAt(0).toUpperCase() + category.slice(1)} {t("create-event.equipment")} {" "}
+              ({t("select-all")})
             </div>
             <input
               type="checkbox"
@@ -128,10 +149,12 @@ export const EquipmentSelector = ({ spaceId }) => {
                 <input
                   type="checkbox"
                   id={`${category}-${index}`}
-                  checked={(selectedEquipment[category] || []).includes(
-                    item.name
-                  )}
-                  onChange={() => handleEquipmentChange(category, item.name)}
+                  checked={
+                    !!(selectedEquipment[category] || []).find(
+                      (selectedItem) => selectedItem.id === item.id
+                    )
+                  }
+                  onChange={() => handleEquipmentChange(category, item)}
                 />
               </div>
             ))}
@@ -145,4 +168,8 @@ export const EquipmentSelector = ({ spaceId }) => {
 EquipmentSelector.propTypes = {
   spaceId: PropTypes.string.isRequired,
   updateEventData: PropTypes.func.isRequired,
+  updateEventRuleData: PropTypes.func.isRequired,
+  permissionEngineAPI: PropTypes.object,
+  selectedEquipment: PropTypes.object,
+  setSelectedEquipment: PropTypes.func.isRequired,
 };

@@ -3,10 +3,15 @@ import { TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 function Stepper({
   currentStep,
   setCurrentStep,
+  isStepComplete,
+  agreements,
+  eventData,
+  eventRuleData,
   numSteps,
   stepContents,
   setNavTitle,
@@ -15,13 +20,20 @@ function Stepper({
 }) {
   let navigate = useNavigate();
 
+  const { t } = useTranslation();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const sendRequest = async (e) => {
     e.preventDefault(); // Prevent form submission
+    if (isSubmitting === true) {
+      return;
+    } else {
+      setIsSubmitting(true);
+    }
 
-    if (currentStep === 6) {
+    if (currentStep + 1 === numSteps) {
       console.log("Submitting at final review... currentStep ", currentStep);
 
       try {
@@ -41,15 +53,27 @@ function Stepper({
         setErrorMessage(
           "There was an error creating the event. Please try again."
         );
+      } finally {
+        // setIsSubmitting(false);
       }
     }
   };
+
   const nextStep = (e) => {
     e.preventDefault(); // Prevent form submission
+    if (isStepComplete) {
+      console.log("isStepComplete", isStepComplete);
+      const completed = isStepComplete(eventData, eventRuleData, agreements);
 
-    const nextCurrentStep = currentStep + 1;
-    if (nextCurrentStep < numSteps) {
-      setCurrentStep(nextCurrentStep);
+      if (completed.result === false) {
+        alert(completed.message);
+        return;
+      }
+
+      const nextCurrentStep = currentStep + 1;
+      if (nextCurrentStep < numSteps) {
+        setCurrentStep(nextCurrentStep);
+      }
     }
   };
 
@@ -69,19 +93,19 @@ function Stepper({
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
           <div className="bg-white m-4 p-6 rounded-lg shadow-lg text-center">
             <h2 className="text-2xl font-bold mb-4">
-              Event Created Successfully!
+            {t("create-event.event-created-success")}
             </h2>
             <p className="mb-6">
-              Your event has been created. Click confirm to continue.
+            {t("create-event.event-created-continue")}
             </p>
             <button
               onClick={() => {
                 setShowSuccessModal(false);
-                navigate("/");
+                navigate("/profile/events");
               }}
               className="px-4 py-2 bg-green-500 text-white rounded-md"
             >
-              Confirm
+              {t("navigation.confirm-button")}
             </button>
           </div>
         </div>
@@ -107,7 +131,7 @@ function Stepper({
                 }}
                 className="px-4 py-2 w-full bg-gray-100 text-black rounded-md"
               >
-                Cancel
+                {t("navigation.cancel-button")}
               </button>
             </div>
           </div>
@@ -165,7 +189,7 @@ function Stepper({
               disabled={currentStep === 0}
               className="w-full px-4 py-2 bg-white text-gray-500 rounded-md border border-gray-500"
             >
-              Back
+              {t("navigation.back-button")}
             </button>
             {/* hide Next button in step 1 */}
             {currentStep != 1 && (
@@ -187,13 +211,14 @@ function Stepper({
               disabled={currentStep === 0}
               className="w-full px-4 py-2 bg-white text-gray-400 rounded-md border border-gray-400"
             >
-              Back
+              {t("navigation.back-button")}
             </button>
             <button
               onClick={sendRequest}
+              disabled={isSubmitting}
               className="w-full px-4 py-2 bg-green-500 text-white rounded-md"
             >
-              Send request
+              {t("navigation.send-request")}
             </button>
           </div>
         )}
@@ -211,5 +236,9 @@ Stepper.propTypes = {
   stepContents: PropTypes.array,
   setNavTitle: PropTypes.func,
   handleSubmit: PropTypes.func,
+  isStepComplete: PropTypes.func,
   nextStepBtnText: PropTypes.string,
+  eventData: PropTypes.object,
+  eventRuleData: PropTypes.object,
+  agreements: PropTypes.object,
 };

@@ -1,0 +1,201 @@
+.rule {
+  color: black;
+  display: flex;
+  flex-direction: row;
+  /* gap: 1rem; */
+  margin-right: 1rem;
+
+  height: auto;
+}
+.rule-data {
+  position: relative;
+  flex: 60%;
+  padding: 1rem;
+  padding-left: 0; /*kiss the left wall*/
+  /* border: 1px solid black; */
+}
+
+.rule-image {
+  height: 20rem;
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  overflow: hidden;
+}
+.rule-image img:first-child {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.rule-image img:nth-child(2) {
+  position: absolute;
+  top: 18rem;
+  left: 2rem;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.rule-image svg:first-child {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.rule-image svg:nth-child(2) {
+  position: absolute;
+  top: 18rem;
+  left: 2rem;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.rule-data .rule-snippet {
+  margin-top: 5rem;
+  padding: 1.5rem;
+}
+
+.rule-data .rule-snippet h1 {
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.rule-data .rule-snippet .rule-account {
+  display: flex;
+  align-items: center;
+}
+.rule-data .rule-snippet .rule-desc {
+  color: #92929d;
+}
+.rule-data .rule-snippet .rule-connection {
+  color: #92929d;
+  font-size: 0.95rem;
+  font-weight: 200;
+}
+
+.rule-data .rule-snippet h3 {
+  margin-top: 1.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #92929d;
+
+  margin-bottom: 0.5rem;
+}
+
+.rule-data .rule-snippet .tag {
+  background-color: #92929d;
+  color: white;
+  border-radius: 0.2rem;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  margin-right: 0.25rem;
+}
+.rule-snippet .rule-call-to-action {
+  margin-top: 2rem;
+}
+
+.rule-snippet .rule-call-to-action .follow-button {
+  display: flex;
+  align-items: center;
+  background-color: black;
+  color: white;
+  border-radius: 0.5rem;
+  padding: 1rem 5rem;
+  margin-right: 0.25rem;
+}
+
+.rule-metadata {
+  flex: 40%;
+  padding-top: 1rem;
+  padding: 1rem;
+  padding-right: 0;
+  /* border: 1px solid black; */
+}
+
+.rule-metadata .metadata-snippet {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.rule-metadata .metadata-snippet .address,
+.rule-metadata .metadata-snippet .website,
+.rule-metadata .metadata-snippet .registration-date,
+.rule-metadata .metadata-snippet .rule-author {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rule-metadata .metadata-snippet .registration-date b,
+.rule-metadata .metadata-snippet .rule-author b {
+  margin-right: 0.5rem;
+}
+.rule-metadata .metadata-snippet .rule-author .tag {
+  background-color: #e2e2ea;
+  color: #727a90;
+  font-size: 0.75rem;
+  padding: 0.25rem 1rem;
+  margin-left: 0.5rem;
+  border-radius: 1rem;
+  align-items: center;
+}
+
+.rule-metadata .metadata-call-to-action {
+  margin-top: 4rem;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+.rule-metadata .metadata-call-to-action .become-steward-button {
+  background-color: black;
+  color: white;
+  border-radius: 0.5rem;
+  padding: 1rem 2rem;
+  margin-right: 0.25rem;
+}
+
+.rule-metadata .metadata-call-to-action .browse-rules-button {
+  background-color: #3dd598;
+  border-radius: 0.5rem;
+  padding: 1rem 2rem;
+  margin-right: 0.25rem;
+}
+
+@media screen and (max-width: 768px) {
+  .rule {
+    flex-direction: column;
+    margin-right: 0;
+  }
+
+  .rule-data .rule-snippet {
+    margin-top: 3.5rem;
+  }
+
+  .rule-data {
+    padding: 0;
+    padding-bottom: 1rem;
+  }
+
+  .rule-image {
+    height: 20rem;
+    border-radius: 0;
+    overflow: hidden;
+  }
+  .rule-metadata {
+    padding: 1rem;
+  }
+
+  .rule-metadata .metadata-image .chip {
+    display: flex;
+    border-radius: 3rem;
+    padding: 0.5rem;
+    position: absolute;
+    left: 0.5rem;
+    right: 0.5rem;
+    bottom: 0.5rem;
+    background-color: white;
+    align-items: center;
+    width: auto;
+    max-width: max-content;
+  }
+}

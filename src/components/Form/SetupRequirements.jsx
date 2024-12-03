@@ -1,24 +1,34 @@
-import { NoiseLevelSelector } from "./NoiseLevelSelector";
 import { EquipmentSelector } from "./EquipmentSelector";
-import { FoodAllowedSelector } from "./FoodAllowedSelector";
 import PropTypes from "prop-types";
-export const SetupRequirements = ({ spaceId, updateEventData }) => {
+import { useTranslation } from "react-i18next";
+
+export const SetupRequirements = ({
+  spaceId,
+  updateEventData,
+  updateEventRuleData,
+  permissionEngineAPI,
+  selectedEquipment,
+  setSelectedEquipment,
+}) => {
+  const { t } = useTranslation();
   return (
     <div className="text-left">
       <hr className="my-6" />
 
       {/* Setup Requirements */}
-      <div className="block mb-2 font-semibold text-xl">Setup Requirements</div>
+      <div className="block mb-2 font-semibold text-xl">{t("create-event.setup-requirements")}</div>
       <div id="setup-requirements" className="h-auto flex flex-col gap-4">
         {/* Noise level selector*/}
-        <NoiseLevelSelector />
         {/* Equipment selector */}
         <EquipmentSelector
           spaceId={spaceId}
           updateEventData={updateEventData}
+          updateEventRuleData={updateEventRuleData}
+          permissionEngineAPI={permissionEngineAPI}
+          selectedEquipment={selectedEquipment}
+          setSelectedEquipment={setSelectedEquipment}
         />
         {/* Food Allowed selector */}
-        <FoodAllowedSelector />
       </div>
     </div>
   );
@@ -27,4 +37,8 @@ export const SetupRequirements = ({ spaceId, updateEventData }) => {
 SetupRequirements.propTypes = {
   spaceId: PropTypes.string,
   updateEventData: PropTypes.func.isRequired,
+  updateEventRuleData: PropTypes.func.isRequired,
+  permissionEngineAPI: PropTypes.object,
+  selectedEquipment: PropTypes.object,
+  setSelectedEquipment: PropTypes.func.isRequired,
 };

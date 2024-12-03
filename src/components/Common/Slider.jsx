@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import PropTypes from "prop-types";
 import { CheckIcon } from "@heroicons/react/solid";
+
 const offset = 5;
 const intialPosition = 0 + offset;
 export const Slider = ({
@@ -10,11 +11,13 @@ export const Slider = ({
   active,
   activeBgColor,
   activeTextColor,
+  disagreeCallbackType,
   Icon,
 }) => {
   const [dragging, setDragging] = useState(false);
   const [position, setPosition] = useState(intialPosition); // Start with initial position
   const [bgColor, setBgColor] = useState("bg-gray-300"); // Initial background color
+  const [textColor, setTextColor] = useState("bg-gray-300"); // Initial background color
   const sliderRef = useRef(null); // Reference for the slider to get its width
 
   // Set the initial position based on the active prop
@@ -28,7 +31,10 @@ export const Slider = ({
       } // Change background color to green if active
     } else {
       setPosition(intialPosition); // Reset to start if not active
-      setBgColor("bg-gray-300"); // Change background color to gray if not active
+      setBgColor(
+        disagreeCallbackType === "delete" ? "bg-[#FDBF59]" : "bg-gray-300"
+      ); // Change background color to gray if not active
+      setTextColor(disagreeCallbackType === "delete" ? "ml-9 text-deleteSliderInActive" : "ml-9 text-gray-700")
     }
   }, [active]);
 
@@ -84,7 +90,6 @@ export const Slider = ({
 
   useEffect(() => {
     // Effect to monitor dragging and position
-    console.log(position);
   }, [position]);
 
   return (
@@ -101,7 +106,7 @@ export const Slider = ({
       onTouchEnd={handleDragEnd}
     >
       <div
-        className={`text-sm absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-700 font-semibold ${active ? activeTextColor : "ml-9 text-gray-700"}`}
+        className={`text-sm absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-700 font-semibold ${active ? activeTextColor : textColor}`}
       >
         {text}
       </div>
@@ -125,7 +130,6 @@ export const Slider = ({
 
 function toText(bgcolor) {
   const string = bgcolor.replace("bg-", "text-");
-  console.log("color string: ", string);
   return string;
 }
 
@@ -136,5 +140,6 @@ Slider.propTypes = {
   active: PropTypes.bool.isRequired,
   activeBgColor: PropTypes.string,
   activeTextColor: PropTypes.string,
+  disagreeCallbackType: PropTypes.string,
   Icon: PropTypes.elementType,
 };

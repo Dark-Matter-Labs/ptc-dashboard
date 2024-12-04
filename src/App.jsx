@@ -10,6 +10,7 @@ import Navbar from "./components/Common/Navbar";
 import CreateEvent from "./pages/Event/Create/CreateEvent";
 import DisplayEvents from "./pages/Event/Display/DisplayEvents";
 import DisplayNotifications from "./pages/Notification/Display/DisplayNotifications";
+import ReviewEvent from "./pages/Event/Review/ReviewEvent";
 import { API } from "./lib/PermissionEngine";
 import Landing from "./pages/Landing/Landing";
 
@@ -82,6 +83,7 @@ function App() {
               />
             }
           />
+
           <Route
             path="/profile/events"
             element={
@@ -109,6 +111,10 @@ function App() {
                 currentLanguage={currentLanguage}
               />
             }
+          />
+          <Route
+            path="/event/review"
+            element={<ReviewEvent currentLanguage={currentLanguage} />}
           />
           <Route
             path="/rule/:ruleId"

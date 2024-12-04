@@ -33,8 +33,11 @@ function App() {
       console.log("at route /event/new, ", t("create-event.navigation-title"));
       setNavTitle(t("create-event.navigation-title")); // Reset to default when on home page
     }
-    setCurrentLanguage("en");
-    localStorage.setItem("i18nextLng", "en");
+
+    if (!localStorage.getItem("i18nextLng")) {
+      setCurrentLanguage("en");
+      localStorage.setItem("i18nextLng", "en");
+    }
   }, [location.pathname, t]); // Re-run when the route changes
 
   const handleChangeLanguage = (lng) => {

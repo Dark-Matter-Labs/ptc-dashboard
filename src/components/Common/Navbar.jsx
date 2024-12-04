@@ -13,6 +13,7 @@ import {
   LocationMarkerIcon,
   ExternalLinkIcon,
   PlusCircleIcon,
+  ScaleIcon,
 } from "@heroicons/react/outline";
 import { Button } from "@headlessui/react";
 import {
@@ -375,6 +376,13 @@ export default function Navbar({
                   >
                     <PlusCircleIcon className="w-4 h-4 text-gray-400 "></PlusCircleIcon>
                     {t("navigation.propose-event")}
+                  </a>
+                  <a
+                    href="/events/assigned"
+                    className={`pl-8 py-4 flex items-center gap-3 text-gray-900 ${location.pathname === "/event/new" ? "bg-slate-200" : "text-gray-900"}`}
+                  >
+                    <ScaleIcon className="w-4 h-4 text-gray-400 "></ScaleIcon>
+                    {t("navigation.review-event")}
                   </a>
 
                   <hr className="font-semibold mt-4" />

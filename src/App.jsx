@@ -11,6 +11,7 @@ import CreateEvent from "./pages/Event/Create/CreateEvent";
 import DisplayEvents from "./pages/Event/Display/DisplayEvents";
 import DisplayNotifications from "./pages/Notification/Display/DisplayNotifications";
 import ReviewEvent from "./pages/Event/Review/ReviewEvent";
+import DisplayAssginedEvents from "./pages/Event/Display/DisplayAssginedEvents";
 import { API } from "./lib/PermissionEngine";
 import Landing from "./pages/Landing/Landing";
 
@@ -93,6 +94,16 @@ function App() {
               />
             }
           />
+
+          <Route
+            path="/events/assigned"
+            element={
+              <DisplayAssginedEvents
+                permissionEngineAPI={permissionEngineAPI}
+                currentLanguage={currentLanguage}
+              />
+            }
+          />
           <Route
             path="/notifications"
             element={
@@ -113,7 +124,7 @@ function App() {
             }
           />
           <Route
-            path="/event/review"
+            path="/event/review/:spaceEventId"
             element={<ReviewEvent currentLanguage={currentLanguage} />}
           />
           <Route

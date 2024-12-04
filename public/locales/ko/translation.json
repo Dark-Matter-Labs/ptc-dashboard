@@ -9,6 +9,7 @@
     "language": "언어",
     "view-calendar": "캘린더",
     "propose-event": "활동 신청",
+    "review-event": "이벤트 리뷰",
     "logout": "로그아웃",
     "back-button": "이전으로",
     "use-this-template-button": "이 템플릿을 사용합니다",
@@ -106,7 +107,7 @@
     "exception-reason-error": "예외 사항을 요청하는 이유를 적어주세요.",
     "rule-block-response-error": "모든 규칙에 응답해주세요.",
     "proposal-summary": "활동 신청 확인"
-  }, 
+  },
   "rule-dashboard": {
     "navigation-title": "규칙 대시보드",
     "registration-date": "등록일자",

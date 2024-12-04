@@ -363,6 +363,13 @@ export class API {
     return response?.data ?? [];
   };
 
+
+  fetchAssignedEvent = async (spaceId) => {
+    const response = await this.get(`permission/request?spaceId=${spaceId}&statuses=assigned`);
+    return response?.data ?? [];
+  };
+
+
   fetchPublicUserData = async (userId) => {
     const response = await this.get("user/:userId", {
       userId,

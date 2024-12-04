@@ -9,6 +9,7 @@
     "language": "Language",
     "view-calendar": "View calendar",
     "propose-event": "Propose an event",
+    "review-event": "Reivew events",
     "logout": "Log Out",
     "back-button": "Back",
     "use-this-template-button": "Use this template",
@@ -53,7 +54,8 @@
     "closed": "Pending Completion",
     "complete": "Completed",
     "complete_with_issue": "Issue Reported",
-    "complete_with_issue_resolved": "Issue Resolved"
+    "complete_with_issue_resolved": "Issue Resolved",
+    "assigned-events": "Assigned events"
   },
   "create-event": {
     "navigation-title": "Propose an event",
@@ -105,7 +107,7 @@
     "exception-reason-error": "Please provide a reason for exception",
     "rule-block-response-error": "Please respond to all the rules",
     "proposal-summary": "Proposal"
-  }, 
+  },
   "rule-dashboard": {
     "navigation-title": "Rule Dashboard",
     "registration-date": "Registration date",

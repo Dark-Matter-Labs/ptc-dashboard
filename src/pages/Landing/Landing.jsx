@@ -12,11 +12,21 @@ const Landing = ({ permissionEngineAPI, currentLanguage }) => {
   const mapSectionRef = useRef(null);
   const slidesSectionRef = useRef(null);
   const [currentSection, setCurrentSection] = useState("cover");
-
   const [selectedThemes, setSelectedThemes] = useState([]);
+  const [me, setMe] = useState(null);
 
   const fetchMe = async () => {
-    return await permissionEngineAPI.fetchMe();
+    try {
+      const result = await permissionEngineAPI.fetchMe();
+      if (result) {
+        setMe(result);
+      } else {
+        throw new Error(`Error fetching me`);
+      }
+    } catch (error) {
+      console.error(error);
+      handleLogin();
+    }
   };
 
   useLayoutEffect(() => {
@@ -60,11 +70,7 @@ const Landing = ({ permissionEngineAPI, currentLanguage }) => {
   };
 
   useEffect(() => {
-    fetchMe().catch((error) => {
-      // if (error.message === 'Error: 401') {
-        handleLogin();
-      // }
-    });
+    fetchMe();
   }, []);
 
   useEffect(() => {

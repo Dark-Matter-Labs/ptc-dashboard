@@ -3,6 +3,14 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { useUser } from "../../../useUser";
 import * as Type from "../../../lib/PermissionEngine/type";
+import { parseTimeManipulation } from "../../../lib/util";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import abbrTimezone from "dayjs-abbr-timezone";
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(abbrTimezone);
 
 const StepFinalReview = ({
   setIsStepComplete,
@@ -89,8 +97,8 @@ const StepFinalReview = ({
 
   // Helper function to format date and time
   const formatDateTime = (startsAt, duration) => {
-    const startDate = new Date(startsAt);
-    const endDate = new Date(startDate);
+    const startDate = dayjs(startsAt).tz("Europe/London").toDate();
+    const endDate = dayjs(startDate).tz("Europe/London").toDate();
     const durationInMinutes = parseInt(duration.replace("h", "")) * 60;
     endDate.setMinutes(startDate.getMinutes() + durationInMinutes);
 
@@ -99,8 +107,17 @@ const StepFinalReview = ({
     )
       .toString()
       .padStart(2, "0")} / ${startDate.getFullYear()}`;
-    const startTime = startDate.toTimeString().slice(0, 5);
-    const endTime = endDate.toTimeString().slice(0, 5);
+    // const startTime = startDate.toTimeString().slice(0, 5);
+    // const endTime = endDate.toTimeString().slice(0, 5);
+    const [startTimeHour, startTimeMinute] = startsAt.split("T")[1].split(":");
+    const startTime = [startTimeHour, startTimeMinute].join(":");
+
+    const durationManipulation = parseTimeManipulation(duration);
+
+    const endTime = dayjs(startsAt)
+      .tz("Europe/London")
+      .add(durationManipulation.numberPart, durationManipulation.stringPart)
+      .format("HH:mm");
 
     return { date, time: `${startTime} - ${endTime}` };
   };

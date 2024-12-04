@@ -190,3 +190,14 @@ export const reverseGeocode = async (lat, lng) => {
 
   return { city, country, bbox };
 };
+
+export const parseTimeManipulation = (manupulation) => {
+  const match = manupulation.match(/^(\d+)([dwMyhms]+)$/);
+  const numberPart = parseInt(match[1], 10);
+  const stringPart = match[2];
+
+  return {
+    numberPart,
+    stringPart,
+  };
+};

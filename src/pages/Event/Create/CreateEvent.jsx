@@ -95,6 +95,7 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI, currentL
     // ruleId: null,
     // duration: null, // to be collected from form
     // startsAt: null, // to be collected from form
+    // endsAt: null, // to be collected from form
     // externalServiceId: null,
     // details: null,
     // link: null,
@@ -186,6 +187,7 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI, currentL
       key={1}
       spaceId={spaceId}
       space={space}
+      spaceRule={spaceRule}
       setNavTitle={setNavTitle}
       eventData={eventData}
       eventRuleData={eventRuleData}

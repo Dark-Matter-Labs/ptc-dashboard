@@ -7,6 +7,15 @@ import { OrganiserNameEmail } from "../../../components/Form/OrganiserNameEmail"
 import { SetupRequirements } from "../../../components/Form/SetupRequirements";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
+import * as Type from "../../../lib/PermissionEngine/type";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import abbrTimezone from "dayjs-abbr-timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(abbrTimezone);
 
 const StepSetEventData = ({
   setNavTitle,
@@ -19,6 +28,7 @@ const StepSetEventData = ({
   updateEventRuleData,
   spaceId,
   space,
+  spaceRule,
   permissionEngineAPI,
   currentMonth,
   setCurrentMonth,
@@ -41,7 +51,7 @@ const StepSetEventData = ({
 
   useEffect(() => {
     setNavTitle(t("create-event.navigation-title"));
-    setNextStepButtonText("Next")
+    setNextStepButtonText("Next");
   });
 
   useEffect(() => {
@@ -91,23 +101,61 @@ const StepSetEventData = ({
     });
   }, []);
 
+  const parseTimeManipulation = (manupulation) => {
+    const match = manupulation.match(/^(\d+)([dwMyhms]+)$/);
+    const numberPart = parseInt(match[1], 10);
+    const stringPart = match[2];
+
+    return {
+      numberPart,
+      stringPart,
+    };
+  };
+
   useEffect(() => {
-    //update event data when title is defined or updated
-    updateEventData({
-      name: eventTitle,
-      details: description,
-      startsAt: eventDateTime,
-      // TODO. dynamic duration
-      duration: "1h",
-    });
-  }, [eventTitle, description, eventDateTime]);
+    if (spaceRule) {
+      const spaceAvailabilityUnit = spaceRule?.ruleBlocks?.find(
+        (item) => item.type === Type.RuleBlockType.spaceAvailabilityUnit
+      );
+      console.log("spaceAvailabilityUnit", spaceAvailabilityUnit);
+      const spaceAvailabilityBuffer = spaceRule?.ruleBlocks?.find(
+        (item) => item.type === Type.RuleBlockType.spaceAvailabilityBuffer
+      );
+      console.log("spaceAvailabilityBuffer", spaceAvailabilityBuffer);
+
+      const parsedSpaceAvailabilityUnit = parseTimeManipulation(
+        spaceAvailabilityUnit?.content
+      );
+      const parsedSpaceAvailabilityBuffer = parseTimeManipulation(
+        spaceAvailabilityBuffer?.content
+      );
+      const time = dayjs();
+      const durationAddedTime = time
+        .add(
+          parsedSpaceAvailabilityUnit.numberPart,
+          parsedSpaceAvailabilityUnit.stringPart
+        )
+        .add(
+          parsedSpaceAvailabilityBuffer.numberPart,
+          parsedSpaceAvailabilityBuffer.stringPart
+        );
+
+      //update event data when title is defined or updated
+      updateEventData({
+        name: eventTitle,
+        details: description,
+        startsAt: eventDateTime,
+        duration: durationAddedTime.diff(time, "minute") + "m",
+      });
+    }
+  }, [spaceRule, eventTitle, description, eventDateTime]);
 
   return (
     <div className="p-4 text-left">
       {/* Enter title */}
       <div>
         <label htmlFor="title" className="block mb-2 font-semibold text-xl">
-        {t("create-event.event-title")}
+          {t("create-event.event-title")}
         </label>
         <input
           id="title"
@@ -145,6 +193,7 @@ const StepSetEventData = ({
         setEventDateTime={setEventDateTime}
         eventDateTime={eventDateTime}
         spaceId={spaceId}
+        spaceRule={spaceRule}
         timezone={space?.timezone}
         permissionEngineAPI={permissionEngineAPI}
         currentMonth={currentMonth}
@@ -163,7 +212,7 @@ const StepSetEventData = ({
           htmlFor="event-description"
           className="block mb-2 font-semibold text-xl"
         >
-        {t("create-event.event-description")}
+          {t("create-event.event-description")}
         </label>
         <Textarea
           id="event-description"
@@ -196,6 +245,7 @@ StepSetEventData.propTypes = {
   updateEventRuleData: PropTypes.func.isRequired,
   spaceId: PropTypes.string,
   space: PropTypes.object,
+  spaceRule: PropTypes.object,
   eventData: PropTypes.object,
   currentStep: PropTypes.number.isRequired,
   setCurrentStep: PropTypes.func.isRequired,

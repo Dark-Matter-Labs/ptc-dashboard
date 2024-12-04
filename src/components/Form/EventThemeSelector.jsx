@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { RadioGroup, Radio } from "@headlessui/react";
 import { XCircleIcon } from "@heroicons/react/solid";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 export const EventThemeSelector = ({
   updateEventData,
@@ -11,6 +12,7 @@ export const EventThemeSelector = ({
   setSelectedTopic,
   currentLanguage,
 }) => {
+  const { t } = useTranslation();
   const [topics, setTopics] = useState([]);
   const loadTopics = async () => {
     try {
@@ -46,7 +48,7 @@ export const EventThemeSelector = ({
   return (
     <div className="text-left">
       <div htmlFor="themes" className="block mb-2 font-semibold text-xl">
-        Themes
+        {t("create-event.themes")}
       </div>
       <RadioGroup
         id="themes"

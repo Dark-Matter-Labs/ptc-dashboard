@@ -13,7 +13,7 @@ const Landing = ({ permissionEngineAPI, currentLanguage }) => {
   const slidesSectionRef = useRef(null);
   const [currentSection, setCurrentSection] = useState("cover");
   const [selectedThemes, setSelectedThemes] = useState([]);
-  const [me, setMe] = useState(null);
+  const [, setMe] = useState(null);
 
   const fetchMe = async () => {
     try {
@@ -203,6 +203,7 @@ const Landing = ({ permissionEngineAPI, currentLanguage }) => {
         mapSectionRef={mapSectionRef}
         permissionEngineAPI={permissionEngineAPI}
         selectedThemes={selectedThemes}
+        currentLanguage={currentLanguage}
       />
 
       {/* Slides Section*/}

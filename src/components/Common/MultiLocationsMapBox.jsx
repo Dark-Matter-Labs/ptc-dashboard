@@ -14,22 +14,26 @@ export const MultiLocationsMapBox = ({
   currentLanguage,
   permissionEngineAPI,
 }) => {
-  // const navigate = useNavigate();
   const mapRef = useRef();
   const defaultStyle = "mapbox://styles/mapbox/streets-v11";
 
+  const navigate = useNavigate();
+
   //defaultLocation in Daegu
-  const defaultLocation = {
-    latitude: 35.8709,
-    longitude: 128.6021,
-  };
-  const [viewport] = useState({
+  // const [defaultLocation, setDefaultLocation] = useState(null);
+  const [viewLocation, setViewLocation] = useState({
+    latitude: 0,
+    longitude: 0,
+  });
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [selectedLocationInfo, setSelectedLocationInfo] = useState(null);
+  const [viewport, setViewport] = useState({
     width: option?.width ?? "100%",
     height: option?.height ?? 400,
     initialViewState: {
       zoom: option?.zoom ?? 11,
-      latitude: Number(locations?.[0]?.latitude ?? defaultLocation.latitude),
-      longitude: Number(locations?.[0]?.longitude ?? defaultLocation.longitude),
+      latitude: Number(locations?.[0]?.latitude ?? viewLocation.latitude),
+      longitude: Number(locations?.[0]?.longitude ?? viewLocation.longitude),
     },
     mapStyle:
       currentLanguage === "en"
@@ -37,10 +41,6 @@ export const MultiLocationsMapBox = ({
         : `${defaultStyle}?language=${currentLanguage}`,
     language: currentLanguage,
   });
-  const navigate = useNavigate();
-
-  const [selectedLocation, setSelectedLocation] = useState(null);
-  const [selectedLocationInfo, setSelectedLocationInfo] = useState(null);
 
   const loadSpaceInformation = async () => {
     if (!selectedLocation?.id) {
@@ -65,6 +65,78 @@ export const MultiLocationsMapBox = ({
       console.error("Error fetching space information: ", error);
     }
   };
+
+  const loadCenterLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          const closestLocation = findClosestLocation(position.coords);
+          // Set the map center to the user's location
+          setViewLocation({
+            longitude: Number(closestLocation?.longitude ?? longitude),
+            latitude: Number(closestLocation?.latitude ?? latitude),
+          });
+          mapRef.current?.setCenter([Number(closestLocation.longitude), Number(closestLocation.latitude)]);
+          // mapRef.current?.jumpTo([longitude, latitude]);
+
+          setViewport({
+            ...viewport,
+            initialViewState: {
+              zoom: option?.zoom ?? 11,
+              latitude: Number(latitude),
+              longitude: Number(longitude),
+            },
+          });
+        },
+        (error) => {
+          console.error("Error getting location: ", error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
+  };
+
+  const calculateDistance = (userLocation, markerLocation) => {
+    const toRadians = (deg) => (deg * Math.PI) / 180;
+
+    const R = 6371e3; // Earth's radius in meters
+    const lat1 = toRadians(userLocation.latitude);
+    const lat2 = toRadians(Number(markerLocation.latitude));
+    const deltaLat = toRadians(Number(markerLocation.latitude) - userLocation.latitude);
+    const deltaLng = toRadians(
+      Number(markerLocation.longitude) - userLocation.longitude
+    );
+
+    const a =
+      Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+      Math.cos(lat1) *
+        Math.cos(lat2) *
+        Math.sin(deltaLng / 2) *
+        Math.sin(deltaLng / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; // Distance in meters
+    return distance;
+  };
+
+  // Function to find the closest marker
+  const findClosestLocation = (userLocation) => {
+    let closestLocation = null;
+    let shortestDistance = Infinity;
+
+    locations?.forEach((location) => {
+      const distance = calculateDistance(userLocation, location);
+      if (distance < shortestDistance) {
+        shortestDistance = distance;
+        closestLocation = location;
+      }
+    });
+
+    return closestLocation;
+  };
+
   useEffect(() => {
     mapRef.current?.setLanguage(currentLanguage);
   }, [currentLanguage]);
@@ -74,6 +146,7 @@ export const MultiLocationsMapBox = ({
     console.log("[MAPBOX] locations: ", locations);
     // loadSpaceInfomation();
     // console.log("(multi map) locations: [after]", locations);
+    loadCenterLocation();
   }, [locations]);
 
   useEffect(() => {
@@ -92,8 +165,8 @@ export const MultiLocationsMapBox = ({
       {locations?.map((loc, index) => (
         <Marker
           key={index}
-          latitude={Number(loc?.latitude ?? defaultLocation.latitude)}
-          longitude={Number(loc?.longitude ?? defaultLocation.longitude)}
+          latitude={Number(loc?.latitude ?? viewLocation.latitude)}
+          longitude={Number(loc?.longitude ?? viewLocation.longitude)}
           onClick={(e) => {
             e.originalEvent.stopPropagation(); // Prevent map zoom when clicking a marker
             setSelectedLocation(loc);

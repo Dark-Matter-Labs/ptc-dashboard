@@ -1,30 +1,69 @@
 import PropTypes from "prop-types";
 import { MultiLocationsMapBox } from "../../components/Common/MultiLocationsMapBox";
 import { useEffect, useState } from "react";
+import { reverseGeocode } from "../../lib/util";
 
 export const LandingMap = ({
   mapSectionRef,
   permissionEngineAPI,
   selectedThemes,
+  currentLanguage,
 }) => {
   const [locations, setLocations] = useState([]);
+  const [userLocation, setUserLocation] = useState([]);
   const [topics, setTopics] = useState([]);
 
-  // Helper function to map fetched spaces to locations
-  // const mapSpacesToLocations = (spaces) =>
-  //   spaces.map((space) => ({
-  //     latitude: space.latitude,
-  //     longitude: space.longitude,
-  //   }));
+  const loadUserLocation = async () => {
+    return await new Promise((resolve, reject) => {
+      try {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            async (position) => {
+              const { latitude, longitude } = position.coords;
+              const geocode = await reverseGeocode(latitude, longitude);
+              setUserLocation({ ...geocode, latitude, longitude });
+              resolve({ ...geocode, latitude, longitude });
+            },
+            (error) => {
+              throw error;
+            }
+          );
+        } else {
+          throw new Error("Geolocation is not supported by this browser.");
+        }
+      } catch (error) {
+        reject(error);
+      }
+    });
+  };
 
   // Load locations filtered by selected themes
   const loadLocations = async () => {
     try {
-      const response =
-        await permissionEngineAPI.filterSpaceByTopics(selectedThemes);
-      console.log("Fetched spaces for locations: ", response.data);
+      const fetchSpaceOption = {
+        page: 1,
+        limit: 20,
+      };
 
-      const convertedLocations = response.data;
+      if (selectedThemes && selectedThemes.length > 0) {
+        fetchSpaceOption.topicIds = selectedThemes.join(",");
+      }
+
+      if (userLocation?.bbox) {
+        fetchSpaceOption.geometry = userLocation?.bbox?.join(",");
+      }
+
+      const response = await permissionEngineAPI.fetchSpaces(fetchSpaceOption);
+      console.log("Fetched spaces for locations: ", response);
+
+      let convertedLocations = response;
+      if (!convertedLocations || convertedLocations?.length === 0) {
+        const { page, limit } = fetchSpaceOption;
+        await permissionEngineAPI.fetchSpaces({ page, limit }).then((res) => {
+          convertedLocations = res ?? [];
+        });
+      }
+
       setLocations(convertedLocations);
     } catch (error) {
       console.error("Error loading locations: ", error);
@@ -56,7 +95,10 @@ export const LandingMap = ({
           try {
             const response = await permissionEngineAPI.fetchTopicById(themeId);
             console.log(`Fetched topic (${themeId}): `, response);
-            return { id: themeId, name: response?.translation?.[currentLanguage] ?? response.name };
+            return {
+              id: themeId,
+              name: response?.translation?.[currentLanguage] ?? response.name,
+            };
           } catch (error) {
             console.error(`Error fetching topic (${themeId}): `, error);
             return null;
@@ -74,8 +116,13 @@ export const LandingMap = ({
 
   // Effects
   useEffect(() => {
+    loadUserLocation();
     loadLocations();
   }, []);
+
+  useEffect(() => {
+    loadLocations();
+  }, [userLocation]);
 
   useEffect(() => {
     loadTopics();
@@ -86,8 +133,6 @@ export const LandingMap = ({
   useEffect(() => {
     console.log("Updated locations: ", locations);
   }, [locations]);
-
-  const currentLanguage = "ko";
 
   return (
     <section
@@ -136,4 +181,5 @@ LandingMap.propTypes = {
   mapSectionRef: PropTypes.object,
   permissionEngineAPI: PropTypes.object.isRequired,
   selectedThemes: PropTypes.array.isRequired,
+  currentLanguage: PropTypes.string,
 };

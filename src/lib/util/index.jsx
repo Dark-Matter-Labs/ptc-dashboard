@@ -2,13 +2,18 @@ import { SupportedEventAccessType } from "../../components/Common/SupportedEvent
 import { KeyValueRuleBlockContent } from "../../components/Common/KeyValueRuleBlockContent";
 import { SpaceAvailabilityRuleBlockContent } from "../../components/Common/SpaceAvailabilityRuleBlockContent";
 import * as Type from "../PermissionEngine/type";
+import { accessToken } from "../mapbox";
 
 export const capitalizeFirstLetter = (str) => {
   if (!str) return str; // Return the original string if it's empty
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
-export const parseRuleBlockContent = async (permissionEngineAPI, ruleBlock, t) => {
+export const parseRuleBlockContent = async (
+  permissionEngineAPI,
+  ruleBlock,
+  t
+) => {
   const { type, content } = ruleBlock;
   let parsedContent = content;
 
@@ -19,7 +24,7 @@ export const parseRuleBlockContent = async (permissionEngineAPI, ruleBlock, t) =
         <div className="h-[79px] w-full px-[15px] py-[13px] bg-[#fafafb] rounded-lg flex-col justify-start items-start gap-2.5 inline-flex">
           <div className="h-[53px] flex-col justify-start items-start gap-2 flex">
             <div className="self-stretch text-[#44444f] text-xs font-semibold font-['Inter'] capitalize">
-            {t("space-excluded_topic-name")}
+              {t("space-excluded_topic-name")}
             </div>
             <div className="self-stretch justify-start items-center gap-1.5 inline-flex">
               <div className="px-3.5 py-1.5 rounded-[60px] border border-[#bcbcc8] justify-center items-center gap-[5px] flex">
@@ -158,4 +163,30 @@ export const parseRuleBlockContent = async (permissionEngineAPI, ruleBlock, t) =
 
 export const handleLogin = () => {
   window.location.href = "/api/v1/auth/google";
+};
+
+export const reverseGeocode = async (lat, lng) => {
+  const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${accessToken}&types=place,region,country`;
+
+  const response = await fetch(url);
+  const data = await response.json();
+
+  // Extract city and country from the response
+  const features = data.features;
+  let city = "";
+  let country = "";
+  let bbox = null;
+
+  features.forEach((feature) => {
+    console.log("feature", feature);
+    if (feature.place_type.includes("place")) {
+      city = feature.text;
+    }
+    if (feature.place_type.includes("country")) {
+      country = feature.text;
+      bbox = feature.bbox;
+    }
+  });
+
+  return { city, country, bbox };
 };

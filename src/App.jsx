@@ -125,7 +125,12 @@ function App() {
           />
           <Route
             path="/event/review/:spaceEventId"
-            element={<ReviewEvent currentLanguage={currentLanguage} />}
+            element={
+              <ReviewEvent
+                currentLanguage={currentLanguage}
+                permissionEngineAPI={permissionEngineAPI}
+              />
+            }
           />
           <Route
             path="/rule/:ruleId"

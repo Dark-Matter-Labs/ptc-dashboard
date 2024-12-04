@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useUser } from "../../../useUser";
-const ReviewEvent = () => {
+import PropTypes from "prop-types";
+const ReviewEvent = ({ permissionEngineAPI }) => {
   const { user } = useUser();
   const { t } = useTranslation();
-  const [eventData] = useState({
+  const [eventData, setEventData] = useState({
     name: "Test Event Name",
     // ruleId: null,
     // duration: null, // to be collected from form
@@ -18,6 +19,23 @@ const ReviewEvent = () => {
     // privateRuleBlocks: [],
     // requestType: null,
   });
+
+  const fetchEventById = async () => {
+    // TODO. add pagination or infinite scroll feature
+    await permissionEngineAPI
+      .fetchEventById("82ac35aa-c30c-4c0c-ac2d-22d78eecd6c0")
+      .then((data) => {
+        console.log("event data: ", data);
+        setEventData(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching event info:", error);
+      });
+  };
+
+  useEffect(() => {
+    fetchEventById();
+  }, []);
 
   console.log("user: ", user);
   return (
@@ -48,3 +66,7 @@ const ReviewEvent = () => {
 };
 
 export default ReviewEvent;
+ReviewEvent.propTypes = {
+  permissionEngineAPI: PropTypes.object,
+  currentLanguage: PropTypes.string,
+};

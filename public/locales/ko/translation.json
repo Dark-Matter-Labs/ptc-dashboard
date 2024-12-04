@@ -84,7 +84,9 @@
     "self-risk-assessment": "자기 위험 평가",
     "proposal-final-review": "제안 최종 검토",
     "event-created-success": "활동이 성공적으로 등록되었습니다!",
-    "event-created-continue": "활동이 등록되었습니다. 계속하려면 확인을 클릭하세요."
+    "event-created-continue": "활동이 등록되었습니다. 계속하려면 확인을 클릭하세요.",
+    "themes": "주제",
+    "buffer-included": "행사 정리 시간 포함"
   },
   "rules": {
     "exception-disclaimer": "이 규칙은 기본 공간 규칙에서 수정되었습니다",

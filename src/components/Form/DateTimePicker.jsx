@@ -112,11 +112,19 @@ const DateTimePicker = ({
     try {
       const data = await permissionEngineAPI.fetchAvailability(
         spaceId,
-        new Date(startOfMonth(currentMonth).getTime()).toISOString(),
-        new Date(endOfMonth(currentMonth).getTime()).toISOString()
+        dayjs(startOfMonth(currentMonth).getTime())
+          .tz("Europe/London")
+          .toISOString(),
+        dayjs(endOfMonth(currentMonth).getTime())
+          .tz("Europe/London")
+          .add(1, 'day')
+          .toISOString()
       );
       const parsedAvailability = data.reduce((acc, slot) => {
-        const date = format(slot.startTime, "yyyy-MM-dd");
+        // const date = format(slot.startTime, "yyyy-MM-dd");
+        const date = dayjs(slot.startTime)
+          .tz("Europe/London", false)
+          .format("YYYY-MM-DD");
         const timeSlot =
           dayjs(slot.startTime).tz("Europe/London", false).format("HH:mm") +
           "-" +
@@ -245,7 +253,9 @@ const DateTimePicker = ({
         (item) => item.type === Type.RuleBlockType.spaceAvailabilityBuffer
       ) && (
         <div className="flex flex-row items-start justify-start p-2">
-          <div className="mr-1 text-gray-500">{t("create-event.buffer-included")}:</div>
+          <div className="mr-1 text-gray-500">
+            {t("create-event.buffer-included")}:
+          </div>
           <div>
             {
               spaceRule.ruleBlocks.find(

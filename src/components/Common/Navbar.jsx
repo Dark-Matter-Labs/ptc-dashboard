@@ -88,6 +88,7 @@ export default function Navbar({
       .then((data) => {
         if (data.message === "Unauthorized") {
           console.log("User not logged in.");
+          handleLogin();
         }
         if (data.email) {
           const newUser = {

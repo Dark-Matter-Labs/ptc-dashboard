@@ -61,9 +61,9 @@ const Landing = ({ permissionEngineAPI, currentLanguage }) => {
 
   useEffect(() => {
     fetchMe().catch((error) => {
-      if (error.message === 'Error: 401') {
+      // if (error.message === 'Error: 401') {
         handleLogin();
-      }
+      // }
     });
   }, []);
 

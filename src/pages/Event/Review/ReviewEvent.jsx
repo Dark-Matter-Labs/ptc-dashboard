@@ -2,17 +2,21 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useUser } from "../../../useUser";
 import PropTypes from "prop-types";
+import { formatDateTime } from "../../../lib/util";
+import { useParams } from "react-router-dom";
 
 const ReviewEvent = ({ permissionEngineAPI }) => {
   const { user } = useUser();
+  const { spaceEventId } = useParams();
   const { t } = useTranslation();
   const [topics, setTopics] = useState([]);
   const [eventData, setEventData] = useState({});
+  const [timeObj, setTimeObj] = useState({ date: null, time: null });
 
   const fetchEventById = async () => {
     // TODO. add pagination or infinite scroll feature
     await permissionEngineAPI
-      .fetchEventById("82ac35aa-c30c-4c0c-ac2d-22d78eecd6c0")
+      .fetchEventById(spaceEventId)
       .then((data) => {
         console.log("event data: ", data);
         setEventData(data);
@@ -38,10 +42,22 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
 
   useEffect(() => {
     fetchEventById();
+    console.log("spaceEventId: ", spaceEventId);
   }, []);
 
   useEffect(() => {
     interpretTopics();
+    console.log(
+      "start and end: ",
+      eventData.startsAt,
+      ", ",
+      eventData.duration
+    );
+    if (eventData.startsAt && eventData.duration) {
+      setTimeObj(formatDateTime(eventData.startsAt, eventData.duration));
+    } else {
+      console.warn("Missing start time or duration in eventData");
+    }
   }, [eventData]);
 
   console.log("user: ", user);
@@ -76,7 +92,14 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
           {/* Date and Time */}
           <div className="py-4">
             <p className="mb-2">{t("review-event.event-date-time")}</p>
-            <div className="text-2xl font-semibold">{eventData.name}</div>
+            <div className="flex justify-between gap-4">
+              <div className="w-full items-center text-center bg-gray-200 p-2 px-4 rounded-xl text-gray-900">
+                {timeObj.date}
+              </div>
+              <div className="w-full items-center text-center bg-gray-200 p-2 px-4 rounded-xl text-gray-900">
+                {timeObj.time}
+              </div>
+            </div>
           </div>
           <hr />
           {/* Description */}

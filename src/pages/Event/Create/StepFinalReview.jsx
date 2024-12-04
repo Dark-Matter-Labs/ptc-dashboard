@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { useUser } from "../../../useUser";
 import * as Type from "../../../lib/PermissionEngine/type";
-
+import { formatDateTime } from "../../../lib/util";
 const StepFinalReview = ({
   setIsStepComplete,
   setNavTitle,
@@ -87,24 +87,6 @@ const StepFinalReview = ({
     console.log("euipments:", equipments);
   }, [equipments]);
 
-  // Helper function to format date and time
-  const formatDateTime = (startsAt, duration) => {
-    const startDate = new Date(startsAt);
-    const endDate = new Date(startDate);
-    const durationInMinutes = parseInt(duration.replace("h", "")) * 60;
-    endDate.setMinutes(startDate.getMinutes() + durationInMinutes);
-
-    const date = `${startDate.getDate().toString().padStart(2, "0")} / ${(
-      startDate.getMonth() + 1
-    )
-      .toString()
-      .padStart(2, "0")} / ${startDate.getFullYear()}`;
-    const startTime = startDate.toTimeString().slice(0, 5);
-    const endTime = endDate.toTimeString().slice(0, 5);
-
-    return { date, time: `${startTime} - ${endTime}` };
-  };
-
   const { date, time } = formatDateTime(eventData.startsAt, eventData.duration);
 
   const getFilteredEquipment = (category) => {
@@ -159,7 +141,7 @@ const StepFinalReview = ({
                 </div>
               </div>
             ))
-          : "Themes not slected"}
+          : "Themes not selected"}
       </div>
       <hr className="my-6"></hr>
       {/* Date and time */}

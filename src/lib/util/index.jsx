@@ -190,3 +190,22 @@ export const reverseGeocode = async (lat, lng) => {
 
   return { city, country, bbox };
 };
+
+// Helper function to format date and time
+export const formatDateTime = (startsAt, duration) => {
+  console.log("=== /// formatDateTime");
+  const startDate = new Date(startsAt);
+  const endDate = new Date(startDate);
+  const durationInMinutes = parseInt(duration.replace("h", "")) * 60;
+  endDate.setMinutes(startDate.getMinutes() + durationInMinutes);
+
+  const date = `${startDate.getDate().toString().padStart(2, "0")} / ${(
+    startDate.getMonth() + 1
+  )
+    .toString()
+    .padStart(2, "0")} / ${startDate.getFullYear()}`;
+  const startTime = startDate.toTimeString().slice(0, 5);
+  const endTime = endDate.toTimeString().slice(0, 5);
+
+  return { date, time: `${startTime} - ${endTime}` };
+};

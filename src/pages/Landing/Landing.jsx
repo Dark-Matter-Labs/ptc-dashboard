@@ -4,6 +4,7 @@ import PtCLogoImgSrc from "../../assets/image/ptc-logo.png";
 import { LandingTheme } from "./LandingTheme";
 import { LandingMap } from "./LandingMap";
 import PropTypes from "prop-types";
+import { handleLogin } from "../../lib/util";
 
 const Landing = ({ permissionEngineAPI, currentLanguage }) => {
   const coverSectionRef = useRef(null);
@@ -13,6 +14,10 @@ const Landing = ({ permissionEngineAPI, currentLanguage }) => {
   const [currentSection, setCurrentSection] = useState("cover");
 
   const [selectedThemes, setSelectedThemes] = useState([]);
+
+  const fetchMe = async () => {
+    return await permissionEngineAPI.fetchMe();
+  };
 
   useLayoutEffect(() => {
     const sections = [
@@ -53,6 +58,14 @@ const Landing = ({ permissionEngineAPI, currentLanguage }) => {
       ref.current.scrollIntoView({ behavior: "smooth" });
     }
   };
+
+  useEffect(() => {
+    fetchMe().catch((error) => {
+      if (error.message === 'Error: 401') {
+        handleLogin();
+      }
+    });
+  }, []);
 
   useEffect(() => {
     console.log("current section: ", currentSection);

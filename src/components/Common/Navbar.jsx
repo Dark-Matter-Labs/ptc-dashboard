@@ -2,7 +2,6 @@ import { useUser } from "../../useUser";
 import { useEffect, useState, useRef } from "react";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import { ChevronDownIcon, XIcon, MenuIcon } from "@heroicons/react/solid";
-import { useNavigate } from "react-router-dom";
 import {
   HomeIcon,
   UserIcon,
@@ -32,7 +31,6 @@ export default function Navbar({
   currentLanguage,
   handleChangeLanguage,
 }) {
-  const navigate = useNavigate();
   const { user, setUser } = useUser();
   const { t } = useTranslation();
   const [dynamicTitle, setDynamicTitle] = useState(navTitle);
@@ -44,7 +42,6 @@ export default function Navbar({
   const handleCloseButton = () => {
     const spaceId = localStorage.getItem("spaceId");
     if (spaceId) {
-      // navigate(`space/${spaceId}`);
       window.location.href = `/space/${spaceId}`;
     } else {
       window.location.href = "/";

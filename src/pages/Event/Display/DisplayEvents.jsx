@@ -5,6 +5,14 @@ import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import * as Type from "../../../lib/PermissionEngine/type";
 import { useTranslation } from "react-i18next";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import abbrTimezone from "dayjs-abbr-timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(abbrTimezone);
 
 export default function DisplayEvents({ permissionEngineAPI }) {
   const { t } = useTranslation();
@@ -44,24 +52,20 @@ export default function DisplayEvents({ permissionEngineAPI }) {
 
   // Helper function to format event date and time
   const formatEventDateTime = (start, duration) => {
-    const startDate = new Date(start);
+    const startDate = dayjs(start).tz("Europe/London").toDate();
     const durationMs = parseDuration(duration);
     const endDate = durationMs
-      ? new Date(startDate.getTime() + durationMs)
+      ? dayjs(startDate.getTime() + durationMs)
+          .tz("Europe/London")
+          .toDate()
       : startDate;
 
     // Format date as YYYY-MM-DD
     const eventDate = startDate.toLocaleDateString();
 
     // Format start time and end time as HH:MM
-    const startTime = startDate.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-    const endTime = endDate.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    const startTime = dayjs(startDate).tz("Europe/London").format("HH:mm A");
+    const endTime = dayjs(endDate).tz("Europe/London").format("HH:mm A");
 
     return { eventDate, eventTime: `${startTime} - ${endTime}` };
   };
@@ -114,8 +118,10 @@ export default function DisplayEvents({ permissionEngineAPI }) {
         events.length > 0 ? (
           <div>
             <p>
-            {t("events.you-have")}
-              {events.length == 1 ? ` 1 ${t("events.event")}.` : ` ${events.length} ${t("events.events")}.`}
+              {t("events.you-have")}
+              {events.length == 1
+                ? ` 1 ${t("events.event")}.`
+                : ` ${events.length} ${t("events.events")}.`}
             </p>
             <div className="mt-8 flex flex-col gap-4 ">
               {events.map((event, key) => {

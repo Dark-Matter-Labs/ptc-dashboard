@@ -193,7 +193,6 @@ export const reverseGeocode = async (lat, lng) => {
 
 // Helper function to format date and time
 export const formatDateTime = (startsAt, duration) => {
-  console.log("=== /// formatDateTime");
   const startDate = new Date(startsAt);
   const endDate = new Date(startDate);
   const durationInMinutes = parseInt(duration.replace("h", "")) * 60;

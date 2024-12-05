@@ -10,6 +10,7 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
   const { spaceEventId } = useParams();
   const { t } = useTranslation();
   const [topics, setTopics] = useState([]);
+  const [equipments, setEquipments] = useState([]);
   const [eventData, setEventData] = useState({});
   const [timeObj, setTimeObj] = useState({ date: null, time: null });
 
@@ -40,6 +41,38 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
     }
   };
 
+  const interpretEquipments = async (ruleId) => {
+    if (!ruleId) return;
+    console.log("ruleId: ", ruleId);
+
+    await permissionEngineAPI
+      .fetchRuleByRuleId(ruleId)
+      .then((data) => {
+        console.log("from ruleId data: ", ruleId, ">>", data);
+
+        data?.ruleBlocks?.map((rule) => {
+          if (!rule.isPublic) {
+            console.log(
+              "equipement is not public: ",
+              rule.name,
+              " ",
+              rule.content.split("^")[1]
+            );
+            setEquipments((prevEquipments) => [
+              ...prevEquipments,
+              {
+                name: rule.name,
+                quantity: rule.content.split("^")[1],
+              },
+            ]);
+          }
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching rule: ", error);
+      });
+  };
+
   useEffect(() => {
     fetchEventById();
     console.log("spaceEventId: ", spaceEventId);
@@ -58,6 +91,7 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
     } else {
       console.warn("Missing start time or duration in eventData");
     }
+    interpretEquipments(eventData.ruleId);
   }, [eventData]);
 
   console.log("user: ", user);
@@ -114,6 +148,25 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
           <p className="mb-2">{t("review-event.organizer-email")}</p>
           <p className="text-xl font-semibold">{user.email}</p>
           <hr className="my-6"></hr>
+          {/* Equipment */}
+          <div className="py-4">
+            <p className="mb-2">{t("review-event.requested-equipment")}</p>
+            <div className="text-2xl font-semibold">
+              <ul>
+                {equipments?.length > 0
+                  ? equipments?.map((equipment, index) => (
+                      <li
+                        key={index}
+                        value={equipment}
+                        className=" text-gray-800 text-2xl font-semibold"
+                      >
+                        {equipment.name} {equipment.quantity}
+                      </li>
+                    ))
+                  : "Equipment not selected"}
+              </ul>
+            </div>
+          </div>
         </div>
       ) : (
         <div>Please log in.</div>

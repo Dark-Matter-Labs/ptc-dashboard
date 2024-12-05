@@ -1,9 +1,9 @@
-.damage-report .panel,
+.issue-report .panel,
 .interest-category .panel {
   padding: 1rem;
 }
 
-.damage-report .panel .card,
+.issue-report .panel .card,
 .interest-category .panel .card {
   display: flex;
   flex-direction: row;
@@ -16,7 +16,7 @@
   padding: 0.2rem;
 }
 
-.damage-report .panel .card .card-header {
+.issue-report .panel .card .card-header {
   background-color: #c1c1c1;
   color: #8a8a8a;
   border-radius: 20rem;
@@ -30,7 +30,7 @@
   padding: 0.5rem;
 }
 
-.damage-report .panel .card .card-content,
+.issue-report .panel .card .card-content,
 .interest-category .panel .card .card-content {
   flex: 70%;
   display: flex;
@@ -38,13 +38,13 @@
   margin-left: 1rem;
 }
 
-.damage-report .panel .card .card-content .content-description,
+.issue-report .panel .card .card-content .content-description,
 .interest-category .panel .card .card-content .content-description {
   color: #8a8a8a;
   font-weight: 400;
 }
 
-.damage-report .panel .card .card-tail {
+.issue-report .panel .card .card-tail {
   border: 1px solid red;
   flex: 40%;
   text-align: center;
@@ -58,11 +58,25 @@
   border-radius: 2rem;
   margin: auto;
 }
+.issue-report .panel .card .card-tail.being-resolved {
+  border: 1px solid yellowgreen;
+  flex: 40%;
+  text-align: center;
+  width: fit-content;
+  background-color: #e9fac3;
+  color: #42db37;
+  border: 1px solid #42db37;
+  font-weight: 400;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.3rem;
+  border-radius: 2rem;
+  margin: auto;
+}
 .interest-category .panel .card .card-tail {
   color: black;
   font-weight: 400;
 }
-.disclosure .damage-report-button {
+.disclosure .issue-report-button {
   background-color: #92929d;
   color: white;
   border-radius: 0.5rem;
@@ -70,7 +84,7 @@
   width: 100%;
 }
 
-.home-report {
+.space-report {
   border-top: 1px solid #e9eaea;
   margin: 1.5rem;
   padding-top: 2rem;
@@ -78,7 +92,7 @@
   flex-direction: row;
   gap: 1rem;
 }
-.damage-report {
+.issue-report {
   flex: 40%;
   /* border: 1px brown solid; */
   /* height: 200px; */
@@ -111,7 +125,7 @@
 }
 
 @media screen and (max-width: 768px) {
-  .home-report {
+  .space-report {
     flex-direction: column;
   }
 }

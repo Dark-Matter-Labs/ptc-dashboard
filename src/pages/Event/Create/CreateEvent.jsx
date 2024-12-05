@@ -177,6 +177,7 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI, currentL
   }, [isStepComplete]);
 
   useEffect(() => {
+    setNavTitle(t("create-event.navigation-title"));
     loadSpace();
     loadSpaceRule();
   }, []);

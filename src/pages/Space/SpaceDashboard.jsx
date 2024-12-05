@@ -5,11 +5,15 @@ import Activity from "./Activity";
 import Space from "./Space";
 import Report from "./Report";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 export default function SpaceDashboard({
   permissionEngineAPI,
   currentLanguage,
+  setNavTitle,
+  setCloseButtonLink,
 }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   let { spaceId } = useParams();
   const [space, setSpace] = useState(null);
@@ -17,27 +21,13 @@ export default function SpaceDashboard({
 
   const loadSpace = async () => {
     try {
-      if (!spaceId || ["1", "2"].includes(spaceId) === true) {
-        let index =
-          ["1", "2"].includes(spaceId) === true ? parseInt(spaceId) - 1 : 0;
-
-        const spaces = await permissionEngineAPI.fetchSpaces({
-          page: 1,
-          limit: 1,
-        });
-        spaceId = spaces?.[index]?.id;
-
-        navigate(`/space/${spaceId}`);
-      }
-
-      if (spaceId && ["1", "2"].includes(spaceId) === false) {
-        const fetchedSpace = await permissionEngineAPI.fetchSpace(spaceId);
-        const fetchedSpaceOwner = await permissionEngineAPI.fetchPublicUserData(
-          fetchedSpace?.ownerId
-        );
-        setSpace(fetchedSpace);
-        setSpaceOwner(fetchedSpaceOwner);
-      }
+      const fetchedSpace = await permissionEngineAPI.fetchSpace(spaceId);
+      const fetchedSpaceOwner = await permissionEngineAPI.fetchPublicUserData(
+        fetchedSpace?.ownerId
+      );
+      setSpace(fetchedSpace);
+      setSpaceOwner(fetchedSpaceOwner);
+      setCloseButtonLink(`/space/${fetchedSpace.id}`);
     } catch (error) {
       console.error("Error fetching space: ", error);
       navigate("/");
@@ -45,7 +35,7 @@ export default function SpaceDashboard({
   };
 
   useEffect(() => {
-    localStorage.setItem("spaceId", spaceId);
+    setNavTitle(t("navigation.navigation-title"));
     // Scroll to the top of the page
     window.scrollTo({
       top: 0,
@@ -67,11 +57,8 @@ export default function SpaceDashboard({
         permissionEngineAPI={permissionEngineAPI}
         currentLanguage={currentLanguage}
       ></Space>
-      <Activity spaceId={spaceId}></Activity>
-      <Report
-        spaceId={spaceId}
-        permissionEngineAPI={permissionEngineAPI}
-      ></Report>
+      <Activity space={space} permissionEngineAPI={permissionEngineAPI}></Activity>
+      <Report space={space} permissionEngineAPI={permissionEngineAPI}></Report>
     </>
   );
 }
@@ -80,4 +67,6 @@ SpaceDashboard.propTypes = {
   spaceId: PropTypes.string,
   permissionEngineAPI: PropTypes.object,
   currentLanguage: PropTypes.string,
+  setNavTitle: PropTypes.func,
+  setCloseButtonLink: PropTypes.func,
 };

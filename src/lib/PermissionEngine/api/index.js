@@ -179,6 +179,7 @@ export class API {
     );
   }
 
+  // GET requests
   /**
    *
    * @param {PaginationOption} option
@@ -313,7 +314,7 @@ export class API {
     const response = await this.get(`space/${topicIdsString}`);
     console.log("response filterSpaceByTopics(): ", response);
     return response;
-  }
+  };
 
   fetchSpaceRule = async (spaceId) => {
     const response = await this.get("rule/space/:spaceId", {
@@ -383,6 +384,39 @@ export class API {
     return response?.data ?? [];
   };
 
+  fetchAllSpaceIssue = async (
+    spaceId,
+    option = { page: 1, limit: 10 }
+  ) => {
+    const response = await this.get(
+      "space/history/issue",
+      {},
+      {
+        spaceId,
+        ...option,
+      }
+    );
+
+    return response?.data ?? [];
+  };
+
+  fetchUnresolvedSpaceIssue = async (
+    spaceId,
+    option = { page: 1, limit: 10 }
+  ) => {
+    const response = await this.get(
+      "space/history/issue/unresolved",
+      {},
+      {
+        spaceId,
+        ...option,
+      }
+    );
+
+    return response?.data ?? [];
+  };
+
+  // POST requests
   updateNotificationToComplete = async (userNotificationId) => {
     const response = await this.put("user/notification/:userNotificationId", {
       userNotificationId,
@@ -390,6 +424,7 @@ export class API {
 
     return response;
   };
+
   /**
    *
    * @param {CreateRuleBlockBody} body

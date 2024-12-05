@@ -1,6 +1,7 @@
 {
   "navigation": {
     "navigation-title": "공간 대시보드",
+    "find-space": "공간 찾기",
     "profile": "프로필",
     "notifications": "알림",
     "my-events": "나의 이벤트",

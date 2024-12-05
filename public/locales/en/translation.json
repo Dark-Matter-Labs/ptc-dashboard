@@ -1,6 +1,7 @@
 {
   "navigation": {
     "navigation-title": "Space dashboard",
+    "find-space": "Find Space",
     "profile": "Profile",
     "notifications": "Notifications",
     "my-events": "My events",

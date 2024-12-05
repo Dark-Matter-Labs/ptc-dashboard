@@ -21,19 +21,22 @@
     "cancel-button": "Cancel",
     "send-request": "Send request"
   },
-
-  "home": {
+  "space": {
     "follow-button": "follow",
     "availability": "Availability",
     "available": "Available to request events",
     "get-permission": "Get permission",
-    "upcoming-events": "Upcoming events",
-    "past-events": "Past events",
+    "upcoming-events": "Upcoming activity",
+    "past-events": "Past activity",
     "registration-date": "Registration date",
     "space-owner": "Space owner",
     "space-keywords": "Space Keywords",
     "join-community": "Join the Community",
-    "browse-rules": "Browse Rules"
+    "browse-rules": "Browse Rules",
+    "today-events": "Today's events",
+    "issue-report": "Issue Report",
+    "permission-statistics": "Permission Statistics",
+    "interest-category": "Interest Category"
   },
   "profile": {
     "title": "Profile Page"

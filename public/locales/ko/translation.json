@@ -22,19 +22,22 @@
     "cancel-button": "취소",
     "send-request": "신청하기"
   },
-
-  "home": {
+  "space": {
     "follow-button": "팔로우",
     "availability": "이용 가능 여부",
     "available": "활동 신청 가능",
     "get-permission": "활동 신청하기",
-    "upcoming-events": "다가오는 이벤트",
-    "past-events": "지난 이벤트",
+    "upcoming-events": "다가오는 활동",
+    "past-events": "지난 활동",
     "registration-date": "등록일자",
     "space-owner": "공간 소유자",
     "space-keywords": "공간 키워드",
     "join-community": "커뮤니티 가입하기",
-    "browse-rules": "공간 규칙 보기"
+    "browse-rules": "공간 규칙 보기",
+    "today-events": "오늘의 활동",
+    "issue-report": "이슈",
+    "permission-statistics": "통계",
+    "interest-category": "활동 주제"
   },
   "profile": {
     "title": "프로필 페이지"
@@ -109,7 +112,7 @@
     "exception-reason-error": "예외 사항을 요청하는 이유를 적어주세요.",
     "rule-block-response-error": "모든 규칙에 응답해주세요.",
     "proposal-summary": "활동 신청 확인"
-  }, 
+  },
   "rule-dashboard": {
     "navigation-title": "규칙 대시보드",
     "registration-date": "등록일자",

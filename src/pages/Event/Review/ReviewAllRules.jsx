@@ -3,14 +3,14 @@ import DisplayAllRules from "../../Rule/DisplayAllRules";
 const ReviewAllRules = ({
   t,
   rule,
-  ruleAuthor,
+
   permissionEngineAPI,
-  currentLanguage,
+  proceedToStep,
 }) => {
   console.log("rule: ", rule);
-  console.log("rule author: ", ruleAuthor);
+  //   console.log("rule author: ", ruleAuthor);
   console.log("permissionEngineAPI: ", permissionEngineAPI);
-  console.log("currentLanguage: ", currentLanguage);
+  //   console.log("currentLanguage: ", currentLanguage);
 
   return (
     <div className="p-4 space-y-4 text-left">
@@ -19,9 +19,10 @@ const ReviewAllRules = ({
       </div>
       <DisplayAllRules
         rule={rule}
-        ruleAuthor={ruleAuthor}
-        currentLanguage={currentLanguage}
+        // ruleAuthor={ruleAuthor}
+        // currentLanguage={currentLanguage}
         permissionEngineAPI={permissionEngineAPI}
+        proceedToStep={proceedToStep}
       ></DisplayAllRules>
     </div>
   );
@@ -32,7 +33,8 @@ export default ReviewAllRules;
 ReviewAllRules.propTypes = {
   t: PropTypes.func,
   rule: PropTypes.object,
-  ruleAuthor: PropTypes.object,
+  //   ruleAuthor: PropTypes.object,
   permissionEngineAPI: PropTypes.object,
-  currentLanguage: PropTypes.string,
+  proceedToStep: PropTypes.func,
+  //   currentLanguage: PropTypes.string,
 };

@@ -6,8 +6,13 @@ import * as Type from "../../lib/PermissionEngine/type";
 import { useTranslation } from "react-i18next";
 import { parseRuleBlockContent } from "../../lib/util";
 
-export default function DisplayAllRules({ rule, permissionEngineAPI }) {
+export default function DisplayAllRules({
+  rule,
+  permissionEngineAPI,
+  proceedToStep,
+}) {
   const { t } = useTranslation();
+
   const [expandedCards, setExpandedCards] = useState({ 0: false }); //{0: true, 2: false}
   const [ruleBlocks, setRuleBlocks] = useState([]);
   const [ruleBlockContentById, setRuleBlockContentById] = useState({});
@@ -99,11 +104,13 @@ export default function DisplayAllRules({ rule, permissionEngineAPI }) {
     });
   }, [ruleBlocks]);
 
+  console.log("ruleBlockContentById: ", ruleBlockContentById);
+
   return (
-    <section className="rule">
-      <p className="mb-4">{rule?.details}</p>
+    <div>
       <div className="flex flex-col gap-4 p-2 mb-20 text-gray-500">
         {ruleBlocks?.map((ruleBlock) => {
+          // console.log("ruleBlock: ", index, "::", ruleBlock);
           return (
             <div
               key={ruleBlock.id}
@@ -114,8 +121,8 @@ export default function DisplayAllRules({ rule, permissionEngineAPI }) {
                 onClick={(e) => toggleExpand(e, ruleBlock.id)}
                 className="w-full flex gap-2 justify-between place-items-start md:items-center text-gray-600 hover:text-gray-900"
               >
-                <div className="text-base sm:text-lg text-gray-900 w-full flex flex-col sm:flex-row gap-2 justify-start">
-                  <div className="whitespace-nowrap text-sm bg-gray-200 rounded-full px-4 py-1 self-start">
+                <div className="text-base sm:text-lg text-gray-900 w-full flex flex-row gap-2 justify-start">
+                  <div className="whitespace-nowrap text-sm bg-[#E4DEE9] rounded-full px-4 py-1 self-start">
                     {ruleTypeInterpreter(ruleBlock.type)}
                   </div>
                   <div className="text-left w-full font-semibold text-lg text-gray-700 break-words break-all">
@@ -133,13 +140,13 @@ export default function DisplayAllRules({ rule, permissionEngineAPI }) {
 
               {/* Content (only visible when expanded) */}
               {expandedCards[ruleBlock.id] && (
-                <div className="mt-2 text-gray-500 text-sm overflow-auto">
+                <div className="mt-2 text-sm overflow-auto">
                   {ruleBlock.details ? (
-                    <p>{ruleBlock.details}</p>
+                    <p className="mt-2">{ruleBlock.details}</p>
                   ) : forceStaticNamedSpaceRuleBlocks.includes(
                       ruleBlock.type
                     ) ? (
-                    <p>
+                    <p className="mt-2">
                       {t(
                         getRuleBlockTypeDescriptionTranslationKey(
                           ruleBlock.type
@@ -150,7 +157,7 @@ export default function DisplayAllRules({ rule, permissionEngineAPI }) {
                     ""
                   )}
 
-                  <div className="mt-2">
+                  <div className="mt-2  text-gray-600">
                     {ruleBlockContentById[ruleBlock.id]
                       ? ruleBlockContentById[ruleBlock.id]
                       : ruleBlock.content}
@@ -161,7 +168,21 @@ export default function DisplayAllRules({ rule, permissionEngineAPI }) {
           );
         })}
       </div>
-    </section>
+      <div className="py-4">
+        <button
+          onClick={() => proceedToStep(1)}
+          className="mt-4 px-6 py-2 border text-black rounded-lg w-full"
+        >
+          Back
+        </button>
+        <button
+          className="mt-4 px-6 py-2 bg-[#2F103A] text-white rounded-lg w-full"
+          onClick={() => proceedToStep(3)}
+        >
+          {t("review-event.next-step")}
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -171,4 +192,5 @@ DisplayAllRules.propTypes = {
   spaceRule: PropTypes.object,
   currentLanguage: PropTypes.string,
   permissionEngineAPI: PropTypes.object,
+  proceedToStep: PropTypes.func,
 };

@@ -7,14 +7,14 @@ import EventProposal from "./EventProposal"; // Sub-component for the proposal
 import { formatDateTime } from "../../../lib/util";
 import ReviewAllRules from "./ReviewAllRules";
 
-const ReviewEvent = ({ permissionEngineAPI, currentLanguage }) => {
+const ReviewEvent = ({ permissionEngineAPI }) => {
   const { user } = useUser();
   const { spaceEventId } = useParams();
   const { t } = useTranslation();
   const [eventData, setEventData] = useState({});
   const [eventRuleTemplate, setEventRuleTemplate] = useState({});
   const [rule, setRule] = useState({});
-  const [ruleAuthor, setRuleAuthor] = useState(null);
+
   const [currentStep, setCurrentStep] = useState(1); // Step tracking: 1 = proposal, 2 = review actions
   const [topics, setTopics] = useState([]);
   const [equipments, setEquipments] = useState([]);
@@ -89,17 +89,16 @@ const ReviewEvent = ({ permissionEngineAPI, currentLanguage }) => {
     }
   };
 
-  const interpretRuleAuthor = async (authorId) => {
-    if (!authorId) return;
+  // const interpretRuleAuthor = async (authorId) => {
+  //   if (!authorId) return;
 
-    try {
-      const data = await permissionEngineAPI.fetchPublicUserData(authorId);
-      console.log("author: ", data);
-      setRuleAuthor(data);
-    } catch (error) {
-      console.error("Error fetching event rule author:", error);
-    }
-  };
+  //   try {
+  //     const data = await permissionEngineAPI.fetchPublicUserData(authorId);
+  //     console.log("author: ", data);
+  //   } catch (error) {
+  //     console.error("Error fetching event rule author:", error);
+  //   }
+  // };
   useEffect(() => {
     fetchEventById();
   }, []);
@@ -122,12 +121,11 @@ const ReviewEvent = ({ permissionEngineAPI, currentLanguage }) => {
     }
   }, [eventData]);
 
-  useEffect(() => {
-    console.log("rule: ", rule);
-    interpretRuleAuthor(rule.authorId);
-  }, [rule]);
+  // useEffect(() => {
+  //   console.log("rule: ", rule);
+  //   // interpretRuleAuthor(rule.authorId);
+  // }, [rule]);
 
-  // const proceedToNextStep = () => setCurrentStep(2); // Move to the review actions step
   const proceedToStep = (step) => setCurrentStep(step);
   return (
     <div>
@@ -144,14 +142,17 @@ const ReviewEvent = ({ permissionEngineAPI, currentLanguage }) => {
               proceedToStep={() => proceedToStep(2)}
               eventRuleTemplate={eventRuleTemplate}
             />
-          ) : (
+          ) : currentStep === 2 ? (
             <ReviewAllRules
               t={t}
               rule={rule}
-              ruleAuthor={ruleAuthor}
               permissionEngineAPI={permissionEngineAPI}
-              currentLanguage={currentLanguage}
+              proceedToStep={proceedToStep}
             />
+          ) : currentStep === 3 ? (
+            <div>Step 3</div>
+          ) : (
+            <div>Step rest </div>
           )}
         </>
       ) : (

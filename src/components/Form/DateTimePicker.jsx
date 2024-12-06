@@ -9,7 +9,6 @@ import {
   eachDayOfInterval,
   getDay,
 } from "date-fns";
-import { formatInTimeZone } from "date-fns-tz";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/outline";
 import PropTypes from "prop-types";
 import dayjs from "dayjs";
@@ -17,6 +16,7 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import abbrTimezone from "dayjs-abbr-timezone";
 import { useTranslation } from "react-i18next";
+import * as Type from "../../lib/PermissionEngine/type";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -24,7 +24,7 @@ dayjs.extend(abbrTimezone);
 
 const DateTimePicker = ({
   spaceId,
-  timezone: spaceTimezone,
+  spaceRule,
   permissionEngineAPI,
   eventDateTime,
   setEventDateTime,
@@ -39,7 +39,7 @@ const DateTimePicker = ({
 }) => {
   // availability
   const [availability, setAvailability] = useState([]);
- // translation
+  // translation
   const { t } = useTranslation();
   // Function to go to the next month
   const handleNextMonth = (e) => {
@@ -63,13 +63,15 @@ const DateTimePicker = ({
 
   // Weekday names
   // Adjust to start the week on Monday
-  const weekdays = [t("create-event.date-time-mon"),
-  t("create-event.date-time-tue"),
-  t("create-event.date-time-wed"),
-  t("create-event.date-time-thu"),
-  t("create-event.date-time-fri"),
-  t("create-event.date-time-sat"),
-  t("create-event.date-time-sun")];
+  const weekdays = [
+    t("create-event.date-time-mon"),
+    t("create-event.date-time-tue"),
+    t("create-event.date-time-wed"),
+    t("create-event.date-time-thu"),
+    t("create-event.date-time-fri"),
+    t("create-event.date-time-sat"),
+    t("create-event.date-time-sun"),
+  ];
 
   const getWeekStartOffset = () => {
     const firstDayOfMonth = getDay(startOfMonth(currentMonth));
@@ -110,25 +112,26 @@ const DateTimePicker = ({
     try {
       const data = await permissionEngineAPI.fetchAvailability(
         spaceId,
-        new Date(startOfMonth(currentMonth).getTime()).toISOString(),
-        new Date(endOfMonth(currentMonth).getTime()).toISOString()
+        dayjs(startOfMonth(currentMonth).getTime())
+          .tz("Europe/London")
+          .toISOString(),
+        dayjs(endOfMonth(currentMonth).getTime())
+          .tz("Europe/London")
+          .add(1, 'day')
+          .toISOString()
       );
       const parsedAvailability = data.reduce((acc, slot) => {
-        const date = formatInTimeZone(
-          slot.startTime,
-          spaceTimezone,
-          "yyyy-MM-dd",
-          {
-            timeZone: spaceTimezone,
-          }
-        );
+        // const date = format(slot.startTime, "yyyy-MM-dd");
+        const date = dayjs(slot.startTime)
+          .tz("Europe/London", false)
+          .format("YYYY-MM-DD");
         const timeSlot =
-          format(new Date(slot.startTime), "HH:mm") +
+          dayjs(slot.startTime).tz("Europe/London", false).format("HH:mm") +
           "-" +
-          format(new Date(slot.endTime), "HH:mm");
+          dayjs(slot.endTime).tz("Europe/London", false).format("HH:mm");
 
         if (!acc[date]) acc[date] = [];
-        if (dayjs() <= dayjs(slot.startTime).tz(spaceTimezone)) {
+        if (dayjs() <= dayjs(slot.startTime).tz("Europe/London", false)) {
           acc[date] = [...acc[date].sort(), timeSlot].sort();
         }
 
@@ -160,108 +163,107 @@ const DateTimePicker = ({
   return (
     <div className="text-left">
       <hr className="my-6" />
-      <div className="block mb-2 font-semibold text-xl">{t("create-event.event-date-time")}</div>
-      {!idDateTimeDecided && (
-        <>
-          <div className="border rounded">
-            <div className="p-2">
-              <div className="text-center font-bold text-lg mb-2">
-                {format(currentMonth, "yyyy")}
-              </div>
-              <div className="flex items-center justify-between">
-                <button
-                  onClick={handlePrevMonth}
-                  className="border rounded w-fit py-2 px-2 items-center"
-                >
-                  <ChevronLeftIcon className="w-5 h-5" />
-                </button>
-                <span className="font-semibold">
-                  {format(currentMonth, "MMMM")}
-                </span>
-                <button
-                  onClick={handleNextMonth}
-                  className="border rounded w-fit py-2 px-2 items-center"
-                >
-                  <ChevronRightIcon className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
-            <hr className="my-2" />
-
-            <div className="p-2">
-              <div className="grid grid-cols-7 text-center font-medium mb-2">
-                {weekdays.map((day) => (
-                  <span key={day}>{day}</span>
-                ))}
-              </div>
-              <div className="grid grid-cols-7 gap-2 text-center">
-                {/* Add offset for the first day of the month */}
-                {Array(getWeekStartOffset())
-                  .fill("")
-                  .map((_, i) => (
-                    <div key={i}></div>
-                  ))}
-                {daysInMonth.map((date) => {
-                  const formattedDate = format(date, "yyyy-MM-dd");
-                  const isAvailable = availability[formattedDate]?.length > 0;
-
-                  return (
-                    <button
-                      key={date}
-                      type="button"
-                      className={`w-10 h-10 text-center p-2 rounded-full ${
-                        formattedDate === selectedDate
-                          ? "bg-[#5570F1] text-white"
-                          : isAvailable
-                            ? "bg-white text-black"
-                            : "bg-white text-gray-300"
-                      }`}
-                      onClick={() => handleDateClick(date)}
-                      disabled={!isAvailable}
-                    >
-                      {date.getDate()}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+      <div className="block mb-2 font-semibold text-xl">
+        {t("create-event.event-date-time")}
+      </div>
+      <div className="border rounded">
+        <div className="p-2">
+          <div className="text-center font-bold text-lg mb-2">
+            {format(currentMonth, "yyyy")}
           </div>
+          <div className="flex items-center justify-between">
+            <button
+              onClick={handlePrevMonth}
+              className="border rounded w-fit py-2 px-2 items-center"
+            >
+              <ChevronLeftIcon className="w-5 h-5" />
+            </button>
+            <span className="font-semibold">
+              {format(currentMonth, "MMMM")}
+            </span>
+            <button
+              onClick={handleNextMonth}
+              className="border rounded w-fit py-2 px-2 items-center"
+            >
+              <ChevronRightIcon className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+        <hr className="my-2" />
 
-          {selectedDate && (
-            <div className="flex overflow-x-auto mt-4 space-x-2 w-full">
-              {(availability[selectedDate] || []).map((slot, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  className={`border p-2 rounded-[12px] min-w-[140px] w-auto text-center ${
-                    selectedTime === slot
-                      ? "bg-[#5570F1] text-white"
-                      : "bg-white text-black"
-                  }`}
-                  onClick={() => handleTimeSlotClick(slot)}
-                >
-                  {slot}
-                </button>
+        <div className="p-2">
+          <div className="grid grid-cols-7 text-center font-medium mb-2">
+            {weekdays.map((day) => (
+              <span key={day}>{day}</span>
+            ))}
+          </div>
+          <div className="grid grid-cols-7 gap-2 text-center">
+            {/* Add offset for the first day of the month */}
+            {Array(getWeekStartOffset())
+              .fill("")
+              .map((_, i) => (
+                <div key={i}></div>
               ))}
-            </div>
-          )}
-        </>
+            {daysInMonth.map((date) => {
+              const formattedDate = format(date, "yyyy-MM-dd");
+              const isAvailable = availability[formattedDate]?.length > 0;
+
+              return (
+                <button
+                  key={date}
+                  type="button"
+                  className={`w-10 h-10 text-center p-2 rounded-full ${
+                    formattedDate === selectedDate
+                      ? "bg-[#5570F1] text-white"
+                      : isAvailable
+                        ? "bg-white text-black"
+                        : "bg-white text-gray-300"
+                  }`}
+                  onClick={() => handleDateClick(date)}
+                  disabled={!isAvailable}
+                >
+                  {date.getDate()}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {selectedDate && (
+        <div className="flex overflow-x-auto mt-4 space-x-2 w-full">
+          {(availability[selectedDate] || []).map((slot, index) => (
+            <button
+              key={index}
+              type="button"
+              className={`border p-2 rounded-[12px] min-w-[140px] w-auto text-center ${
+                selectedTime === slot
+                  ? "bg-[#5570F1] text-white"
+                  : "bg-white text-black"
+              }`}
+              onClick={() => handleTimeSlotClick(slot)}
+            >
+              {slot}
+            </button>
+          ))}
+        </div>
       )}
 
-      {idDateTimeDecided && selectedDate && selectedTime && (
-        <div className="flex justify-between gap-4">
-          <button
-            onClick={flagDecision}
-            className="w-full items-center text-center bg-gray-600 p-2 px-4 rounded-xl text-white"
-          >
-            {selectedDate}
-          </button>
-          <button
-            onClick={flagDecision}
-            className="w-full items-center text-center bg-gray-600 p-2 px-4 rounded-xl text-white"
-          >
-            {selectedTime}
-          </button>
+      {spaceRule?.ruleBlocks?.find(
+        (item) => item.type === Type.RuleBlockType.spaceAvailabilityBuffer
+      ) && (
+        <div className="flex flex-row items-start justify-start p-2">
+          <div className="mr-1 text-gray-500">
+            {t("create-event.buffer-included")}:
+          </div>
+          <div>
+            {
+              spaceRule.ruleBlocks.find(
+                (item) =>
+                  item.type === Type.RuleBlockType.spaceAvailabilityBuffer
+              )?.content
+            }
+          </div>
         </div>
       )}
     </div>
@@ -284,4 +286,5 @@ DateTimePicker.propTypes = {
   setSelectedTime: PropTypes.func.isRequired,
   idDateTimeDecided: PropTypes.bool,
   setDateTimeDecided: PropTypes.func.isRequired,
+  spaceRule: PropTypes.object,
 };

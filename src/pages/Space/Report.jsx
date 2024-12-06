@@ -5,6 +5,7 @@ import {
   DisclosurePanel,
 } from "@headlessui/react";
 import "../../assets/css/Report.css";
+import { useState, useEffect } from "react";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { BellIcon } from "@heroicons/react/solid";
 import { MusicNoteIcon } from "@heroicons/react/solid";
@@ -12,51 +13,70 @@ import { BookOpenIcon } from "@heroicons/react/solid";
 import { FireIcon } from "@heroicons/react/solid";
 import { SparklesIcon } from "@heroicons/react/solid";
 import { SunIcon } from "@heroicons/react/solid";
+import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
+import * as Type from "../../lib/PermissionEngine/type";
 
-export default function Report() {
+export default function Report({ space, permissionEngineAPI }) {
+  const { t } = useTranslation();
+  const [issues, setIssues] = useState([]);
+  const fetchIssues = async () => {
+    try {
+      const unresolvedIssues =
+        await permissionEngineAPI.fetchUnresolvedSpaceIssue(space.id);
+
+      setIssues(unresolvedIssues);
+    } catch (error) {
+      console.error(`Failed to fetch issues`, error);
+    }
+  };
+  const generateIssueTag = (issue) => {
+    const { children } = issue;
+    let tag = <div className="card-tail">Volunteer to resolve</div>;
+
+    if (
+      children.length > 0
+    ) {
+      console.log('children', children)
+      tag = <div className="card-tail being-resolved">Being resolved</div>;
+    }
+
+    return tag;
+  };
+
+  useEffect(() => {
+    if (space) {
+      fetchIssues();
+    }
+  }, [space]);
+
   return (
-    <section className="home-report">
-      <div className="damage-report">
+    <section className="space-report">
+      <div className="issue-report">
         <div className="disclosure">
           <Disclosure>
             <DisclosureButton className="group header">
-              <div className="title">Damage Report</div>
+              <div className="title">{t("space.issue-report")}</div>
               <div className="chev">
                 <ChevronDownIcon className="w-5 group-data-[open]:rotate-180"></ChevronDownIcon>
               </div>
             </DisclosureButton>
             <DisclosurePanel className="panel">
-              <div className="card">
-                <div className="card-header">
-                  <BellIcon className="h-6 w-6"></BellIcon>
+              {issues?.map((spaceHistory) => (
+                <div key={spaceHistory.id} className="card">
+                  <div className="card-header">
+                    <BellIcon className="h-6 w-6"></BellIcon>
+                  </div>
+                  <div className="card-content">
+                    <div className="content-title">{spaceHistory.title}</div>
+                    <div className="content-description">
+                      {spaceHistory.details}
+                    </div>
+                  </div>
+                  {generateIssueTag(spaceHistory)}
                 </div>
-                <div className="card-content">
-                  <div className="content-title">Toilet</div>
-                  <div className="content-description">7 days estimated</div>
-                </div>
-                <div className="card-tail">Under repairing</div>
-              </div>
-              <div className="card">
-                <div className="card-header">
-                  <BellIcon className="h-6 w-6"></BellIcon>
-                </div>
-                <div className="card-content">
-                  <div className="content-title">Keyboard</div>
-                  <div className="content-description">5 days estimated</div>
-                </div>
-                <div className="card-tail">Under repairing</div>
-              </div>
-              <div className="card">
-                <div className="card-header">
-                  <BellIcon className="h-6 w-6"></BellIcon>
-                </div>
-                <div className="card-content">
-                  <div className="content-title">Controller</div>
-                  <div className="content-description">3 days estimated</div>
-                </div>
-                <div className="card-tail">Under repairing</div>
-              </div>
-              <Button className="damage-report-button">Report an issue</Button>
+              ))}
+              <Button className="issue-report-button">Report an issue</Button>
             </DisclosurePanel>
           </Disclosure>
         </div>
@@ -65,12 +85,12 @@ export default function Report() {
         <div className="disclosure">
           <Disclosure>
             <DisclosureButton className="group header">
-              <div className="title">Permission Statistics</div>
+              <div className="title">{t("space.permission-statistics")}</div>
               <div className="chev">
                 <ChevronDownIcon className="w-5 group-data-[open]:rotate-180"></ChevronDownIcon>
               </div>
             </DisclosureButton>
-            <DisclosurePanel className="panel">
+            <DisclosurePanel className="panel overflow-x-scroll">
               <div className="title">Number of permissions</div>
               <div className="flex space-x-1">
                 <div className="card bg-emerald-400">
@@ -101,7 +121,7 @@ export default function Report() {
         <div className="disclosure">
           <Disclosure>
             <DisclosureButton className="group header">
-              <div className="title">Interest Category</div>
+              <div className="title">{t("space.interest-category")}</div>
               <div className="chev">
                 <ChevronDownIcon className="w-5 group-data-[open]:rotate-180"></ChevronDownIcon>
               </div>
@@ -164,3 +184,8 @@ export default function Report() {
     </section>
   );
 }
+
+Report.propTypes = {
+  space: PropTypes.object,
+  permissionEngineAPI: PropTypes.object,
+};

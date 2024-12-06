@@ -1,4 +1,4 @@
-.home-availability {
+.space-availability {
   border-top: 1px solid #e9eaea;
   margin: 1.5rem;
   padding-top: 2rem;
@@ -86,7 +86,7 @@
     padding: 0;
     padding-top: 1rem;
   }
-  .home-availability {
+  .space-availability {
     flex-direction: column;
   }
 

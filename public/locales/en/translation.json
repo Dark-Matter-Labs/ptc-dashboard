@@ -1,6 +1,7 @@
 {
   "navigation": {
     "navigation-title": "Space dashboard",
+    "find-space": "Find Space",
     "profile": "Profile",
     "notifications": "Notifications",
     "my-events": "My events",
@@ -21,19 +22,22 @@
     "cancel-button": "Cancel",
     "send-request": "Send request"
   },
-
-  "home": {
+  "space": {
     "follow-button": "follow",
     "availability": "Availability",
     "available": "Available to request events",
     "get-permission": "Get permission",
-    "upcoming-events": "Upcoming events",
-    "past-events": "Past events",
+    "upcoming-events": "Upcoming activity",
+    "past-events": "Past activity",
     "registration-date": "Registration date",
     "space-owner": "Space owner",
     "space-keywords": "Space Keywords",
     "join-community": "Join the Community",
-    "browse-rules": "Browse Rules"
+    "browse-rules": "Browse Rules",
+    "today-events": "Today's events",
+    "issue-report": "Issue Report",
+    "permission-statistics": "Permission Statistics",
+    "interest-category": "Interest Category"
   },
   "profile": {
     "title": "Profile Page"
@@ -85,7 +89,9 @@
     "self-risk-assessment": "Self-risk assessment",
     "proposal-final-review": "Proposal final review",
     "event-created-success": "Event Created Successfully!",
-    "event-created-continue": "Your event has been created. Click confirm to continue."
+    "event-created-continue": "Your event has been created. Click confirm to continue.",
+    "themes": "Themes",
+    "buffer-included": "Buffer time included"
   },
   "review-event": {
     "event-title": "Event title",

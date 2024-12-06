@@ -31,6 +31,7 @@ export default function Navbar({
   navTitle,
   currentLanguage,
   handleChangeLanguage,
+  closeButtonLink,
 }) {
   const [spaceId, setSpaceId] = useState(null);
   const { user, setUser } = useUser();
@@ -40,20 +41,9 @@ export default function Navbar({
   const [notifications, setNotifications] = useState([]);
   const webSocket = useRef(null);
 
-  // TODO. set prevPage state -> x button behavior
   const handleCloseButton = () => {
-    const spaceId = localStorage.getItem("spaceId");
-    if (spaceId) {
-      window.location.href = `/space/${spaceId}`;
-    } else {
-      window.location.href = "/";
-    }
+    window.location.href = closeButtonLink;
   };
-
-  useEffect(() => {
-    setDynamicTitle(navTitle);
-  }, [navTitle, currentLanguage, t]);
-
   const handleLogin = () => {
     console.log("call handleLogin");
     window.location.href = "/api/v1/auth/google";
@@ -80,7 +70,6 @@ export default function Navbar({
       console.error("Error during logout:", error);
     }
   };
-
   const handleFetchProfile = () => {
     // console.log("call hanldeFetchProfile");
     fetch("/api/v1/auth/profile", {
@@ -106,6 +95,10 @@ export default function Navbar({
         console.error("Error fetching profile info:", error);
       });
   };
+
+  useEffect(() => {
+    setDynamicTitle(navTitle);
+  }, [navTitle, currentLanguage, t]);
 
   useEffect(() => {
     handleFetchProfile();
@@ -276,11 +269,11 @@ export default function Navbar({
                   {/* Sidebar Links */}
                   <div>
                     <a
-                      href="/"
+                      href="/landing"
                       className={`pl-8 space-y-8 py-4 flex items-center gap-3 text-gray-900 ${location.pathname === "/" ? "bg-slate-200" : "text-gray-900"}`}
                     >
                       <HomeIcon className="w-4 h-4 text-gray-400 "></HomeIcon>
-                      {t("navigation.navigation-title")}
+                      {t("navigation.find-space")}
                     </a>
                     <a
                       href="/profile"
@@ -516,4 +509,6 @@ Navbar.propTypes = {
   navTitle: PropTypes.string,
   currentLanguage: PropTypes.string,
   handleChangeLanguage: PropTypes.func,
+  closeButtonLink: PropTypes.string,
+  setCloseButtonLink: PropTypes.func,
 };

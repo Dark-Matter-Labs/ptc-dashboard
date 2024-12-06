@@ -19,21 +19,20 @@ export const MultiLocationsMapBox = ({
 
   const navigate = useNavigate();
 
-  //defaultLocation in Daegu
-  // const [defaultLocation, setDefaultLocation] = useState(null);
   const [viewLocation, setViewLocation] = useState({
-    latitude: 0,
-    longitude: 0,
+    latitude: locations?.[0]?.latitude ?? 0,
+    longitude: locations?.[0]?.longitude ?? 0,
   });
   const [selectedLocation, setSelectedLocation] = useState(null);
+  const [closestLocation, setClosestLocation] = useState(null);
   const [selectedLocationInfo, setSelectedLocationInfo] = useState(null);
-  const [viewport, setViewport] = useState({
+  const [viewport] = useState({
     width: option?.width ?? "100%",
     height: option?.height ?? 400,
     initialViewState: {
       zoom: option?.zoom ?? 11,
-      latitude: Number(locations?.[0]?.latitude ?? viewLocation.latitude),
-      longitude: Number(locations?.[0]?.longitude ?? viewLocation.longitude),
+      latitude: Number(viewLocation.latitude),
+      longitude: Number(viewLocation.longitude),
     },
     mapStyle:
       currentLanguage === "en"
@@ -67,34 +66,36 @@ export const MultiLocationsMapBox = ({
   };
 
   const loadCenterLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          const closestLocation = findClosestLocation(position.coords);
-          // Set the map center to the user's location
-          setViewLocation({
-            longitude: Number(closestLocation?.longitude ?? longitude),
-            latitude: Number(closestLocation?.latitude ?? latitude),
-          });
-          mapRef.current?.setCenter([Number(closestLocation.longitude), Number(closestLocation.latitude)]);
-          // mapRef.current?.jumpTo([longitude, latitude]);
-
-          setViewport({
-            ...viewport,
-            initialViewState: {
-              zoom: option?.zoom ?? 11,
-              latitude: Number(latitude),
-              longitude: Number(longitude),
-            },
-          });
-        },
-        (error) => {
-          console.error("Error getting location: ", error);
-        }
-      );
-    } else {
-      console.error("Geolocation is not supported by this browser.");
+    try {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            const closestLocationResult = findClosestLocation(position.coords);
+            setClosestLocation(closestLocationResult);
+            mapRef.current?.setCenter([
+              Number(closestLocationResult?.longitude ?? longitude),
+              Number(closestLocationResult?.latitude ?? latitude),
+            ]);
+            console.log("closestLocation", closestLocation);
+          },
+          (error) => {
+            console.error(error);
+            mapRef.current?.setCenter([
+              Number(locations?.[0]?.longitude ?? 0),
+              Number(locations?.[0]?.latitude ?? 0),
+            ]);
+          }
+        );
+      } else {
+        throw new Error("Geolocation is not supported by this browser.");
+      }
+    } catch (error) {
+      console.error(error);
+      mapRef.current?.setCenter([
+        Number(locations?.[0]?.longitude ?? 0),
+        Number(locations?.[0]?.latitude ?? 0),
+      ]);
     }
   };
 
@@ -104,7 +105,9 @@ export const MultiLocationsMapBox = ({
     const R = 6371e3; // Earth's radius in meters
     const lat1 = toRadians(userLocation.latitude);
     const lat2 = toRadians(Number(markerLocation.latitude));
-    const deltaLat = toRadians(Number(markerLocation.latitude) - userLocation.latitude);
+    const deltaLat = toRadians(
+      Number(markerLocation.latitude) - userLocation.latitude
+    );
     const deltaLng = toRadians(
       Number(markerLocation.longitude) - userLocation.longitude
     );
@@ -144,10 +147,16 @@ export const MultiLocationsMapBox = ({
   useEffect(() => {
     // Fetch space information using locations
     console.log("[MAPBOX] locations: ", locations);
-    // loadSpaceInfomation();
-    // console.log("(multi map) locations: [after]", locations);
+    setViewLocation({
+      latitude: closestLocation?.latitude ?? locations?.[0]?.latitude ?? 0,
+      longitude: closestLocation?.longitude ?? locations?.[0]?.longitude ?? 0,
+    });
+    mapRef.current?.setCenter([
+      Number(viewLocation?.longitude ?? 0),
+      Number(viewLocation?.latitude ?? 0),
+    ]);
     loadCenterLocation();
-  }, [locations]);
+  }, [locations, closestLocation]);
 
   useEffect(() => {
     // when locatoin is selected, fetch more information for this location

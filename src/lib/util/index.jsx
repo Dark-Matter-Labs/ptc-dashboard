@@ -208,3 +208,14 @@ export const formatDateTime = (startsAt, duration) => {
 
   return { date, time: `${startTime} - ${endTime}` };
 };
+
+export const parseTimeManipulation = (manupulation) => {
+  const match = manupulation.match(/^(\d+)([dwMyhms]+)$/);
+  const numberPart = parseInt(match[1], 10);
+  const stringPart = match[2];
+
+  return {
+    numberPart,
+    stringPart,
+  };
+};

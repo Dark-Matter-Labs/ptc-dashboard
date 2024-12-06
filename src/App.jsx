@@ -21,29 +21,28 @@ function App() {
   const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
   const [navTitle, setNavTitle] = useState(t("navigation.navigation-title")); // state to track current step
   const location = useLocation();
+  const [closeButtonLink, setCloseButtonLink] = useState("/");
   const permissionEngineAPI = new API();
 
   // Determine if Navbar should be shown
   const showNavbar = location.pathname !== "/landing";
-
-  // Reset navTitle when navigating back to "/"
-  useEffect(() => {
-    if (location.pathname === "/") {
-      setNavTitle(t("navigation.navigation-title")); // Reset to default when on home page
-      navigate("/landing");
-    } else if (location.pathname === "/event/new") {
-      console.log("at route /event/new, ", t("create-event.navigation-title"));
-      setNavTitle(t("create-event.navigation-title")); // Reset to default when on home page
-    }
-    setCurrentLanguage("en");
-    localStorage.setItem("i18nextLng", "en");
-  }, [location.pathname, t]); // Re-run when the route changes
 
   const handleChangeLanguage = (lng) => {
     i18n.changeLanguage(lng);
     setCurrentLanguage(lng);
     localStorage.setItem("i18nextLng", lng); // Store language in localStorage
   };
+
+  // Reset navTitle when navigating back to "/"
+  useEffect(() => {
+    if (location.pathname === "/") {
+      navigate("/landing");
+    }
+
+    if (!localStorage.getItem("i18nextLng")) {
+      handleChangeLanguage("en");
+    }
+  }, [location.pathname, t]); // Re-run when the route changes
 
   return (
     <div>
@@ -54,6 +53,8 @@ function App() {
             currentLanguage={currentLanguage}
             handleChangeLanguage={handleChangeLanguage}
             permissionEngineAPI={permissionEngineAPI}
+            closeButtonLink={closeButtonLink}
+            setCloseButtonLink={setCloseButtonLink}
           />
         )}
         <Routes>
@@ -70,8 +71,10 @@ function App() {
             path="/space/:spaceId"
             element={
               <SpaceDashboard
+                setNavTitle={setNavTitle}
                 permissionEngineAPI={permissionEngineAPI}
                 currentLanguage={currentLanguage}
+                setCloseButtonLink={setCloseButtonLink}
               />
             }
           />
@@ -81,6 +84,7 @@ function App() {
               <Profile
                 permissionEngineAPI={permissionEngineAPI}
                 currentLanguage={currentLanguage}
+                setCloseButtonLink={setCloseButtonLink}
               />
             }
           />
@@ -91,6 +95,7 @@ function App() {
               <DisplayEvents
                 permissionEngineAPI={permissionEngineAPI}
                 currentLanguage={currentLanguage}
+                setCloseButtonLink={setCloseButtonLink}
               />
             }
           />
@@ -110,6 +115,7 @@ function App() {
               <DisplayNotifications
                 permissionEngineAPI={permissionEngineAPI}
                 currentLanguage={currentLanguage}
+                setCloseButtonLink={setCloseButtonLink}
               />
             }
           />
@@ -120,6 +126,7 @@ function App() {
                 setNavTitle={setNavTitle}
                 permissionEngineAPI={permissionEngineAPI}
                 currentLanguage={currentLanguage}
+                setCloseButtonLink={setCloseButtonLink}
               />
             }
           />
@@ -139,6 +146,7 @@ function App() {
                 setNavTitle={setNavTitle}
                 permissionEngineAPI={permissionEngineAPI}
                 currentLanguage={currentLanguage}
+                setCloseButtonLink={setCloseButtonLink}
               />
             }
           />

@@ -11,6 +11,7 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
   const { spaceEventId } = useParams();
   const { t } = useTranslation();
   const [eventData, setEventData] = useState({});
+  const [eventRuleTemplate, setEventRuleTemplate] = useState({});
   const [currentStep, setCurrentStep] = useState(1); // Step tracking: 1 = proposal, 2 = review actions
   const [topics, setTopics] = useState([]);
   const [equipments, setEquipments] = useState([]);
@@ -55,6 +56,26 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
     }
   };
 
+  const interpretEventRuleTemplate = async (ruleId) => {
+    if (!ruleId) return;
+
+    try {
+      const data = await permissionEngineAPI.fetchRuleByRuleId(ruleId);
+      const hasException = data?.ruleBlocks?.some((rule) =>
+        rule.type.includes("exception")
+      );
+
+      console.log("event rule name: ", data.name);
+      console.log("hasException: ", hasException);
+      setEventRuleTemplate({
+        name: data.name,
+        hasException,
+      });
+    } catch (error) {
+      console.error("Error fetching event rule template:", error);
+    }
+  };
+
   useEffect(() => {
     fetchEventById();
   }, []);
@@ -69,12 +90,15 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
         );
         setTimeObj(formattedTime);
       }
-      if (eventData.ruleId) interpretEquipments(eventData.ruleId);
+      if (eventData.ruleId) {
+        interpretEquipments(eventData.ruleId);
+        interpretEventRuleTemplate(eventData.ruleId);
+      }
     }
   }, [eventData]);
 
-  const proceedToNextStep = () => setCurrentStep(2); // Move to the review actions step
-
+  // const proceedToNextStep = () => setCurrentStep(2); // Move to the review actions step
+  const proceedToStep = (step) => setCurrentStep(step);
   return (
     <div>
       {user ? (
@@ -87,7 +111,8 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
               topics={topics}
               equipments={equipments}
               timeObj={timeObj}
-              proceedToNextStep={proceedToNextStep}
+              proceedToStep={() => proceedToStep(2)}
+              eventRuleTemplate={eventRuleTemplate}
             />
           ) : (
             <div>

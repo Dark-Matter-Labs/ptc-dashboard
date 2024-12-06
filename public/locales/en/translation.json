@@ -105,7 +105,8 @@
     "event-proposal": "Event proposal",
     "next-step": "Next step",
     "no-themes": "Themes not selected",
-    "no-equipment": "Equipments not selected"
+    "no-equipment": "Equipments not selected",
+    "rules-template": "Rules template"
   },
   "rules": {
     "exception-disclaimer": "This rule has modified the original space rule",

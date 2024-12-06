@@ -63,6 +63,7 @@ const StepSetEventData = ({
   }, []);
 
   useEffect(() => {
+    console.log("event data: ", eventData);
     setIsStepComplete((updatedEventData, updatedEventRuleData) => {
       return (
         eventData = updatedEventData,

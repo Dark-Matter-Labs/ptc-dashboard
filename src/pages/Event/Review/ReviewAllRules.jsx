@@ -19,8 +19,6 @@ const ReviewAllRules = ({
       </div>
       <DisplayAllRules
         rule={rule}
-        // ruleAuthor={ruleAuthor}
-        // currentLanguage={currentLanguage}
         permissionEngineAPI={permissionEngineAPI}
         proceedToStep={proceedToStep}
       ></DisplayAllRules>

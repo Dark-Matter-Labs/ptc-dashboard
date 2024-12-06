@@ -5,8 +5,8 @@ import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 import EventProposal from "./EventProposal"; // Sub-component for the proposal
 import { formatDateTime } from "../../../lib/util";
+import ReviewRulesWithExceptions from "./ReviewRulesWithExceptions";
 import ReviewAllRules from "./ReviewAllRules";
-
 const ReviewEvent = ({ permissionEngineAPI }) => {
   const { user } = useUser();
   const { spaceEventId } = useParams();
@@ -150,9 +150,14 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
               proceedToStep={proceedToStep}
             />
           ) : currentStep === 3 ? (
-            <div>Step 3</div>
+            <ReviewRulesWithExceptions
+              t={t}
+              rule={rule}
+              permissionEngineAPI={permissionEngineAPI}
+              proceedToStep={proceedToStep}
+            />
           ) : (
-            <div>Step rest </div>
+            <div>Step 3 </div>
           )}
         </>
       ) : (

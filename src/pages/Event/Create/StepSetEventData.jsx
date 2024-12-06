@@ -41,7 +41,7 @@ const StepSetEventData = ({
 
   useEffect(() => {
     setNavTitle(t("create-event.navigation-title"));
-    setNextStepButtonText("Next")
+    setNextStepButtonText("Next");
   });
 
   useEffect(() => {
@@ -107,7 +107,7 @@ const StepSetEventData = ({
       {/* Enter title */}
       <div>
         <label htmlFor="title" className="block mb-2 font-semibold text-xl">
-        {t("create-event.event-title")}
+          {t("create-event.event-title")}
         </label>
         <input
           id="title"
@@ -163,7 +163,7 @@ const StepSetEventData = ({
           htmlFor="event-description"
           className="block mb-2 font-semibold text-xl"
         >
-        {t("create-event.event-description")}
+          {t("create-event.event-description")}
         </label>
         <Textarea
           id="event-description"

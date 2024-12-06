@@ -32,6 +32,7 @@ export default function Navbar({
   currentLanguage,
   handleChangeLanguage,
 }) {
+  const [spaceId, setSpaceId] = useState(null);
   const { user, setUser } = useUser();
   const { t } = useTranslation();
   const [dynamicTitle, setDynamicTitle] = useState(navTitle);
@@ -81,7 +82,7 @@ export default function Navbar({
   };
 
   const handleFetchProfile = () => {
-    console.log("call hanldeFetchProfile");
+    // console.log("call hanldeFetchProfile");
     fetch("/api/v1/auth/profile", {
       credentials: "include",
     })
@@ -98,7 +99,7 @@ export default function Navbar({
             name: data.name || "",
           };
           setUser(newUser);
-          console.log("Fetched user:", newUser);
+          // console.log("Fetched user:", newUser);
         }
       })
       .catch((error) => {
@@ -108,11 +109,16 @@ export default function Navbar({
 
   useEffect(() => {
     handleFetchProfile();
+    const spaceId = localStorage.getItem("spaceId");
+    if (spaceId) {
+      setSpaceId(spaceId);
+      console.log("[NavBar] Space Id:", spaceId);
+    }
 
     if (!i18n) {
       console.error("i18n is not initialized");
     }
-    console.log("in Navbar: ", { navTitle }); // eslint-disable-next-line react-hooks/exhaustive-deps
+    // console.log("in Navbar: ", { navTitle }); // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -124,11 +130,11 @@ export default function Navbar({
       });
 
       webSocket.current.on("connect", () => {
-        console.log(
-          "webSocket.current.connected",
-          webSocket.current?.connected,
-          webSocket.current?.id
-        );
+        // console.log(
+        //   "webSocket.current.connected",
+        //   webSocket.current?.connected,
+        //   webSocket.current?.id
+        // );
       });
 
       webSocket.current.on("disconnect", () => {
@@ -371,7 +377,7 @@ export default function Navbar({
                     {t("navigation.view-calendar")}
                   </a>
                   <a
-                    href="/event/new"
+                    href={`/event/new/${spaceId}`}
                     className={`pl-8 py-4 flex items-center gap-3 text-gray-900 ${location.pathname === "/event/new" ? "bg-slate-200" : "text-gray-900"}`}
                   >
                     <PlusCircleIcon className="w-4 h-4 text-gray-400 "></PlusCircleIcon>

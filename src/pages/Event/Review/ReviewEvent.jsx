@@ -19,6 +19,7 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
   const fetchEventById = async () => {
     try {
       const data = await permissionEngineAPI.fetchEventById(spaceEventId);
+      console.log("event: ", data);
       setEventData(data);
     } catch (error) {
       console.error("Error fetching event info:", error);
@@ -91,7 +92,7 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
           ) : (
             <div>
               {/* Review interaction UI */}
-              <h2>{t("review-event.review-interaction")}</h2>
+              <h2>Review interaction</h2>
               {/* Add Agree/Reject buttons and actions */}
             </div>
           )}

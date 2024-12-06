@@ -1,18 +1,12 @@
-import { CalendarIcon, UsersIcon } from "@heroicons/react/outline";
 import "../../assets/css/Rule.css";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { PlusIcon, MinusIcon } from "@heroicons/react/solid";
 import * as Type from "../../lib/PermissionEngine/type";
-import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
-import { parseRuleBlockContent, capitalizeFirstLetter } from "../../lib/util";
+import { parseRuleBlockContent } from "../../lib/util";
 
-export default function DisplayAllRules({
-  rule,
-  ruleAuthor,
-  permissionEngineAPI,
-}) {
+export default function DisplayAllRules({ rule, permissionEngineAPI }) {
   const { t } = useTranslation();
   const [expandedCards, setExpandedCards] = useState({ 0: false }); //{0: true, 2: false}
   const [ruleBlocks, setRuleBlocks] = useState([]);
@@ -107,24 +101,6 @@ export default function DisplayAllRules({
 
   return (
     <section className="rule">
-      <div className="rule-data"></div>
-      <div className="rule-metadata">
-        <div className="metadata-snippet">
-          <div className="registration-date">
-            <CalendarIcon className="h-5 w-5 white mr-1 text-gray-400"></CalendarIcon>
-            <b>{t("rule-dashboard.registration-date")}</b>
-            {dayjs(rule?.createdAt).format("YYYY-MM-DD")}
-          </div>
-          <div className="rule-author">
-            <UsersIcon className="h-5 w-5 white mr-1 text-gray-400"></UsersIcon>
-            <b>{t("rule-dashboard.rule-author")}</b>
-            {ruleAuthor?.name}
-            <div className="tag">{capitalizeFirstLetter(ruleAuthor?.type)}</div>
-          </div>
-          <hr></hr>
-        </div>
-      </div>
-
       <p className="mb-4">{rule?.details}</p>
       <div className="flex flex-col gap-4 p-2 mb-20 text-gray-500">
         {ruleBlocks?.map((ruleBlock) => {

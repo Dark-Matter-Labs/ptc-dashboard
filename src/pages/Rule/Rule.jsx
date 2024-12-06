@@ -16,6 +16,11 @@ export default function Rule({
   currentLanguage,
   permissionEngineAPI,
 }) {
+  console.log("rule: ", rule);
+  console.log("rule author: ", ruleAuthor);
+  console.log("permissionEngineAPI: ", permissionEngineAPI);
+  console.log("currentLanguage: ", currentLanguage);
+
   const { t } = useTranslation();
   const [expandedCards, setExpandedCards] = useState({ 0: false }); //{0: true, 2: false}
   const [ruleBlocks, setRuleBlocks] = useState([]);
@@ -99,7 +104,7 @@ export default function Rule({
       const content = await parseRuleBlockContent(
         permissionEngineAPI,
         ruleBlock,
-        t,
+        t
       );
 
       setRuleBlockContentById((prev) => ({

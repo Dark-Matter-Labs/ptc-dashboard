@@ -5,13 +5,16 @@ import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 import EventProposal from "./EventProposal"; // Sub-component for the proposal
 import { formatDateTime } from "../../../lib/util";
+import ReviewAllRules from "./ReviewAllRules";
 
-const ReviewEvent = ({ permissionEngineAPI }) => {
+const ReviewEvent = ({ permissionEngineAPI, currentLanguage }) => {
   const { user } = useUser();
   const { spaceEventId } = useParams();
   const { t } = useTranslation();
   const [eventData, setEventData] = useState({});
   const [eventRuleTemplate, setEventRuleTemplate] = useState({});
+  const [rule, setRule] = useState([]);
+  const [ruleAuthor, setRuleAuthor] = useState(null);
   const [currentStep, setCurrentStep] = useState(1); // Step tracking: 1 = proposal, 2 = review actions
   const [topics, setTopics] = useState([]);
   const [equipments, setEquipments] = useState([]);
@@ -65,8 +68,6 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
         rule.type.includes("exception")
       );
 
-      console.log("event rule name: ", data.name);
-      console.log("hasException: ", hasException);
       setEventRuleTemplate({
         name: data.name,
         hasException,
@@ -76,6 +77,29 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
     }
   };
 
+  const interpretRule = async (ruleId) => {
+    if (!ruleId) return;
+
+    try {
+      const data = await permissionEngineAPI.fetchRuleByRuleId(ruleId);
+      console.log("rule: ", data);
+      setRule(data);
+    } catch (error) {
+      console.error("Error fetching event rule:", error);
+    }
+  };
+
+  const interpretRuleAuthor = async (authorId) => {
+    if (!authorId) return;
+
+    try {
+      const data = await permissionEngineAPI.fetchPublicUserData(authorId);
+      console.log("author: ", data);
+      setRuleAuthor(data);
+    } catch (error) {
+      console.error("Error fetching event rule author:", error);
+    }
+  };
   useEffect(() => {
     fetchEventById();
   }, []);
@@ -93,9 +117,14 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
       if (eventData.ruleId) {
         interpretEquipments(eventData.ruleId);
         interpretEventRuleTemplate(eventData.ruleId);
+        interpretRule(eventData.ruleId);
       }
     }
   }, [eventData]);
+
+  useEffect(() => {
+    interpretRuleAuthor(rule.authorId);
+  }, [rule]);
 
   // const proceedToNextStep = () => setCurrentStep(2); // Move to the review actions step
   const proceedToStep = (step) => setCurrentStep(step);
@@ -115,11 +144,13 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
               eventRuleTemplate={eventRuleTemplate}
             />
           ) : (
-            <div>
-              {/* Review interaction UI */}
-              <h2>Review interaction</h2>
-              {/* Add Agree/Reject buttons and actions */}
-            </div>
+            <ReviewAllRules
+              t={t}
+              rule={rule}
+              ruleAuthor={ruleAuthor}
+              permissionEngineAPI={permissionEngineAPI}
+              currentLanguage={currentLanguage}
+            />
           )}
         </>
       ) : (
@@ -131,6 +162,7 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
 
 ReviewEvent.propTypes = {
   permissionEngineAPI: PropTypes.object.isRequired,
+  currentLanguage: PropTypes.string,
 };
 
 export default ReviewEvent;

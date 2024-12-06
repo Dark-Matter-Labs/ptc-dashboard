@@ -106,7 +106,7 @@ const EventProposal = ({
             )}
           </div>
           <div className="font-light text-sm">
-            Rules for {eventRuleTemplate.name}
+            Rule template for {eventRuleTemplate.name} about {eventData.details}
           </div>
         </div>
       </div>
@@ -115,12 +115,12 @@ const EventProposal = ({
       <div className="py-4">
         <button
           onClick={() => navigate("/events/assigned")}
-          className="mt-4 px-6 py-2 border text-black rounded-lg w-full "
+          className="mt-4 px-6 py-2 border text-black rounded-lg w-full"
         >
           Back
         </button>
         <button
-          className="mt-4 px-6 py-2 bg-[#2F103A] text-white rounded-lg w-full "
+          className="mt-4 px-6 py-2 bg-[#2F103A] text-white rounded-lg w-full"
           onClick={() => proceedToStep(2)}
         >
           {t("review-event.next-step")}

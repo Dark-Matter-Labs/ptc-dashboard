@@ -106,7 +106,8 @@
     "next-step": "Next step",
     "no-themes": "Themes not selected",
     "no-equipment": "Equipments not selected",
-    "rules-template": "Rules template"
+    "rules-template": "Rules template",
+    "review-the-rules": "Review the rules"
   },
   "rules": {
     "exception-disclaimer": "This rule has modified the original space rule",

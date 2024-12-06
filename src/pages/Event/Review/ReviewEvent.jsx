@@ -157,7 +157,7 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
               proceedToStep={proceedToStep}
             />
           ) : (
-            <div>Step 3 </div>
+            <div>Step 4 </div>
           )}
         </>
       ) : (

@@ -13,7 +13,7 @@ const ReviewEvent = ({ permissionEngineAPI, currentLanguage }) => {
   const { t } = useTranslation();
   const [eventData, setEventData] = useState({});
   const [eventRuleTemplate, setEventRuleTemplate] = useState({});
-  const [rule, setRule] = useState([]);
+  const [rule, setRule] = useState({});
   const [ruleAuthor, setRuleAuthor] = useState(null);
   const [currentStep, setCurrentStep] = useState(1); // Step tracking: 1 = proposal, 2 = review actions
   const [topics, setTopics] = useState([]);
@@ -123,6 +123,7 @@ const ReviewEvent = ({ permissionEngineAPI, currentLanguage }) => {
   }, [eventData]);
 
   useEffect(() => {
+    console.log("rule: ", rule);
     interpretRuleAuthor(rule.authorId);
   }, [rule]);
 

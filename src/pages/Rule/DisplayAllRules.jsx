@@ -1,6 +1,4 @@
 import { CalendarIcon, UsersIcon } from "@heroicons/react/outline";
-import { UserIcon } from "@heroicons/react/solid";
-import { Button } from "@headlessui/react";
 import "../../assets/css/Rule.css";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
@@ -13,14 +11,12 @@ import { parseRuleBlockContent, capitalizeFirstLetter } from "../../lib/util";
 export default function DisplayAllRules({
   rule,
   ruleAuthor,
-  currentLanguage,
   permissionEngineAPI,
 }) {
   const { t } = useTranslation();
   const [expandedCards, setExpandedCards] = useState({ 0: false }); //{0: true, 2: false}
   const [ruleBlocks, setRuleBlocks] = useState([]);
   const [ruleBlockContentById, setRuleBlockContentById] = useState({});
-  const topics = rule?.topics ?? [];
 
   const spaceRuleBlockOrderPriority = [
     Type.RuleBlockType.spaceExcludedTopic,
@@ -111,31 +107,7 @@ export default function DisplayAllRules({
 
   return (
     <section className="rule">
-      <div className="rule-data">
-        <div className="rule-snippet">
-          <h1>{rule?.name}</h1>
-
-          <div className="rule-account">
-            {ruleAuthor?.image ? (
-              <img
-                className="h-5 w-5 flex-none rounded-full bg-gray-50 mr-1"
-                src={ruleAuthor?.image}
-              ></img>
-            ) : (
-              <UserIcon className="h-5 w-5 text-gray-800 mr-1" />
-            )}
-            {ruleAuthor?.name}
-          </div>
-          <div className="rule-desc">{rule?.details}</div>
-          <h3>{t("rule-dashboard.rule-keywords")}</h3>
-          {topics?.map((topic) => (
-            <Button key={topic.id} className="tag" id={topic.id}>
-              {topic.translation?.[currentLanguage] ?? topic.name}
-            </Button>
-          ))}
-          <div className="rule-call-to-action"></div>
-        </div>
-      </div>
+      <div className="rule-data"></div>
       <div className="rule-metadata">
         <div className="metadata-snippet">
           <div className="registration-date">

@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
-import RuleExceptions from "../../Rule/RuleExceptions";
-// import RuleExceptions from "./RuleExceptions";
+import DisplayAllRules from "../../Rule/DisplayAllRules";
 const ReviewAllRules = ({
   t,
   rule,
@@ -18,18 +17,12 @@ const ReviewAllRules = ({
       <div className="text-2xl block mb-2 font-semibold mt-8">
         {t("review-event.review-the-rules")}
       </div>
-      {/* <Rule
-        rule={rule}
-        ruleAuthor={ruleAuthor}
-        permissionEngineAPI={permissionEngineAPI}
-        currentLanguage={currentLanguage}
-      ></Rule> */}
-      <RuleExceptions
+      <DisplayAllRules
         rule={rule}
         ruleAuthor={ruleAuthor}
         currentLanguage={currentLanguage}
         permissionEngineAPI={permissionEngineAPI}
-      ></RuleExceptions>
+      ></DisplayAllRules>
     </div>
   );
 };

@@ -110,7 +110,7 @@
     "review-the-rules": "Review the rules",
     "review-the-exceptions": "Review the exceptions",
     "review-agree": "Agree",
-    "review-dsiagree": "Disagree",
+    "review-disagree": "Disagree",
     "review-abstention": "Abstention"
   },
   "rules": {

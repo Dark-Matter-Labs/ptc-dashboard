@@ -29,7 +29,19 @@ const ReviewRulesWithExceptions = ({
           className="mt-4 px-6 py-2 bg-[#2F103A] text-white rounded-lg w-full"
           onClick={() => proceedToStep(4)}
         >
-          {t("review-event.next-step")}
+          {t("review-event.review-agree")}
+        </button>
+        <button
+          className="mt-4 px-6 py-2 bg-[#2F103A] text-white rounded-lg w-full"
+          onClick={() => proceedToStep(4)}
+        >
+          {t("review-event.review-disagree")}
+        </button>
+        <button
+          className="mt-4 px-6 py-2 bg-[#2F103A] text-white rounded-lg w-full"
+          onClick={() => proceedToStep(4)}
+        >
+          {t("review-event.review-abstention")}
         </button>
       </div>
     </div>

@@ -116,7 +116,7 @@ export default function Navbar({
 
   useEffect(() => {
     if (!webSocket.current) {
-      webSocket.current = io(`${window.location.origin}:3000`, {
+      webSocket.current = io(window.location.host === 'localhost' ? `${window.location.origin}:3000` : `${window.location.protocol}//ws.${window.location.host}`, {
         transports: ["websocket"],
         withCredentials: true,
         autoConnect: true,

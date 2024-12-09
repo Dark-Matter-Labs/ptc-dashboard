@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Button, Textarea, Input } from "@headlessui/react";
+import { Button, Textarea } from "@headlessui/react";
 import "../../assets/css/Drawer.css";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
@@ -85,9 +85,10 @@ export default function BottomDrawerReview({
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-      className={`${isOpening ? "rise-up" : ""} ${isClosing ? "sink-down" : ""} bottom-drawer fixed bottom-0 left-0 w-full h-[460px] pl-8 pr-8 pt-6 pb-24 bg-white rounded-tl-[20px] rounded-tr-[20px] shadow border border-white flex-col justify-start items-center gap-4 z-30`}
+      className={`${isOpening ? "rise-up" : ""} ${isClosing ? "sink-down" : ""} bottom-drawer fixed bottom-0 left-0 w-full max-h-[90vh] p-6 bg-white rounded-t-[20px] shadow border border-white flex flex-col gap-4 z-30 overflow-y-auto`}
     >
-      <div className="absolute w-full left-0 flex justify-center items-center top-[6px]">
+      {/* Drawer Handle */}
+      <div className="absolute top-[6px] left-0 w-full flex justify-center items-center">
         <svg
           width="48"
           height="3"
@@ -103,77 +104,70 @@ export default function BottomDrawerReview({
           />
         </svg>
       </div>
-      <div className="self-stretch h-[356px] flex-col justify-start items-start gap-[35px] inline-flex">
-        <div className="self-stretch h-[31px] flex-col justify-start items-center gap-8 flex">
-          <div className="self-stretch h-[31px] flex-col justify-start items-start gap-[11px] flex">
-            <div className="justify-start items-center gap-2 inline-flex">
-              <div className="text-[#1e1e1e] text-2xl font-semibold  leading-[31.20px]">
-                {t("rules.add-new-rule")}
-              </div>
-              <div>{decision}</div>
-            </div>
-          </div>
+
+      {/* Content */}
+      <div className="flex-grow flex flex-col gap-6 mt-8">
+        {/* Header */}
+        <div className="text-[#1e1e1e] text-2xl font-semibold">
+          {t("rules.add-new-rule")}
         </div>
-        <div className="self-stretch h-[219px] flex-col justify-start items-end gap-[30px] flex">
-          <div className="self-stretch h-[219px] flex-col justify-start items-start gap-5 flex">
-            <div className="self-stretch h-[75px] flex-col justify-center items-start gap-[25px] flex">
-              <div className="self-stretch h-[75px] flex-col justify-start items-start gap-2.5 flex">
-                <div className="self-stretch text-[#1e1e1e] text-lg font-semibold  leading-normal">
-                  {t("rules.new-rule-title")}
-                </div>
-                <div className="self-stretch px-4 py-3 bg-[#fafafb] rounded-xl border border-[#d8d8dd] justify-start items-center gap-1 inline-flex">
-                  <div className="grow shrink basis-0 h-[18px] justify-start items-center gap-[7.06px] flex">
-                    <div className="grow shrink basis-0 h-[18px] justify-start items-center gap-[5.65px] flex">
-                      <Input
-                        id="add-custom-rule-block-name"
-                        value={title}
-                        onChange={handleTitleChange}
-                        placeholder={t("create-event.event-title-placeholder")}
-                        className="grow shrink basis-0 text-[#979797] font-normal  leading-[18.35px] bg-[#fafafb]"
-                      ></Input>
-                    </div>
-                  </div>
-                </div>
-              </div>
+
+        {/* Decision Section */}
+        <div className="w-full">
+          {decision === "agree" && (
+            <div className="px-6 py-2 bg-[#35AD66] text-white rounded-full w-full text-center">
+              {t("review-event.review-agree")}
             </div>
-            <div className="self-stretch h-[160px] flex-col justify-center items-start gap-2.5 flex">
-              <div className="self-stretch h-[160px] flex-col justify-start items-start gap-2.5 flex">
-                <div className="self-stretch text-[#1e1e1e] text-lg font-semibold  leading-normal">
-                  {t("rules.new-rule-description")}
-                </div>
-                <div className="w-[329px] justify-start items-start gap-[5.26px] inline-flex">
-                  <div className="grow shrink basis-0 h-[91px] px-3.5 py-3.5 bg-[#fafafb] rounded-xl border border-[#d8d8dd] flex-col justify-start items-start gap-[8.77px] inline-flex">
-                    <div className="self-stretch grow shrink basis-0 justify-start items-start gap-3.5 inline-flex">
-                      <div className="grow shrink basis-0 self-stretch flex-col justify-start items-start gap-[7.02px] inline-flex">
-                        <Textarea
-                          id="add-custom-rule-block-content"
-                          value={content}
-                          onChange={handleContentChange}
-                          placeholder={t(
-                            "create-event.event-description-placeholder"
-                          )}
-                          className="self-stretch h-full text-[#979797] text-sm font-normal  bg-[#fafafb]"
-                        ></Textarea>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+          )}
+          {decision === "disagree" && (
+            <div className="px-6 py-2 bg-[#F47051] text-white rounded-full w-full text-center">
+              {t("review-event.review-disagree")}
             </div>
-          </div>
+          )}
+          {decision === "abstention" && (
+            <div className="px-6 py-2 bg-[#92929D] text-white rounded-full w-full text-center">
+              {t("review-event.review-abstention")}
+            </div>
+          )}
         </div>
-        <div className="self-stretch h-9 flex-col justify-start items-start gap-[8.69px] flex">
-          <div className="self-stretch h-[46px] py-[5px] flex-col justify-start items-center gap-[15px] flex">
-            <div className="w-[137px] py-[9px] bg-[#3b3a43] rounded-[67.04px] justify-center items-center inline-flex">
-              <Button
-                onClick={handleSaveClick}
-                className="text-center text-white text-xs font-normal  leading-[18px]"
-              >
-                {t("navigation.save-button")}
-              </Button>
-            </div>
+
+        {/* Excitements Section */}
+        <div className="flex flex-col gap-2.5 w-full">
+          <div className="text-[#1e1e1e] text-lg font-semibold">
+            {t("review-event.excitements")}
           </div>
+          <Textarea
+            id="add-custom-rule-block-name"
+            value={title}
+            onChange={handleTitleChange}
+            placeholder={t("review-event.excitements-textarea-placeholder")}
+            className="w-full h-[91px] px-3.5 py-3.5 bg-[#fafafb] rounded-xl border border-[#d8d8dd] text-[#979797] text-sm"
+          />
         </div>
+
+        {/* Worries Section */}
+        <div className="flex flex-col gap-2.5 w-full">
+          <div className="text-[#1e1e1e] text-lg font-semibold">
+            {t("review-event.worries")}
+          </div>
+          <Textarea
+            id="add-custom-rule-block-content"
+            value={content}
+            onChange={handleContentChange}
+            placeholder={t("review-event.worries-textarea-placeholder")}
+            className="w-full h-[91px] px-3.5 py-3.5 bg-[#fafafb] rounded-xl border border-[#d8d8dd] text-[#979797] text-sm"
+          />
+        </div>
+      </div>
+
+      {/* Save Button */}
+      <div className="mt-auto w-full flex justify-center">
+        <Button
+          onClick={handleSaveClick}
+          className="px-6 py-2 bg-[#3b3a43] text-white rounded-full text-xs"
+        >
+          {t("navigation.save-button")}
+        </Button>
       </div>
     </div>
   );

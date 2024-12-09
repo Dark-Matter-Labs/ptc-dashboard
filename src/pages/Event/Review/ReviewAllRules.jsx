@@ -22,6 +22,21 @@ const ReviewAllRules = ({
         permissionEngineAPI={permissionEngineAPI}
         proceedToStep={proceedToStep}
       ></DisplayAllRules>
+
+      <div className="py-4">
+        <button
+          onClick={() => proceedToStep(1)}
+          className="mt-4 px-6 py-2 border text-black rounded-lg w-full"
+        >
+          Back
+        </button>
+        <button
+          className="mt-4 px-6 py-2 bg-[#2F103A] text-white rounded-lg w-full"
+          onClick={() => proceedToStep(3)}
+        >
+          {t("review-event.next-step")}
+        </button>
+      </div>
     </div>
   );
 };

@@ -9,7 +9,6 @@ import { parseRuleBlockContent } from "../../lib/util";
 export default function DisplayRulesWithExceptions({
   rule,
   permissionEngineAPI,
-  proceedToStep,
 }) {
   const { t } = useTranslation();
 
@@ -138,20 +137,6 @@ export default function DisplayRulesWithExceptions({
           );
         })}
       </div>
-      <div className="py-4">
-        <button
-          onClick={() => proceedToStep(2)}
-          className="mt-4 px-6 py-2 border text-black rounded-lg w-full"
-        >
-          Back
-        </button>
-        <button
-          className="mt-4 px-6 py-2 bg-[#2F103A] text-white rounded-lg w-full"
-          onClick={() => proceedToStep(4)}
-        >
-          {t("review-event.next-step")}
-        </button>
-      </div>
     </div>
   );
 }
@@ -162,5 +147,4 @@ DisplayRulesWithExceptions.propTypes = {
   spaceRule: PropTypes.object,
   currentLanguage: PropTypes.string,
   permissionEngineAPI: PropTypes.object,
-  proceedToStep: PropTypes.func,
 };

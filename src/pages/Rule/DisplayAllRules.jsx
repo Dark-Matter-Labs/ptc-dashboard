@@ -6,11 +6,7 @@ import * as Type from "../../lib/PermissionEngine/type";
 import { useTranslation } from "react-i18next";
 import { parseRuleBlockContent } from "../../lib/util";
 
-export default function DisplayAllRules({
-  rule,
-  permissionEngineAPI,
-  proceedToStep,
-}) {
+export default function DisplayAllRules({ rule, permissionEngineAPI }) {
   const { t } = useTranslation();
 
   const [expandedCards, setExpandedCards] = useState({ 0: false }); //{0: true, 2: false}
@@ -168,20 +164,6 @@ export default function DisplayAllRules({
           );
         })}
       </div>
-      <div className="py-4">
-        <button
-          onClick={() => proceedToStep(1)}
-          className="mt-4 px-6 py-2 border text-black rounded-lg w-full"
-        >
-          Back
-        </button>
-        <button
-          className="mt-4 px-6 py-2 bg-[#2F103A] text-white rounded-lg w-full"
-          onClick={() => proceedToStep(3)}
-        >
-          {t("review-event.next-step")}
-        </button>
-      </div>
     </div>
   );
 }
@@ -192,5 +174,4 @@ DisplayAllRules.propTypes = {
   spaceRule: PropTypes.object,
   currentLanguage: PropTypes.string,
   permissionEngineAPI: PropTypes.object,
-  proceedToStep: PropTypes.func,
 };

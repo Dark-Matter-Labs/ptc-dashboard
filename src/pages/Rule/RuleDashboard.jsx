@@ -5,6 +5,7 @@ import Rule from "./Rule";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { useUser } from "../../useUser";
+import { navigateToBack } from "../../lib/util";
 
 export default function RuleDashboard({
   permissionEngineAPI,
@@ -28,13 +29,7 @@ export default function RuleDashboard({
       setRuleAuthor(fetchedRuleAuthor);
     } catch (error) {
       console.error("Error fetching rule: ", error);
-      const spaceId = localStorage.getItem("spaceId");
-
-      if (spaceId) {
-        navigate(`/space/${spaceId}`);
-      } else {
-        navigate("/");
-      }
+      navigateToBack(navigate);
     }
   };
 

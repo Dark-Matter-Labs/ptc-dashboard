@@ -4,6 +4,7 @@ import { CalendarIcon, ClockIcon } from "@heroicons/react/outline";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
+import { navigateTo, navigateToBack } from "../../../lib/util";
 
 export default function DisplayAssignedEvents({ permissionEngineAPI }) {
   const { t } = useTranslation();
@@ -27,7 +28,7 @@ export default function DisplayAssignedEvents({ permissionEngineAPI }) {
       })
       .catch((error) => {
         console.error("Error fetching event info:", error);
-        navigate("/");
+        navigateToBack(navigate);
       });
   };
 
@@ -63,7 +64,10 @@ export default function DisplayAssignedEvents({ permissionEngineAPI }) {
                   <div
                     key={key}
                     onClick={() =>
-                      navigate(`/event/review/${request.spaceEventId}`)
+                      navigateTo({
+                        navigate,
+                        pathname: `/event/review/${request.spaceEventId}`,
+                      })
                     }
                     className="border p-4 shadow rounded-[1rem] bg-white"
                   >

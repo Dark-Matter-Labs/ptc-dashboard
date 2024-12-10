@@ -14,6 +14,7 @@ import ReviewEvent from "./pages/Event/Review/ReviewEvent";
 import DisplayAssginedEvents from "./pages/Event/Display/DisplayAssginedEvents";
 import { API } from "./lib/PermissionEngine";
 import Landing from "./pages/Landing/Landing";
+import { navigateTo } from "./lib/util";
 
 function App() {
   const navigate = useNavigate();
@@ -35,8 +36,15 @@ function App() {
 
   // Reset navTitle when navigating back to "/"
   useEffect(() => {
-    if (location.pathname === "/") {
-      navigate("/landing");
+    const pathname = window.localStorage.getItem("pathname");
+
+    if (pathname && location.pathname !== pathname) {
+      window.localStorage.removeItem("pathname");
+      window.location.href = pathname;
+    } else if (pathname && location.pathname === pathname) {
+      window.localStorage.removeItem("pathname");
+    } else if (location.pathname === "/") {
+      navigateTo({ navigate, pathname: "/landing" });
     }
 
     if (!localStorage.getItem("i18nextLng")) {

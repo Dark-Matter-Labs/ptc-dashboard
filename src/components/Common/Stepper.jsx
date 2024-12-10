@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
+import { navigateTo, navigateToBack } from "../../lib/util";
 
 function Stepper({
   currentStep,
@@ -93,15 +94,13 @@ function Stepper({
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
           <div className="bg-white m-4 p-6 rounded-lg shadow-lg text-center">
             <h2 className="text-2xl font-bold mb-4">
-            {t("create-event.event-created-success")}
+              {t("create-event.event-created-success")}
             </h2>
-            <p className="mb-6">
-            {t("create-event.event-created-continue")}
-            </p>
+            <p className="mb-6">{t("create-event.event-created-continue")}</p>
             <button
               onClick={() => {
                 setShowSuccessModal(false);
-                navigate("/profile/events");
+                navigateTo({ navigate, pathname: "/profile/events" });
               }}
               className="px-4 py-2 bg-green-500 text-white rounded-md"
             >
@@ -127,7 +126,7 @@ function Stepper({
               <button
                 onClick={(e) => {
                   e.preventDefault();
-                  navigate("/");
+                  navigateToBack(navigate);
                 }}
                 className="px-4 py-2 w-full bg-gray-100 text-black rounded-md"
               >

@@ -6,6 +6,7 @@ import Space from "./Space";
 import Report from "./Report";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
+import { navigateToBack } from "../../lib/util";
 
 export default function SpaceDashboard({
   permissionEngineAPI,
@@ -30,7 +31,7 @@ export default function SpaceDashboard({
       setCloseButtonLink(`/space/${fetchedSpace.id}`);
     } catch (error) {
       console.error("Error fetching space: ", error);
-      navigate("/");
+      navigateToBack(navigate);
     }
   };
 
@@ -57,7 +58,10 @@ export default function SpaceDashboard({
         permissionEngineAPI={permissionEngineAPI}
         currentLanguage={currentLanguage}
       ></Space>
-      <Activity space={space} permissionEngineAPI={permissionEngineAPI}></Activity>
+      <Activity
+        space={space}
+        permissionEngineAPI={permissionEngineAPI}
+      ></Activity>
       <Report space={space} permissionEngineAPI={permissionEngineAPI}></Report>
     </>
   );

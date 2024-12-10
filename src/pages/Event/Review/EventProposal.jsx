@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import { navigateTo } from "../../../lib/util";
+
 const EventProposal = ({
   t,
   eventData,
@@ -114,7 +116,7 @@ const EventProposal = ({
       {/* Buttons */}
       <div className="py-4">
         <button
-          onClick={() => navigate("/events/assigned")}
+          onClick={() => navigateTo({navigate, pathname: "/events/assigned"})}
           className="mt-4 px-6 py-2 border text-black rounded-lg w-full"
         >
           Back

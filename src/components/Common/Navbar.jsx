@@ -26,6 +26,7 @@ import i18n from "../../i18n";
 import PropTypes from "prop-types";
 import { io } from "socket.io-client";
 import { Notification } from "./Notification";
+import { handleLogin } from "../../lib/util";
 
 export default function Navbar({
   navTitle,
@@ -43,10 +44,6 @@ export default function Navbar({
 
   const handleCloseButton = () => {
     window.location.href = closeButtonLink;
-  };
-  const handleLogin = () => {
-    console.log("call handleLogin");
-    window.location.href = "/api/v1/auth/google";
   };
   const handleLogout = async () => {
     console.log("call handleLogout");
@@ -116,19 +113,18 @@ export default function Navbar({
 
   useEffect(() => {
     if (!webSocket.current) {
-      webSocket.current = io(window.location.host === 'localhost' ? `${window.location.origin}:3000` : `${window.location.protocol}//ws.${window.location.host}`, {
-        transports: ["websocket"],
-        withCredentials: true,
-        autoConnect: true,
-      });
+      webSocket.current = io(
+        window.location.host === "localhost"
+          ? `${window.location.origin}:3000`
+          : `${window.location.protocol}//ws.${window.location.host}`,
+        {
+          transports: ["websocket"],
+          withCredentials: true,
+          autoConnect: true,
+        }
+      );
 
-      webSocket.current.on("connect", () => {
-        // console.log(
-        //   "webSocket.current.connected",
-        //   webSocket.current?.connected,
-        //   webSocket.current?.id
-        // );
-      });
+      webSocket.current.on("connect", () => {});
 
       webSocket.current.on("disconnect", () => {
         console.log("webSocket disconnected");

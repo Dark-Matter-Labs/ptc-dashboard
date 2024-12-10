@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { v4 as uuid } from "uuid";
 import "../../assets/css/Notification.css";
 import GroupPPIcon from "../../assets/image/group-pp.svg";
+import { navigateTo } from "../../lib/util";
 
 export function Notification({ subject, html, text }) {
   const [isVisible, setIsVisible] = useState(false);
@@ -12,7 +13,7 @@ export function Notification({ subject, html, text }) {
 
   const handleOnClick = (e) => {
     e.preventDefault();
-    navigate("/notifications");
+    navigateTo({ navigate, pathname: "/notifications" });
   };
 
   useEffect(() => {

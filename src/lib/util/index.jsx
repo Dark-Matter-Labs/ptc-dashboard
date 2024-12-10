@@ -161,7 +161,16 @@ export const parseRuleBlockContent = async (
   return parsedContent;
 };
 
+export const logPathname = () => {
+  window.localStorage.setItem("pathname", window.location.pathname);
+};
+
+export const logPrevPathname = (pathname) => {
+  window.localStorage.setItem("prevPathname", pathname);
+};
+
 export const handleLogin = () => {
+  logPathname();
   window.location.href = "/api/v1/auth/google";
 };
 
@@ -218,4 +227,32 @@ export const parseTimeManipulation = (manupulation) => {
     numberPart,
     stringPart,
   };
+};
+
+/**
+ * @typedef {Object} NavigateToOption
+ * @property {function} navigate - useNavigation().
+ * @property {string} pathname - pathname to navigate.
+ */
+
+/**
+ *
+ * @param {NavigateToOption} option
+ */
+export const navigateTo = (option) => {
+  const { navigate, pathname } = option;
+  logPrevPathname(window.location.pathname);
+  navigate(pathname);
+};
+
+export const navigateToBack = (navigate) => {
+  logPrevPathname(window.location.pathname);
+  let pathname = "/";
+  const prevPathname = window.localStorage.getItem("prevPathname");
+
+  if (prevPathname && prevPathname !== "") {
+    pathname = prevPathname;
+  }
+
+  navigate(pathname);
 };

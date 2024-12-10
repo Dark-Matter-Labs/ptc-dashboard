@@ -10,8 +10,13 @@ import Stepper from "../../../components//Common/Stepper";
 import * as Type from "../../../lib/PermissionEngine/type";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
+import { navigateToBack } from "../../../lib/util";
 
-export default function CreateEvent({ setNavTitle, permissionEngineAPI, currentLanguage }) {
+export default function CreateEvent({
+  setNavTitle,
+  permissionEngineAPI,
+  currentLanguage,
+}) {
   const { t } = useTranslation();
   const spaceRuleBlockExcludedTypes = [
     Type.RuleBlockType.spaceConsentMethod,
@@ -150,14 +155,14 @@ export default function CreateEvent({ setNavTitle, permissionEngineAPI, currentL
       setSpace(space);
     } catch (error) {
       console.error(`Error fetching space`, error);
-      navigate("/");
+      navigateToBack(navigate);
     }
   };
 
   const loadSpaceRule = async () => {
     try {
       if (!spaceId) {
-        navigate(`/`);
+        navigateToBack(navigate);
       }
       const spaceRule = await permissionEngineAPI.fetchSpaceRule(spaceId);
       console.log("the spaceRule: ", spaceRule);

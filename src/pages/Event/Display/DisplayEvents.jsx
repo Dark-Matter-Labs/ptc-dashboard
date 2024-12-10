@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import abbrTimezone from "dayjs-abbr-timezone";
+import { navigateToBack } from "../../../lib/util";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -36,7 +37,7 @@ export default function DisplayEvents({ permissionEngineAPI }) {
       })
       .catch((error) => {
         console.error("Error fetching event info:", error);
-        navigate("/");
+        navigateToBack(navigate);
       });
   };
 

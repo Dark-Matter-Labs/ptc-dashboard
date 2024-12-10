@@ -15,7 +15,6 @@ import { SparklesIcon } from "@heroicons/react/solid";
 import { SunIcon } from "@heroicons/react/solid";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
-import * as Type from "../../lib/PermissionEngine/type";
 
 export default function Report({ space, permissionEngineAPI }) {
   const { t } = useTranslation();
@@ -34,14 +33,18 @@ export default function Report({ space, permissionEngineAPI }) {
     const { children } = issue;
     let tag = <div className="card-tail">Volunteer to resolve</div>;
 
-    if (
-      children.length > 0
-    ) {
-      console.log('children', children)
+    if (children.length > 0) {
+      console.log("children", children);
       tag = <div className="card-tail being-resolved">Being resolved</div>;
     }
 
     return tag;
+  };
+
+  const handleIssueReport = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    alert("TBD");
   };
 
   useEffect(() => {
@@ -76,7 +79,12 @@ export default function Report({ space, permissionEngineAPI }) {
                   {generateIssueTag(spaceHistory)}
                 </div>
               ))}
-              <Button className="issue-report-button">Report an issue</Button>
+              <Button
+                className="issue-report-button"
+                onClick={handleIssueReport}
+              >
+                Report an issue
+              </Button>
             </DisclosurePanel>
           </Disclosure>
         </div>

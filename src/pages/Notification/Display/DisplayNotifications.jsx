@@ -4,6 +4,7 @@ import { CalendarIcon, MailOpenIcon, MailIcon } from "@heroicons/react/outline";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import * as Type from "../../../lib/PermissionEngine/type";
+import { navigateToBack } from "../../../lib/util";
 
 export default function DisplayNotifications({ permissionEngineAPI }) {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ export default function DisplayNotifications({ permissionEngineAPI }) {
       })
       .catch((error) => {
         console.error("Error fetching notification info:", error);
-        navigate("/");
+        navigateToBack(navigate);
       });
   };
 

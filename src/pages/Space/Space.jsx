@@ -15,6 +15,7 @@ import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../useUser";
+import { navigateTo } from "../../lib/util";
 
 export default function Space({ space, spaceOwner, currentLanguage }) {
   const { t } = useTranslation();
@@ -42,7 +43,7 @@ export default function Space({ space, spaceOwner, currentLanguage }) {
 
   const handleBrowseRule = () => {
     if (user) {
-      navigate(`/rule/${space.ruleId}`);
+      navigateTo({ navigate, pathname: `/rule/${space.ruleId}` });
     } else {
       alert("Please log in");
     }

@@ -5,6 +5,7 @@ import mapboxgl from "mapbox-gl";
 import PropTypes from "prop-types";
 import { accessToken } from "../../lib/mapbox";
 import MapPinGreenImgSrc from "../../assets/image/map-pin-green.svg";
+import { navigateTo } from "../../lib/util";
 
 mapboxgl.accessToken = accessToken;
 
@@ -246,7 +247,12 @@ export const MultiLocationsMapBox = ({
             </div>
             <button
               className="bg-[#AF56EF] w-full text-white font-semibold rounded-md py-2 px-4 self-start mt-4"
-              onClick={() => navigate(`/space/${selectedLocation.id}`)}
+              onClick={() =>
+                navigateTo({
+                  navigate,
+                  pathname: `/space/${selectedLocation.id}`,
+                })
+              }
             >
               더 보러가기
             </button>

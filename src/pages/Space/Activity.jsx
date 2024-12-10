@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import abbrTimezone from "dayjs-abbr-timezone";
+import { navigateTo } from "../../lib/util";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -69,7 +70,7 @@ export default function Activity({ space, permissionEngineAPI }) {
 
   const gotoCreateEvent = () => {
     if (space) {
-      navigate(`/event/new/${space?.id}`);
+      navigateTo({ navigate, pathname: `/event/new/${space?.id}` });
     }
   };
 

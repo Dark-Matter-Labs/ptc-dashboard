@@ -7,6 +7,7 @@ import EventProposal from "./EventProposal"; // Sub-component for the proposal
 import { formatDateTime } from "../../../lib/util";
 import ReviewRulesWithExceptions from "./ReviewRulesWithExceptions";
 import ReviewAllRules from "./ReviewAllRules";
+import { DecisionSummary } from "./DecisionSummary";
 const ReviewEvent = ({ permissionEngineAPI }) => {
   const { user } = useUser();
   const { spaceEventId } = useParams();
@@ -14,7 +15,7 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
   const [eventData, setEventData] = useState({});
   const [eventRuleTemplate, setEventRuleTemplate] = useState({});
   const [rule, setRule] = useState({});
-
+  const [voteHistory, setVoteHistory] = useState([]); //[{decision: ["agree"|"disagree"|"abstention"], excitements:"...", worries:"..."} , ...]
   const [currentStep, setCurrentStep] = useState(1); // Step tracking: 1 = proposal, 2 = review actions
   const [topics, setTopics] = useState([]);
   const [equipments, setEquipments] = useState([]);
@@ -129,6 +130,15 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
   const proceedToStep = (step) => setCurrentStep(step);
   return (
     <div>
+      vote length: {voteHistory.length}
+      <p>
+        {voteHistory.map((vote, index) => (
+          <p key={index}>
+            {" "}
+            vote {index} :: {vote.decision} , {vote.excitements} ,{vote.worries}
+          </p>
+        ))}
+      </p>
       {user ? (
         <>
           {currentStep === 1 ? (
@@ -155,9 +165,17 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
               rule={rule}
               permissionEngineAPI={permissionEngineAPI}
               proceedToStep={proceedToStep}
+              voteHistory={voteHistory}
+              setVoteHistory={setVoteHistory}
+            />
+          ) : currentStep === 4 ? (
+            <DecisionSummary
+              t={t}
+              proceedToStep={proceedToStep}
+              voteHistory={voteHistory}
             />
           ) : (
-            <div>Step 4 </div>
+            <div>Step 5</div>
           )}
         </>
       ) : (

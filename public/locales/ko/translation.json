@@ -113,7 +113,9 @@
     "review-agree": "동의",
     "review-disagree": "동의하지 않음",
     "review-abstention": "기권",
-    "cast-decision": "캐스트 결정"
+    "cast-decision": "캐스트 결정",
+    "submit": "제출",
+    "change-my-decision": "내 결정을 바꿔주세요"
   },
   "rules": {
     "exception-disclaimer": "이 규칙은 기본 공간 규칙에서 수정되었습니다",

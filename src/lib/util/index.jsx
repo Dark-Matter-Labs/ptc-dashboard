@@ -169,9 +169,25 @@ export const logPrevPathname = (pathname) => {
   window.localStorage.setItem("prevPathname", pathname);
 };
 
-export const handleLogin = () => {
+export const handleLogin = async () => {
   logPathname();
-  window.location.href = "/api/v1/auth/google";
+  try {
+    // try to refresh
+    const response = await fetch(`/api/v1/auth/refresh`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+  } catch (error) {
+    console.error("Failed to refresh token", error);
+    window.location.href = "/api/v1/auth/google";
+  }
 };
 
 export const reverseGeocode = async (lat, lng) => {

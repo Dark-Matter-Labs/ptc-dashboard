@@ -105,7 +105,17 @@
     "event-proposal": "Event proposal",
     "next-step": "Next step",
     "no-themes": "Themes not selected",
-    "no-equipment": "Equipments not selected"
+    "no-equipment": "Equipments not selected",
+    "rules-template": "Rules template",
+    "review-the-rules": "Review the rules",
+    "review-the-exceptions": "Review the exceptions",
+    "review-agree": "Agree",
+    "review-disagree": "Disagree",
+    "review-abstention": "Abstention",
+    "excitements": "Excitements",
+    "worries": "Worries",
+    "excitements-textarea-placeholder": "What do you find exciting about this event?",
+    "worries-textarea-placeholder": "What worries you about this event? Describe any concerns you have."
   },
   "rules": {
     "exception-disclaimer": "This rule has modified the original space rule",

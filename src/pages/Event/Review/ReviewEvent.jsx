@@ -5,12 +5,16 @@ import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 import EventProposal from "./EventProposal"; // Sub-component for the proposal
 import { formatDateTime } from "../../../lib/util";
-
+import ReviewRulesWithExceptions from "./ReviewRulesWithExceptions";
+import ReviewAllRules from "./ReviewAllRules";
 const ReviewEvent = ({ permissionEngineAPI }) => {
   const { user } = useUser();
   const { spaceEventId } = useParams();
   const { t } = useTranslation();
   const [eventData, setEventData] = useState({});
+  const [eventRuleTemplate, setEventRuleTemplate] = useState({});
+  const [rule, setRule] = useState({});
+
   const [currentStep, setCurrentStep] = useState(1); // Step tracking: 1 = proposal, 2 = review actions
   const [topics, setTopics] = useState([]);
   const [equipments, setEquipments] = useState([]);
@@ -55,6 +59,46 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
     }
   };
 
+  const interpretEventRuleTemplate = async (ruleId) => {
+    if (!ruleId) return;
+
+    try {
+      const data = await permissionEngineAPI.fetchRuleByRuleId(ruleId);
+      const hasException = data?.ruleBlocks?.some((rule) =>
+        rule.type.includes("exception")
+      );
+
+      setEventRuleTemplate({
+        name: data.name,
+        hasException,
+      });
+    } catch (error) {
+      console.error("Error fetching event rule template:", error);
+    }
+  };
+
+  const interpretRule = async (ruleId) => {
+    if (!ruleId) return;
+
+    try {
+      const data = await permissionEngineAPI.fetchRuleByRuleId(ruleId);
+      console.log("rule: ", data);
+      setRule(data);
+    } catch (error) {
+      console.error("Error fetching event rule:", error);
+    }
+  };
+
+  // const interpretRuleAuthor = async (authorId) => {
+  //   if (!authorId) return;
+
+  //   try {
+  //     const data = await permissionEngineAPI.fetchPublicUserData(authorId);
+  //     console.log("author: ", data);
+  //   } catch (error) {
+  //     console.error("Error fetching event rule author:", error);
+  //   }
+  // };
   useEffect(() => {
     fetchEventById();
   }, []);
@@ -69,12 +113,20 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
         );
         setTimeObj(formattedTime);
       }
-      if (eventData.ruleId) interpretEquipments(eventData.ruleId);
+      if (eventData.ruleId) {
+        interpretEquipments(eventData.ruleId);
+        interpretEventRuleTemplate(eventData.ruleId);
+        interpretRule(eventData.ruleId);
+      }
     }
   }, [eventData]);
 
-  const proceedToNextStep = () => setCurrentStep(2); // Move to the review actions step
+  // useEffect(() => {
+  //   console.log("rule: ", rule);
+  //   // interpretRuleAuthor(rule.authorId);
+  // }, [rule]);
 
+  const proceedToStep = (step) => setCurrentStep(step);
   return (
     <div>
       {user ? (
@@ -87,14 +139,25 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
               topics={topics}
               equipments={equipments}
               timeObj={timeObj}
-              proceedToNextStep={proceedToNextStep}
+              proceedToStep={() => proceedToStep(2)}
+              eventRuleTemplate={eventRuleTemplate}
+            />
+          ) : currentStep === 2 ? (
+            <ReviewAllRules
+              t={t}
+              rule={rule}
+              permissionEngineAPI={permissionEngineAPI}
+              proceedToStep={proceedToStep}
+            />
+          ) : currentStep === 3 ? (
+            <ReviewRulesWithExceptions
+              t={t}
+              rule={rule}
+              permissionEngineAPI={permissionEngineAPI}
+              proceedToStep={proceedToStep}
             />
           ) : (
-            <div>
-              {/* Review interaction UI */}
-              <h2>Review interaction</h2>
-              {/* Add Agree/Reject buttons and actions */}
-            </div>
+            <div>Step 4 </div>
           )}
         </>
       ) : (
@@ -106,6 +169,7 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
 
 ReviewEvent.propTypes = {
   permissionEngineAPI: PropTypes.object.isRequired,
+  currentLanguage: PropTypes.string,
 };
 
 export default ReviewEvent;

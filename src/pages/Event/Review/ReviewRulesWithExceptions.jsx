@@ -10,13 +10,51 @@ const ReviewRulesWithExceptions = ({
   proceedToStep,
   voteHistory,
   setVoteHistory,
+  spaceEventId,
 }) => {
   console.log("rule with exeptions: ", rule);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [decision, setDecision] = useState(""); //agree, disagree, abstention
   const [excitements, setExcitements] = useState("");
   const [worries, setWorries] = useState("");
+  const [requestId, setRequestId] = useState("");
+  const [responseId, setResponseId] = useState("");
 
+  const loadRequestId = async () => {
+    await permissionEngineAPI
+      .fetchRequestIdByEventId(spaceEventId)
+      .then((data) => {
+        console.log("request data: ", data);
+        setRequestId(data[0].id);
+      })
+      .catch((error) => {
+        console.error("Error fetching request: ", error);
+      });
+  };
+  const loadResponseId = async () => {
+    await permissionEngineAPI
+      .fetchResponseIdByRequestId(requestId)
+      .then((data) => {
+        console.log("response data: ", data);
+        setResponseId(data[0].id);
+      })
+      .catch((error) => {
+        console.error("Error fetching response: ", error);
+      });
+  };
+  const handleResponseSubmittion = async () => {
+    try {
+      const response = await permissionEngineAPI.postPermissionResponse({
+        responseId: responseId,
+        decision: decision,
+        excitements: excitements,
+        worries: worries,
+      });
+      console.log("permission response posted, response,", response);
+    } catch (error) {
+      console.error("Error posting permission response:", error);
+    }
+  };
   const handleButtonClicked = (d) => {
     //reset excitements and worries when another button is clicked
     if (decision != "" && d !== decision) {
@@ -36,11 +74,13 @@ const ReviewRulesWithExceptions = ({
 
     setIsDrawerOpen(true);
   };
+
   const handleSubmitButtonClicked = (e) => {
     e.preventDefault();
     alert("Your vote has been submited.");
     // todo: post permissionresponse here
-
+    console.log("let's proceed with the responseId,", responseId);
+    handleResponseSubmittion();
     // we only allow one re-vote
     if (voteHistory.length < 2) {
       setVoteHistory((prevHistory) => [
@@ -52,9 +92,21 @@ const ReviewRulesWithExceptions = ({
     }
     proceedToStep(4);
   };
+
   useEffect(() => {
-    console.log(isDrawerOpen);
-  }, [isDrawerOpen]);
+    if (spaceEventId) {
+      console.log("spaceEventId:", spaceEventId);
+      loadRequestId(spaceEventId);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (requestId) {
+      console.log("requestId (when updated):", requestId);
+      loadResponseId(requestId);
+    }
+  }, [requestId]);
+
   return (
     <div className="flex flex-col justify-start p-4 space-y-2 text-left h-[90vh]">
       <div className="flex-grow">
@@ -64,6 +116,9 @@ const ReviewRulesWithExceptions = ({
         <p>decision: {decision}</p>
         <p>excitements: {excitements}</p>
         <p>worries: {worries}</p>
+        <p>spaceEventId: {spaceEventId}</p>
+        <p>requestId: {requestId}</p>
+        <p>responseId: {responseId}</p>
 
         <DisplayRulesWithExceptions
           rule={rule}
@@ -179,4 +234,5 @@ ReviewRulesWithExceptions.propTypes = {
   proceedToStep: PropTypes.func,
   voteHistory: PropTypes.arrayOf(PropTypes.object).isRequired,
   setVoteHistory: PropTypes.func,
+  spaceEventId: PropTypes.string,
 };

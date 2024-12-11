@@ -100,7 +100,7 @@ export default function DisplayAllRules({ rule, permissionEngineAPI }) {
     });
   }, [ruleBlocks]);
 
-  console.log("ruleBlockContentById: ", ruleBlockContentById);
+  // console.log("ruleBlockContentById: ", ruleBlockContentById);
 
   return (
     <div>

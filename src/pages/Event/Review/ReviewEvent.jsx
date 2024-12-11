@@ -131,14 +131,14 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
   return (
     <div>
       vote length: {voteHistory.length}
-      <p>
+      <div>
         {voteHistory.map((vote, index) => (
           <p key={index}>
             {" "}
             vote {index} :: {vote.decision} , {vote.excitements} ,{vote.worries}
           </p>
         ))}
-      </p>
+      </div>
       {user ? (
         <>
           {currentStep === 1 ? (
@@ -167,6 +167,7 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
               proceedToStep={proceedToStep}
               voteHistory={voteHistory}
               setVoteHistory={setVoteHistory}
+              spaceEventId={spaceEventId}
             />
           ) : currentStep === 4 ? (
             <DecisionSummary

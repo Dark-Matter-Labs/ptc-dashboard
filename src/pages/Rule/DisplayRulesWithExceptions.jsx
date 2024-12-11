@@ -54,7 +54,7 @@ export default function DisplayRulesWithExceptions({
     const ruleBlocksWithException = rule?.ruleBlocks.filter((item) =>
       item.type.includes("exception")
     );
-    console.log("ruleBlocksWithException: ", ruleBlocksWithException);
+    // console.log("ruleBlocksWithException: ", ruleBlocksWithException);
     setRuleBlocks(ruleBlocksWithException);
   }, [rule]);
 
@@ -73,7 +73,7 @@ export default function DisplayRulesWithExceptions({
     });
   }, [ruleBlocks]);
 
-  console.log("ruleBlockContentById: ", ruleBlockContentById);
+  // console.log("ruleBlockContentById: ", ruleBlockContentById);
 
   return (
     <div>

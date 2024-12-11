@@ -26,6 +26,7 @@ import i18n from "../../i18n";
 import PropTypes from "prop-types";
 import { io } from "socket.io-client";
 import { Notification } from "./Notification";
+import { useSpace } from "../../useSpace";
 
 export default function Navbar({
   navTitle,
@@ -33,8 +34,8 @@ export default function Navbar({
   handleChangeLanguage,
   closeButtonLink,
 }) {
-  const [spaceId, setSpaceId] = useState(null);
   const { user, setUser } = useUser();
+  const { spaceId } = useSpace();
   const { t } = useTranslation();
   const [dynamicTitle, setDynamicTitle] = useState(navTitle);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -101,12 +102,9 @@ export default function Navbar({
   }, [navTitle, currentLanguage, t]);
 
   useEffect(() => {
+    console.log("spaceId:", spaceId);
     handleFetchProfile();
-    const spaceId = localStorage.getItem("spaceId");
-    if (spaceId) {
-      setSpaceId(spaceId);
-      console.log("[NavBar] Space Id:", spaceId);
-    }
+    // const spaceId = localStorage.getItem("spaceId");
 
     if (!i18n) {
       console.error("i18n is not initialized");
@@ -377,8 +375,8 @@ export default function Navbar({
                     {t("navigation.propose-event")}
                   </a>
                   <a
-                    href="/events/assigned"
-                    className={`pl-8 py-4 flex items-center gap-3 text-gray-900 ${location.pathname === "/event/new" ? "bg-slate-200" : "text-gray-900"}`}
+                    href={`/events/assigned/${spaceId}`}
+                    className={`pl-8 py-4 flex items-center gap-3 text-gray-900 ${location.pathname === "/event/assgined" ? "bg-slate-200" : "text-gray-900"}`}
                   >
                     <ScaleIcon className="w-4 h-4 text-gray-400 "></ScaleIcon>
                     {t("navigation.review-event")}

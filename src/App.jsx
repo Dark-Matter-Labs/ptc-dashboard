@@ -23,7 +23,7 @@ function App() {
   const [navTitle, setNavTitle] = useState(t("navigation.navigation-title")); // state to track current step
   const location = useLocation();
   const [closeButtonLink, setCloseButtonLink] = useState("/");
-  const permissionEngineAPI = new API();
+  const permissionEngineAPI = API.getInstance();
 
   // Determine if Navbar should be shown
   const showNavbar = location.pathname !== "/landing";

@@ -1,6 +1,19 @@
 export class API {
   constructor(baseURL = "/api/v1/") {
-    this.baseURL = baseURL;
+    if (API.instance) {
+      return API.instance;
+    } else {
+      this.baseURL = baseURL;
+      API.instance = this;
+    }
+  }
+
+  static getInstance() {
+    if (!API.instance) {
+      API.instance = new API();
+    }
+
+    return API.instance;
   }
 
   /**
@@ -373,10 +386,11 @@ export class API {
   };
 
   fetchAssignedEvent = async (spaceId) => {
-    const response = await this.get(`permission/request?spaceId=${spaceId}&statuses=assigned`);
+    const response = await this.get(
+      `permission/request?spaceId=${spaceId}&statuses=assigned`
+    );
     return response?.data ?? [];
   };
-
 
   fetchPublicUserData = async (userId) => {
     const response = await this.get("user/:userId", {
@@ -398,10 +412,7 @@ export class API {
     return response?.data ?? [];
   };
 
-  fetchAllSpaceIssue = async (
-    spaceId,
-    option = { page: 1, limit: 10 }
-  ) => {
+  fetchAllSpaceIssue = async (spaceId, option = { page: 1, limit: 10 }) => {
     const response = await this.get(
       "space/history/issue",
       {},

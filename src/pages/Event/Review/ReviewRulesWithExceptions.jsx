@@ -3,6 +3,12 @@ import { CheckCircleIcon } from "@heroicons/react/solid";
 import DisplayRulesWithExceptions from "../../Rule/DisplayRulesWithExceptions";
 import BottomDrawerReview from "../../../components/Common/BottomDrawerReview";
 import { useState, useEffect } from "react";
+import {
+  ApiClient,
+  PermissionResponseAPI,
+  PermissionRequestAPI,
+} from "@dark-matter-labs/ptc-sdk";
+
 const ReviewRulesWithExceptions = ({
   t,
   rule,
@@ -19,10 +25,16 @@ const ReviewRulesWithExceptions = ({
   const [worries, setWorries] = useState("");
   const [requestId, setRequestId] = useState("");
   const [responseId, setResponseId] = useState("");
+  const apiClient = new ApiClient();
+  const permissionResponseAPI = new PermissionResponseAPI(apiClient);
+  const permissionRequestAPI = new PermissionRequestAPI(apiClient);
 
   const loadRequestId = async () => {
-    await permissionEngineAPI
-      .fetchRequestIdByEventId(spaceEventId)
+    await permissionRequestAPI
+      .findAll({
+        spaceEventId,
+        statuses: ["assigned"],
+      })
       .then((data) => {
         console.log("request data: ", data);
         setRequestId(data[0].id);
@@ -32,24 +44,46 @@ const ReviewRulesWithExceptions = ({
       });
   };
   const loadResponseId = async () => {
-    await permissionEngineAPI
-      .fetchResponseIdByRequestId(requestId)
+    await permissionResponseAPI
+      .findAllSelfResponse({
+        permissionRequestId: requestId,
+      })
       .then((data) => {
         console.log("response data: ", data);
         setResponseId(data[0].id);
       })
+
       .catch((error) => {
         console.error("Error fetching response: ", error);
       });
   };
   const handleResponseSubmittion = async () => {
     try {
-      const response = await permissionEngineAPI.postPermissionResponse({
-        responseId: responseId,
-        decision: decision,
-        excitements: excitements,
-        worries: worries,
-      });
+      let response = null;
+
+      switch (decision) {
+        case "agree":
+          response = await permissionResponseAPI.approve(responseId, {
+            excitements: excitements,
+            worries: worries,
+          });
+          break;
+        case "disagree":
+          response = await permissionResponseAPI.reject(responseId, {
+            excitements: excitements,
+            worries: worries,
+          });
+          break;
+        case "abstention":
+          response = await permissionResponseAPI.abstention(responseId, {
+            excitements: excitements,
+            worries: worries,
+          });
+          break;
+        default:
+          break;
+      }
+
       console.log("permission response posted, response,", response);
     } catch (error) {
       console.error("Error posting permission response:", error);

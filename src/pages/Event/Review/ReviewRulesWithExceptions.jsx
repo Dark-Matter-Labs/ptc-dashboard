@@ -30,32 +30,36 @@ const ReviewRulesWithExceptions = ({
   const permissionRequestAPI = new PermissionRequestAPI(apiClient);
 
   const loadRequestId = async () => {
-    await permissionRequestAPI
-      .findAll({
-        spaceEventId,
-        statuses: ["assigned"],
-      })
-      .then((data) => {
-        console.log("request data: ", data);
-        setRequestId(data[0].id);
-      })
-      .catch((error) => {
-        console.error("Error fetching request: ", error);
-      });
+    if (spaceEventId) {
+      await permissionRequestAPI
+        .findAll({
+          spaceEventId,
+          statuses: ["assigned"],
+        })
+        .then((res) => {
+          console.log("request data: ", res.data);
+          setRequestId(res.data?.[0].id);
+        })
+        .catch((error) => {
+          console.error("Error fetching request: ", error);
+        });
+    }
   };
   const loadResponseId = async () => {
-    await permissionResponseAPI
-      .findAllSelfResponse({
-        permissionRequestId: requestId,
-      })
-      .then((data) => {
-        console.log("response data: ", data);
-        setResponseId(data[0].id);
-      })
+    if (requestId) {
+      await permissionResponseAPI
+        .findAllSelfResponse({
+          permissionRequestId: requestId,
+        })
+        .then((res) => {
+          console.log("response data: ", res.data);
+          setResponseId(res.data?.[0].id);
+        })
 
-      .catch((error) => {
-        console.error("Error fetching response: ", error);
-      });
+        .catch((error) => {
+          console.error("Error fetching response: ", error);
+        });
+    }
   };
   const handleResponseSubmittion = async () => {
     try {
@@ -64,20 +68,20 @@ const ReviewRulesWithExceptions = ({
       switch (decision) {
         case "agree":
           response = await permissionResponseAPI.approve(responseId, {
-            excitements: excitements,
-            worries: worries,
+            excitements: excitements.trim(),
+            worries: worries.trim(),
           });
           break;
         case "disagree":
           response = await permissionResponseAPI.reject(responseId, {
-            excitements: excitements,
-            worries: worries,
+            excitements: excitements.trim(),
+            worries: worries.trim(),
           });
           break;
         case "abstention":
           response = await permissionResponseAPI.abstention(responseId, {
-            excitements: excitements,
-            worries: worries,
+            excitements: excitements.trim(),
+            worries: worries.trim(),
           });
           break;
         default:

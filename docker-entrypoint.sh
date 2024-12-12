@@ -1,10 +1,6 @@
 #!/bin/bash
 set -e
 
-cp -R /home/.git /.git
-
-ln -s /app /ptc-dashboard
-
 echo "Install packages..."
 npm i
 echo "Package installation complete!"

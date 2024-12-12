@@ -6,7 +6,7 @@ import Space from "./Space";
 import Report from "./Report";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-import { navigateToBack } from "../../lib/util";
+import { useSpace } from "../../useSpace";import { navigateToBack } from "../../lib/util";
 
 export default function SpaceDashboard({
   permissionEngineAPI,
@@ -19,6 +19,8 @@ export default function SpaceDashboard({
   let { spaceId } = useParams();
   const [space, setSpace] = useState(null);
   const [spaceOwner, setSpaceOwner] = useState(null);
+  // const [tempSpaceId, setTempSpaceId] = useState(null);
+  const { setSpaceId } = useSpace();
 
   const loadSpace = async () => {
     try {
@@ -29,6 +31,7 @@ export default function SpaceDashboard({
       setSpace(fetchedSpace);
       setSpaceOwner(fetchedSpaceOwner);
       setCloseButtonLink(`/space/${fetchedSpace.id}`);
+      console.log(fetchedSpace);
     } catch (error) {
       console.error("Error fetching space: ", error);
       navigateToBack(navigate);
@@ -45,11 +48,16 @@ export default function SpaceDashboard({
   }, []);
 
   useEffect(() => {
-    console.log("spaceId", spaceId);
-
     loadSpace();
+    console.log("spaceId:", spaceId);
+    setSpaceId(spaceId);
+    // setTempSpaceId(spaceId);
   }, []);
 
+  // useEffect(() => {
+  //   console.log("setspaceId:", spaceId);
+  //   setSpaceId(spaceId);
+  // }, [tempSpaceId]);
   return (
     <>
       <Space
@@ -73,4 +81,5 @@ SpaceDashboard.propTypes = {
   currentLanguage: PropTypes.string,
   setNavTitle: PropTypes.func,
   setCloseButtonLink: PropTypes.func,
+  setSpaceId: PropTypes.func,
 };

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Button, Textarea } from "@headlessui/react";
+import { Textarea } from "@headlessui/react";
 import "../../assets/css/Drawer.css";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
@@ -8,10 +8,17 @@ export default function BottomDrawerReview({
   isAddCustomRuleBlockOpen,
   setIsDrawerOpen,
   decision,
+  excitements,
+  worries,
+  setDecision,
+  setExcitements,
+  setWorries,
+  proceedToStep,
 }) {
   const { t } = useTranslation();
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [title, setTitle] = useState(excitements);
+  const [content, setContent] = useState(worries);
+
   const [position, setPosition] = useState(0); // Tracks vertical position
   const [isDragging, setIsDragging] = useState(false); // Tracks if dragging
   const [isOpening, setIsOpening] = useState(false); // Tracks if dragging
@@ -29,11 +36,32 @@ export default function BottomDrawerReview({
     e.stopPropagation();
     if (title && title !== "" && content && content !== "") {
       // save
+      setExcitements(title);
+      setWorries(content);
+      setDecision(decision);
+    } else {
+      alert(
+        "please fill in the reasons (exiciments and worries) to have this decision saved."
+      );
+      setDecision("");
     }
     setIsClosing(true);
     setIsDrawerOpen(false);
   };
 
+  const handleBackClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (title == "" && content == "") {
+      setDecision("");
+    }
+    if (excitements == "" && worries == "") {
+      setDecision("");
+    }
+    setIsClosing(true);
+    setIsDrawerOpen(false);
+    proceedToStep(3);
+  };
   const handleTouchStart = (e) => {
     setIsDragging(true);
     startYRef.current = e.touches[0].clientY - position;
@@ -49,6 +77,7 @@ export default function BottomDrawerReview({
     setIsDragging(false);
     if (position > window.innerHeight / 3) {
       setPosition(window.innerHeight - 100); // Snap to bottom
+      setDecision("");
       setIsDrawerOpen(false);
     } else {
       setPosition(0); // Snap to top
@@ -59,7 +88,7 @@ export default function BottomDrawerReview({
     setIsOpening(true);
     setTimeout(() => {
       setIsOpening(false);
-    }, 1000);
+    }, 700);
     setIsDrawerOpen(true);
   }, []);
 
@@ -109,7 +138,7 @@ export default function BottomDrawerReview({
       <div className="flex-grow flex flex-col gap-6 mt-8">
         {/* Header */}
         <div className="text-[#1e1e1e] text-2xl font-semibold">
-          {t("rules.add-new-rule")}
+          {t("review-event.cast-decision")}
         </div>
 
         {/* Decision Section */}
@@ -161,13 +190,19 @@ export default function BottomDrawerReview({
       </div>
 
       {/* Save Button */}
-      <div className="mt-auto w-full flex justify-center">
-        <Button
+      <div className="py-4">
+        <button
+          onClick={handleBackClick}
+          className="mt-4 px-6 py-2 border text-black rounded-lg w-full"
+        >
+          Back
+        </button>
+        <button
           onClick={handleSaveClick}
-          className="px-6 py-2 bg-[#3b3a43] text-white rounded-full text-xs"
+          className="mt-4 px-6 py-2 bg-[#2F103A] text-white rounded-lg w-full"
         >
           {t("navigation.save-button")}
-        </Button>
+        </button>
       </div>
     </div>
   );
@@ -177,4 +212,10 @@ BottomDrawerReview.propTypes = {
   isAddCustomRuleBlockOpen: PropTypes.bool,
   setIsDrawerOpen: PropTypes.func,
   decision: PropTypes.string,
+  proceedToStep: PropTypes.func,
+  setDecision: PropTypes.func,
+  setExcitements: PropTypes.func,
+  setWorries: PropTypes.func,
+  excitements: PropTypes.string,
+  worries: PropTypes.string,
 };

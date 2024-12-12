@@ -2,6 +2,7 @@ import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { UserProvider } from "./UserProvider";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useSpace } from "./useSpace";
 import i18n from "./i18n";
 import SpaceDashboard from "./pages/Space/SpaceDashboard";
 import RuleDashboard from "./pages/Rule/RuleDashboard";
@@ -23,7 +24,8 @@ function App() {
   const [navTitle, setNavTitle] = useState(t("navigation.navigation-title")); // state to track current step
   const location = useLocation();
   const [closeButtonLink, setCloseButtonLink] = useState("/");
-  const permissionEngineAPI = API.getInstance();
+  const permissionEngineAPI = new API();
+  const { spaceId } = useSpace();
 
   // Determine if Navbar should be shown
   const showNavbar = location.pathname !== "/landing";
@@ -52,6 +54,9 @@ function App() {
     }
   }, [location.pathname, t]); // Re-run when the route changes
 
+  useEffect(() => {
+    console.log("spaceId:", spaceId);
+  }, [spaceId]);
   return (
     <div>
       <UserProvider>
@@ -65,7 +70,7 @@ function App() {
             setCloseButtonLink={setCloseButtonLink}
           />
         )}
-        <Routes>
+        <Routes key={spaceId}>
           <Route
             path="/landing"
             element={
@@ -109,7 +114,7 @@ function App() {
           />
 
           <Route
-            path="/events/assigned"
+            path="/events/assigned/:spaceId"
             element={
               <DisplayAssginedEvents
                 permissionEngineAPI={permissionEngineAPI}

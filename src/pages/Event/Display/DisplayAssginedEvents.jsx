@@ -1,7 +1,7 @@
 import { useUser } from "../../../useUser";
 import { useState, useEffect } from "react";
 import { CalendarIcon, ClockIcon } from "@heroicons/react/outline";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { navigateTo, navigateToBack } from "../../../lib/util";
@@ -12,6 +12,7 @@ export default function DisplayAssignedEvents({ permissionEngineAPI }) {
   const [assignedRequests, setAssignedRequests] = useState([]);
   const [me, setMe] = useState(null);
   const { user } = useUser();
+  let { spaceId } = useParams();
 
   const fetchMe = async () => {
     const me = await permissionEngineAPI.fetchMe();
@@ -20,19 +21,42 @@ export default function DisplayAssignedEvents({ permissionEngineAPI }) {
 
   const fetchAssignedEvents = async () => {
     // TODO. add pagination or infinite scroll feature
-    await permissionEngineAPI
-      .fetchAssignedEvent("8b1403f3-1840-40be-bfc1-3013ef36b640")
-      .then((data) => {
-        console.log(">>> assigned event data: ", data);
-        setAssignedRequests(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching event info:", error);
-        navigateToBack(navigate);
-      });
+    console.log("fetchAssignedEvents");
+
+    try {
+      // Fetch assigned events
+      const data = await permissionEngineAPI.fetchAssignedEvent(spaceId);
+      console.log(">>> Assigned event data: ", data);
+
+      // Fetch details for each event concurrently
+      const detailedData = await Promise.all(
+        data.map(async (event) => {
+          try {
+            const eventDetails = await permissionEngineAPI.fetchEventById(
+              event.spaceEventId
+            );
+            return { ...event, name: eventDetails.name }; // Include response.name in the event object
+          } catch (err) {
+            console.error(
+              `Error fetching details for event ${event.spaceEventId}:`,
+              err
+            );
+            return { ...event, name: "Unknown" }; // Fallback value if fetching details fails
+          }
+        })
+      );
+
+      // Update state with detailed data
+      setAssignedRequests(detailedData);
+    } catch (error) {
+      console.error("Error fetching event info:", error);
+      navigate("/"); // Handle navigation in case of errors
+    }
   };
 
   useEffect(() => {
+    console.log("spaceId", spaceId);
+
     fetchMe();
   }, []);
 
@@ -73,7 +97,7 @@ export default function DisplayAssignedEvents({ permissionEngineAPI }) {
                   >
                     <div className="flex items-center justify-between">
                       <div className="font-semibold text-xl ">
-                        {request.spaceEventId}
+                        {request.name}
                       </div>
                       <div
                         className={`${eventStatusColor} text-sm p-1 px-4 rounded-full`}

@@ -13,17 +13,18 @@ const ReviewAllRules = ({
   //   console.log("currentLanguage: ", currentLanguage);
 
   return (
-    <div className="p-4 space-y-4 text-left">
-      <div className="text-2xl block mb-2 font-semibold mt-8">
-        {t("review-event.review-the-rules")}
+    <div className="flex flex-col justify-start p-4 space-y-2 text-left h-[90vh]">
+      <div className="flex-grow">
+        <div className="text-2xl block mb-2 font-semibold mt-8">
+          {t("review-event.review-the-rules")}
+        </div>
+        <DisplayAllRules
+          rule={rule}
+          permissionEngineAPI={permissionEngineAPI}
+          proceedToStep={proceedToStep}
+        ></DisplayAllRules>
       </div>
-      <DisplayAllRules
-        rule={rule}
-        permissionEngineAPI={permissionEngineAPI}
-        proceedToStep={proceedToStep}
-      ></DisplayAllRules>
-
-      <div className="py-4">
+      <div className="py-8">
         <button
           onClick={() => proceedToStep(1)}
           className="mt-4 px-6 py-2 border text-black rounded-lg w-full"

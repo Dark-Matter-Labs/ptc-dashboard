@@ -391,6 +391,16 @@ export class API {
     );
     return response?.data ?? [];
   };
+  fetchRequestIdByEventId = async (spaceEventId) => {
+    const response = await this.get(`permission/request?spaceEventId=${spaceEventId}`);
+    return response?.data ?? [];
+  };
+  fetchResponseIdByRequestId = async (requestId) => {
+    const response = await this.get(`permission/response?permissionRequestId=${requestId}`);
+    return response?.data ?? [];
+  };
+
+
 
   fetchPublicUserData = async (userId) => {
     const response = await this.get("user/:userId", {
@@ -449,6 +459,34 @@ export class API {
 
     return response;
   };
+
+  postPermissionResponse = async ({ responseId, decision, excitements, worries }) => {
+    console.log("response is: ", responseId);
+    const body = { excitements, worries };
+    let response = null;
+
+    let endpoint = null;
+    switch (decision) {
+      case "agree":
+        console.log("response approve, body: ", body);
+        endpoint = `permission/response/${responseId}/approve`;
+        break;
+      case "disagree":
+        endpoint = `permission/response/${responseId}/reject`;
+        break;
+      case "abstention":
+        endpoint = `permission/response/${responseId}/abstention`;
+        break;
+      default:
+        throw new Error("Invalid decision value");
+    }
+    // Call the POST method
+    if (endpoint) {
+      response = await this.post(endpoint, {}, body);
+    }
+
+    return response;
+  }
 
   /**
    *

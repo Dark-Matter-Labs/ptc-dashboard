@@ -20,6 +20,8 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
   const [topics, setTopics] = useState([]);
   const [equipments, setEquipments] = useState([]);
   const [timeObj, setTimeObj] = useState({ date: null, time: null });
+  const [requestId, setRequestId] = useState("");
+  const [responseId, setResponseId] = useState("");
 
   const fetchEventById = async () => {
     try {
@@ -100,9 +102,44 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
   //     console.error("Error fetching event rule author:", error);
   //   }
   // };
+
+  const loadRequestId = async () => {
+    await permissionEngineAPI
+      .fetchRequestIdByEventId(spaceEventId)
+      .then((data) => {
+        console.log("request data: ", data);
+        setRequestId(data[0].id);
+      })
+      .catch((error) => {
+        console.error("Error fetching request: ", error);
+      });
+  };
+  const loadResponseId = async () => {
+    await permissionEngineAPI
+      .fetchResponseIdByRequestId(requestId)
+      .then((data) => {
+        console.log("response data: ", data);
+        setResponseId(data[0].id);
+      })
+      .catch((error) => {
+        console.error("Error fetching response: ", error);
+      });
+  };
+
   useEffect(() => {
     fetchEventById();
+    if (spaceEventId) {
+      console.log("spaceEventId:", spaceEventId);
+      loadRequestId(spaceEventId);
+    }
   }, []);
+
+  useEffect(() => {
+    if (requestId) {
+      console.log("requestId (when updated):", requestId);
+      loadResponseId(requestId);
+    }
+  }, [requestId]);
 
   useEffect(() => {
     if (eventData) {
@@ -131,6 +168,8 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
   return (
     <div>
       vote length: {voteHistory.length}
+      <p>requestId: {requestId}</p>
+      <p>responseId: {responseId}</p>
       <div>
         {voteHistory.map((vote, index) => (
           <p key={index}>
@@ -168,6 +207,7 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
               voteHistory={voteHistory}
               setVoteHistory={setVoteHistory}
               spaceEventId={spaceEventId}
+              responseId={responseId}
             />
           ) : currentStep === 4 ? (
             <DecisionSummary

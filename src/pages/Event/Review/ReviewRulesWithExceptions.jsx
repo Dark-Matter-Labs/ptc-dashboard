@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { CheckCircleIcon } from "@heroicons/react/solid";
 import DisplayRulesWithExceptions from "../../Rule/DisplayRulesWithExceptions";
 import BottomDrawerReview from "../../../components/Common/BottomDrawerReview";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 const ReviewRulesWithExceptions = ({
   t,
   rule,
@@ -11,37 +11,14 @@ const ReviewRulesWithExceptions = ({
   voteHistory,
   setVoteHistory,
   spaceEventId,
+  responseId,
 }) => {
   console.log("rule with exeptions: ", rule);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [decision, setDecision] = useState(""); //agree, disagree, abstention
   const [excitements, setExcitements] = useState("");
   const [worries, setWorries] = useState("");
-  const [requestId, setRequestId] = useState("");
-  const [responseId, setResponseId] = useState("");
 
-  const loadRequestId = async () => {
-    await permissionEngineAPI
-      .fetchRequestIdByEventId(spaceEventId)
-      .then((data) => {
-        console.log("request data: ", data);
-        setRequestId(data[0].id);
-      })
-      .catch((error) => {
-        console.error("Error fetching request: ", error);
-      });
-  };
-  const loadResponseId = async () => {
-    await permissionEngineAPI
-      .fetchResponseIdByRequestId(requestId)
-      .then((data) => {
-        console.log("response data: ", data);
-        setResponseId(data[0].id);
-      })
-      .catch((error) => {
-        console.error("Error fetching response: ", error);
-      });
-  };
   const handleResponseSubmittion = async () => {
     try {
       const response = await permissionEngineAPI.postPermissionResponse({
@@ -93,20 +70,6 @@ const ReviewRulesWithExceptions = ({
     proceedToStep(4);
   };
 
-  useEffect(() => {
-    if (spaceEventId) {
-      console.log("spaceEventId:", spaceEventId);
-      loadRequestId(spaceEventId);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (requestId) {
-      console.log("requestId (when updated):", requestId);
-      loadResponseId(requestId);
-    }
-  }, [requestId]);
-
   return (
     <div className="flex flex-col justify-start p-4 space-y-2 text-left h-[90vh]">
       <div className="flex-grow">
@@ -117,7 +80,6 @@ const ReviewRulesWithExceptions = ({
         <p>excitements: {excitements}</p>
         <p>worries: {worries}</p>
         <p>spaceEventId: {spaceEventId}</p>
-        <p>requestId: {requestId}</p>
         <p>responseId: {responseId}</p>
 
         <DisplayRulesWithExceptions
@@ -235,4 +197,5 @@ ReviewRulesWithExceptions.propTypes = {
   voteHistory: PropTypes.arrayOf(PropTypes.object).isRequired,
   setVoteHistory: PropTypes.func,
   spaceEventId: PropTypes.string,
+  responseId: PropTypes.string,
 };

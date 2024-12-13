@@ -37,7 +37,9 @@
     "today-events": "Today's events",
     "issue-report": "Issue Report",
     "permission-statistics": "Permission Statistics",
-    "interest-category": "Interest Category"
+    "interest-category": "Interest Category",
+    "issue-report-title-placeholder": "Please enter a title",
+    "issue-report-description-placeholder": "Please enter description"
   },
   "profile": {
     "title": "Profile Page"

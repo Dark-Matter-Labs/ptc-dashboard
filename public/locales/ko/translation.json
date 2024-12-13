@@ -38,7 +38,9 @@
     "today-events": "오늘의 활동",
     "issue-report": "이슈",
     "permission-statistics": "통계",
-    "interest-category": "활동 주제"
+    "interest-category": "활동 주제",
+    "issue-report-title-placeholder": "제목을 입력해주세요",
+    "issue-report-description-placeholder": "내용을 입력해주세요"
   },
   "profile": {
     "title": "프로필 페이지"

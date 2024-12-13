@@ -8,6 +8,12 @@ import { formatDateTime } from "../../../lib/util";
 import ReviewRulesWithExceptions from "./ReviewRulesWithExceptions";
 import ReviewAllRules from "./ReviewAllRules";
 import { DecisionSummary } from "./DecisionSummary";
+import {
+  ApiClient,
+  PermissionResponseAPI,
+  PermissionRequestAPI,
+} from "@dark-matter-labs/ptc-sdk";
+
 const ReviewEvent = ({ permissionEngineAPI }) => {
   const { user } = useUser();
   const { spaceEventId } = useParams();
@@ -20,7 +26,11 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
   const [topics, setTopics] = useState([]);
   const [equipments, setEquipments] = useState([]);
   const [timeObj, setTimeObj] = useState({ date: null, time: null });
-
+  const [requestId, setRequestId] = useState("");
+  const [responseId, setResponseId] = useState("");
+  const apiClient = new ApiClient();
+  const permissionResponseAPI = new PermissionResponseAPI(apiClient);
+  const permissionRequestAPI = new PermissionRequestAPI(apiClient);
   const fetchEventById = async () => {
     try {
       const data = await permissionEngineAPI.fetchEventById(spaceEventId);
@@ -100,6 +110,51 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
   //     console.error("Error fetching event rule author:", error);
   //   }
   // };
+  const loadRequestId = async () => {
+    if (spaceEventId) {
+      await permissionRequestAPI
+        .findAll({
+          spaceEventId,
+          statuses: ["assigned"],
+        })
+        .then((res) => {
+          console.log("request data: ", res.data);
+          setRequestId(res.data?.[0].id);
+        })
+        .catch((error) => {
+          console.error("Error fetching request: ", error);
+        });
+    }
+  };
+  const loadResponseId = async () => {
+    if (requestId) {
+      await permissionResponseAPI
+        .findAllSelfResponse({
+          permissionRequestId: requestId,
+        })
+        .then((res) => {
+          console.log("response data: ", res.data);
+          setResponseId(res.data?.[0].id);
+        })
+
+        .catch((error) => {
+          console.error("Error fetching response: ", error);
+        });
+    }
+  };
+  useEffect(() => {
+    if (spaceEventId) {
+      console.log("spaceEventId:", spaceEventId);
+      loadRequestId(spaceEventId);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (requestId) {
+      console.log("requestId (when updated):", requestId);
+      loadResponseId(requestId);
+    }
+  }, [requestId]);
   useEffect(() => {
     fetchEventById();
   }, []);
@@ -136,6 +191,8 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
           <p key={index}>
             {" "}
             vote {index} :: {vote.decision} , {vote.excitements} ,{vote.worries}
+            <p>requestId: {requestId}</p>
+            <p>responseId: {responseId}</p>
           </p>
         ))}
       </div>
@@ -168,6 +225,7 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
               voteHistory={voteHistory}
               setVoteHistory={setVoteHistory}
               spaceEventId={spaceEventId}
+              responseId={responseId}
             />
           ) : currentStep === 4 ? (
             <DecisionSummary

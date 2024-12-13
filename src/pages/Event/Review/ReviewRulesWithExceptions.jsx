@@ -2,12 +2,8 @@ import PropTypes from "prop-types";
 import { CheckCircleIcon } from "@heroicons/react/solid";
 import DisplayRulesWithExceptions from "../../Rule/DisplayRulesWithExceptions";
 import BottomDrawerReview from "../../../components/Common/BottomDrawerReview";
-import { useState, useEffect } from "react";
-import {
-  ApiClient,
-  PermissionResponseAPI,
-  PermissionRequestAPI,
-} from "@dark-matter-labs/ptc-sdk";
+import { useState } from "react";
+import { ApiClient, PermissionResponseAPI } from "@dark-matter-labs/ptc-sdk";
 
 const ReviewRulesWithExceptions = ({
   t,
@@ -17,50 +13,17 @@ const ReviewRulesWithExceptions = ({
   voteHistory,
   setVoteHistory,
   spaceEventId,
+  responseId,
 }) => {
   console.log("rule with exeptions: ", rule);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [decision, setDecision] = useState(""); //agree, disagree, abstention
   const [excitements, setExcitements] = useState("");
   const [worries, setWorries] = useState("");
-  const [requestId, setRequestId] = useState("");
-  const [responseId, setResponseId] = useState("");
+
   const apiClient = new ApiClient();
   const permissionResponseAPI = new PermissionResponseAPI(apiClient);
-  const permissionRequestAPI = new PermissionRequestAPI(apiClient);
 
-  const loadRequestId = async () => {
-    if (spaceEventId) {
-      await permissionRequestAPI
-        .findAll({
-          spaceEventId,
-          statuses: ["assigned"],
-        })
-        .then((res) => {
-          console.log("request data: ", res.data);
-          setRequestId(res.data?.[0].id);
-        })
-        .catch((error) => {
-          console.error("Error fetching request: ", error);
-        });
-    }
-  };
-  const loadResponseId = async () => {
-    if (requestId) {
-      await permissionResponseAPI
-        .findAllSelfResponse({
-          permissionRequestId: requestId,
-        })
-        .then((res) => {
-          console.log("response data: ", res.data);
-          setResponseId(res.data?.[0].id);
-        })
-
-        .catch((error) => {
-          console.error("Error fetching response: ", error);
-        });
-    }
-  };
   const handleResponseSubmittion = async () => {
     try {
       let response = null;
@@ -131,20 +94,6 @@ const ReviewRulesWithExceptions = ({
     proceedToStep(4);
   };
 
-  useEffect(() => {
-    if (spaceEventId) {
-      console.log("spaceEventId:", spaceEventId);
-      loadRequestId(spaceEventId);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (requestId) {
-      console.log("requestId (when updated):", requestId);
-      loadResponseId(requestId);
-    }
-  }, [requestId]);
-
   return (
     <div className="flex flex-col justify-start p-4 space-y-2 text-left h-[90vh]">
       <div className="flex-grow">
@@ -155,7 +104,7 @@ const ReviewRulesWithExceptions = ({
         <p>excitements: {excitements}</p>
         <p>worries: {worries}</p>
         <p>spaceEventId: {spaceEventId}</p>
-        <p>requestId: {requestId}</p>
+
         <p>responseId: {responseId}</p>
 
         <DisplayRulesWithExceptions
@@ -273,4 +222,5 @@ ReviewRulesWithExceptions.propTypes = {
   voteHistory: PropTypes.arrayOf(PropTypes.object).isRequired,
   setVoteHistory: PropTypes.func,
   spaceEventId: PropTypes.string,
+  responseId: PropTypes.string,
 };

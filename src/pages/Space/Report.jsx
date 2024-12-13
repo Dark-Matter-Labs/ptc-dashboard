@@ -15,16 +15,24 @@ import { SparklesIcon } from "@heroicons/react/solid";
 import { SunIcon } from "@heroicons/react/solid";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
+import { ApiClient, SpaceHistoryAPI } from "@dark-matter-labs/ptc-sdk";
+import BottomDrawerSpaceIssueReport from "../../components/Common/BottomDrawerSpaceIssueReport";
 
-export default function Report({ space, permissionEngineAPI }) {
+export default function Report({ space }) {
   const { t } = useTranslation();
+  const apiClient = new ApiClient();
+  const spaceHistoryAPI = new SpaceHistoryAPI(apiClient);
   const [issues, setIssues] = useState([]);
+  const [isIssueReportBottonDrawerOpen, setIsIssueReportBottonDrawerOpen] =
+    useState(false);
+
   const fetchIssues = async () => {
     try {
-      const unresolvedIssues =
-        await permissionEngineAPI.fetchUnresolvedSpaceIssue(space.id);
+      const unresolvedIssues = await spaceHistoryAPI.findAllUnresolvedIssue({
+        spaceId: space.id,
+      });
 
-      setIssues(unresolvedIssues);
+      setIssues(unresolvedIssues?.data);
     } catch (error) {
       console.error(`Failed to fetch issues`, error);
     }
@@ -44,7 +52,7 @@ export default function Report({ space, permissionEngineAPI }) {
   const handleIssueReport = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    alert("TBD");
+    setIsIssueReportBottonDrawerOpen(true);
   };
 
   useEffect(() => {
@@ -187,6 +195,20 @@ export default function Report({ space, permissionEngineAPI }) {
               </div>
             </DisclosurePanel>
           </Disclosure>
+        </div>
+
+        <div className="w-full h-0">
+          {isIssueReportBottonDrawerOpen ? (
+            <BottomDrawerSpaceIssueReport
+              space={space}
+              isIssueReportBottonDrawerOpen={isIssueReportBottonDrawerOpen}
+              setIsIssueReportBottonDrawerOpen={
+                setIsIssueReportBottonDrawerOpen
+              }
+            />
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </section>

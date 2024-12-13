@@ -22,7 +22,7 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
   const [eventRuleTemplate, setEventRuleTemplate] = useState({});
   const [rule, setRule] = useState({});
   const [voteHistory, setVoteHistory] = useState([]); //[{decision: ["agree"|"disagree"|"abstention"], excitements:"...", worries:"..."} , ...]
-  const [currentStep, setCurrentStep] = useState(1); // Step tracking: 1 = proposal, 2 = review actions
+  const [currentStep, setCurrentStep] = useState(4); // Step tracking: 1 = proposal, 2 = review actions
   const [topics, setTopics] = useState([]);
   const [equipments, setEquipments] = useState([]);
   const [timeObj, setTimeObj] = useState({ date: null, time: null });
@@ -185,9 +185,9 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
   const proceedToStep = (step) => setCurrentStep(step);
   return (
     <div>
-      <p>vote length: {voteHistory.length} </p>
+      {/* <p>vote length: {voteHistory.length} </p>
       <p>requestId: {requestId}</p>
-      <p>responseId: {responseId}</p>
+      <p>responseId: {responseId}</p> */}
       <div>
         {voteHistory.map((vote, index) => (
           <p key={index}>
@@ -230,6 +230,7 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
           ) : currentStep === 4 ? (
             <DecisionSummary
               t={t}
+              eventData={eventData}
               proceedToStep={proceedToStep}
               voteHistory={voteHistory}
               permissionResponseAPI={permissionResponseAPI}

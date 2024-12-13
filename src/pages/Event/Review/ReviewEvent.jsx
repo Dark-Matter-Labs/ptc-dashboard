@@ -185,14 +185,14 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
   const proceedToStep = (step) => setCurrentStep(step);
   return (
     <div>
-      vote length: {voteHistory.length}
+      <p>vote length: {voteHistory.length} </p>
+      <p>requestId: {requestId}</p>
+      <p>responseId: {responseId}</p>
       <div>
         {voteHistory.map((vote, index) => (
           <p key={index}>
             {" "}
             vote {index} :: {vote.decision} , {vote.excitements} ,{vote.worries}
-            <p>requestId: {requestId}</p>
-            <p>responseId: {responseId}</p>
           </p>
         ))}
       </div>
@@ -232,6 +232,8 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
               t={t}
               proceedToStep={proceedToStep}
               voteHistory={voteHistory}
+              permissionResponseAPI={permissionResponseAPI}
+              requestId={requestId}
             />
           ) : (
             <div>Step 5</div>

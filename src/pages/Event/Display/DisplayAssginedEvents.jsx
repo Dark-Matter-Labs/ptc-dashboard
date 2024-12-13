@@ -4,7 +4,7 @@ import { CalendarIcon, ClockIcon } from "@heroicons/react/outline";
 import { useNavigate, useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-import { navigateTo, navigateToBack } from "../../../lib/util";
+import { navigateTo } from "../../../lib/util";
 
 export default function DisplayAssignedEvents({ permissionEngineAPI }) {
   const { t } = useTranslation();

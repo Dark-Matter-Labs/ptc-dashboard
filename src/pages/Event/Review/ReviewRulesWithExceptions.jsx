@@ -78,10 +78,11 @@ const ReviewRulesWithExceptions = ({
 
   const handleSubmitButtonClicked = (e) => {
     e.preventDefault();
-    alert("Your vote has been submited.");
+
     // todo: post permissionresponse here
     console.log("let's proceed with the responseId,", responseId);
     handleResponseSubmittion();
+    alert("Your vote has been submited.");
     // we only allow one re-vote
     if (voteHistory.length < 2) {
       setVoteHistory((prevHistory) => [

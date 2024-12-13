@@ -1,12 +1,46 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-export const DecisionSummary = ({ t, proceedToStep, voteHistory }) => {
+import VotingSummaryPage from "./VotingSummaryPage";
+
+export const DecisionSummary = ({
+  permissionResponseAPI,
+  t,
+  requestId,
+  proceedToStep,
+  voteHistory,
+}) => {
   const navigate = useNavigate();
+  const [responses, setResponses] = useState([]); // State to store API responses
+
+  const loadAllResponses = async () => {
+    if (requestId) {
+      await permissionResponseAPI
+        .findAll({
+          permissionRequestId: requestId,
+        })
+        .then((res) => {
+          console.log("All response data: ", res.data);
+          setResponses(res.data);
+        })
+
+        .catch((error) => {
+          console.error("Error fetching response: ", error);
+        });
+    }
+  };
+  useEffect(() => {
+    console.log("requestId: ", requestId);
+
+    loadAllResponses();
+  }, []);
   return (
     <div className="p-4 space-y-4 text-left">
       <div className="text-2xl block mb-2 font-semibold mt-8">
         Decision Summary
       </div>
+      {/* Voting Summary */}
+      <VotingSummaryPage data={responses} />
       {/* Buttons */}
       <div className="py-4">
         <button
@@ -33,6 +67,8 @@ export const DecisionSummary = ({ t, proceedToStep, voteHistory }) => {
 
 DecisionSummary.propTypes = {
   t: PropTypes.func.isRequired,
+  permissionResponseAPI: PropTypes.object.isRequired,
   proceedToStep: PropTypes.func.isRequired,
   voteHistory: PropTypes.arrayOf(PropTypes.object).isRequired,
+  requestId: PropTypes.string,
 };

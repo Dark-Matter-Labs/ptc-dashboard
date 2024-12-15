@@ -14,35 +14,79 @@ export default function BottomDrawerSpaceIssueReport({
   const { t } = useTranslation();
   const apiClient = new ApiClient();
   const spaceAPI = new SpaceAPI(apiClient);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [image, setImage] = useState("");
   const [position, setPosition] = useState(0); // Tracks vertical position
   const [isDragging, setIsDragging] = useState(false); // Tracks if dragging
   const [isOpening, setIsOpening] = useState(false); // Tracks if dragging
   const [isClosing, setIsClosing] = useState(false); // Tracks if dragging
   const startYRef = useRef(0); // Initial Y position during drag
+  const [title, setTitle] = useState(null);
+  const [content, setContent] = useState(null);
+  const [images, setImages] = useState([]);
+  const fileInputRef = useRef(null);
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
   };
+
   const handleContentChange = (e) => {
     setContent(e.target.value);
   };
+
+  const handleFileChange = (event) => {
+    const files = event.target.files;
+
+    if (files) {
+      const fileArray = Array.from(new Set(files));
+
+      if (fileArray.length > 5) {
+        alert(`Up to 5 images are allowed`);
+        return;
+      }
+
+      setImages(fileArray);
+    }
+  };
+
   const handleCameraClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    alert("Camera clicked");
+
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   const handleSaveClick = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (title && title !== "" && content && content !== "") {
-      await spaceAPI.reportIssue(space.id, {});
+
+    try {
+      if (title && title.trim() !== "" && content && content.trim() !== "") {
+        const formData = new FormData();
+        formData.append("title", title.trim());
+        formData.append("details", content.trim());
+        formData.append("isPublic", true);
+
+        if (images.length > 0) {
+          images.forEach((image) => {
+            formData.append("images", image);
+          });
+        }
+
+        await spaceAPI.reportIssue(space.id, formData);
+        alert("Issue submitted");
+
+        setIsClosing(true);
+        setIsIssueReportBottonDrawerOpen(false);
+      } else if (!title || title.trim() === "") {
+        alert("Please provide title");
+      } else if (!content || content.trim() === "") {
+        alert("Please provide content");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Failed to submit issue report");
     }
-    setIsClosing(true);
-    setIsIssueReportBottonDrawerOpen(false);
   };
 
   const handleTouchStart = (e) => {
@@ -119,7 +163,7 @@ export default function BottomDrawerSpaceIssueReport({
           <div className="self-stretch h-[31px] flex-col justify-start items-start gap-[11px] flex">
             <div className="justify-start items-center gap-2 inline-flex">
               <div className="text-[#1e1e1e] text-2xl font-semibold font-['Inter'] leading-[31.20px]">
-                {t("rules.add-new-rule")}
+                {t("space.add-issue-report")}
               </div>
             </div>
           </div>
@@ -129,7 +173,7 @@ export default function BottomDrawerSpaceIssueReport({
             <div className="self-stretch h-[75px] flex-col justify-center items-start gap-[25px] flex">
               <div className="self-stretch h-[75px] flex-col justify-start items-start gap-2.5 flex">
                 <div className="self-stretch text-[#1e1e1e] text-lg font-semibold font-['Inter'] leading-normal">
-                  {t("rules.new-rule-title")}
+                  {t("space.add-issue-report-title")}
                 </div>
                 <div className="self-stretch px-4 py-3 bg-[#fafafb] rounded-xl border border-[#d8d8dd] justify-start items-center gap-1 inline-flex">
                   <div className="grow shrink basis-0 h-[18px] justify-start items-center gap-[7.06px] flex">
@@ -138,7 +182,9 @@ export default function BottomDrawerSpaceIssueReport({
                         id="add-custom-rule-block-name"
                         value={title}
                         onChange={handleTitleChange}
-                        placeholder={t("space.issue-report-title-placeholder")}
+                        placeholder={t(
+                          "space.add-issue-report-title-placeholder"
+                        )}
                         className="grow shrink basis-0 text-[#979797] font-normal font-['Roboto'] leading-[18.35px] bg-[#fafafb]"
                       ></Input>
                     </div>
@@ -149,7 +195,7 @@ export default function BottomDrawerSpaceIssueReport({
             <div className="self-stretch h-[160px] flex-col justify-center items-start gap-2.5 flex">
               <div className="self-stretch h-[160px] flex-col justify-start items-start gap-2.5 flex">
                 <div className="self-stretch text-[#1e1e1e] text-lg font-semibold font-['Inter'] leading-normal">
-                  {t("rules.new-rule-description")}
+                  {t("space.add-issue-report-description")}
                 </div>
                 <div className="w-[329px] justify-start items-start gap-[5.26px] inline-flex">
                   <div className="grow shrink basis-0 h-[91px] px-3.5 py-3.5 bg-[#fafafb] rounded-xl border border-[#d8d8dd] flex-col justify-start items-start gap-[8.77px] inline-flex">
@@ -160,19 +206,34 @@ export default function BottomDrawerSpaceIssueReport({
                           value={content}
                           onChange={handleContentChange}
                           placeholder={t(
-                            "space.issue-report-description-placeholder"
+                            "space.add-issue-report-description-placeholder"
                           )}
                           className="self-stretch h-full text-[#979797] text-sm font-normal font-['Inter'] bg-[#fafafb]"
                         ></Textarea>
                         <div className="h-0 w-full top-0 flex flex-col items-end">
+                          <input
+                            type="file"
+                            ref={fileInputRef}
+                            style={{ display: "none" }}
+                            onChange={handleFileChange}
+                            multiple
+                            accept=".jpg,.jpeg,.png,.webp,.heic"
+                          />
                           <CameraIcon
-                            className="p-2 size-10 fixed right-24 bottom-36"
+                            className="p-2 size-10 fixed left-80 bottom-36"
                             onClick={handleCameraClick}
                           />
                         </div>
                       </div>
                     </div>
                   </div>
+                </div>
+                <div>
+                  {images.length > 0
+                    ? images.map((image, index) => (
+                        <div key={index}>{image.name}</div>
+                      ))
+                    : ""}
                 </div>
               </div>
             </div>

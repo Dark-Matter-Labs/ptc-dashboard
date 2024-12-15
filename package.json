@@ -48,7 +48,7 @@
     "postcss": "^8.4.47",
     "prettier": "^3.3.3",
     "tailwindcss": "^3.4.13",
-    "@dark-matter-labs/ptc-sdk": "^1.0.6"
+    "@dark-matter-labs/ptc-sdk": "^1.1.0"
   },
   "devDependencies": {}
 }

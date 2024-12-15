@@ -153,7 +153,7 @@ export default function Space({ space, spaceOwner, currentLanguage }) {
               </span>
             </div>
           </div>
-          <div className="website">
+          <div className="website overflow-scroll">
             {space?.link ? (
               <div className="flex">
                 <LinkIcon className="h-5 w-5 white mr-1 text-gray-400"></LinkIcon>

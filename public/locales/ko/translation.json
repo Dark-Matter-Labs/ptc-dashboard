@@ -39,8 +39,11 @@
     "issue-report": "이슈",
     "permission-statistics": "통계",
     "interest-category": "활동 주제",
-    "issue-report-title-placeholder": "제목을 입력해주세요",
-    "issue-report-description-placeholder": "내용을 입력해주세요"
+    "add-issue-report": "이슈 리포트",
+    "add-issue-report-title": "제목",
+    "add-issue-report-description": "내용",
+    "add-issue-report-title-placeholder": "제목을 입력해주세요",
+    "add-issue-report-description-placeholder": "내용을 입력해주세요"
   },
   "profile": {
     "title": "프로필 페이지"

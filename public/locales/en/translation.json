@@ -38,8 +38,11 @@
     "issue-report": "Issue Report",
     "permission-statistics": "Permission Statistics",
     "interest-category": "Interest Category",
-    "issue-report-title-placeholder": "Please enter a title",
-    "issue-report-description-placeholder": "Please enter description"
+    "add-issue-report": "Report Issue",
+    "add-issue-report-title": "Title",
+    "add-issue-report-description": "Description",
+    "add-issue-report-title-placeholder": "Please enter a title",
+    "add-issue-report-description-placeholder": "Please enter description"
   },
   "profile": {
     "title": "Profile Page"

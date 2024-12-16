@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { CheckCircleIcon } from "@heroicons/react/solid";
 import DisplayRulesWithExceptions from "../../Rule/DisplayRulesWithExceptions";
 import BottomDrawerReview from "../../../components/Common/BottomDrawerReview";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const ReviewRulesWithExceptions = ({
   t,
@@ -10,18 +10,19 @@ const ReviewRulesWithExceptions = ({
   permissionEngineAPI,
   permissionResponseAPI,
   proceedToStep,
-  voteHistory,
-  setVoteHistory,
   responseId,
+  requestId,
   daysLeft,
   voters,
+  userId,
 }) => {
   console.log("rule with exeptions: ", rule);
+  const [responses, setResponses] = useState([]); // State to store API responses
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [decision, setDecision] = useState(""); //agree, disagree, abstention
   const [excitements, setExcitements] = useState("");
   const [worries, setWorries] = useState("");
-
+  const [voteHistory, setVoteHistory] = useState([]);
   const handleResponseSubmittion = async () => {
     try {
       let response = null;
@@ -81,17 +82,45 @@ const ReviewRulesWithExceptions = ({
     console.log("let's proceed with the responseId,", responseId);
     handleResponseSubmittion();
     alert("Your vote has been submited.");
-    // we only allow one re-vote
-    if (voteHistory.length < 2) {
-      setVoteHistory((prevHistory) => [
-        ...prevHistory,
-        { decision: decision, excitements: excitements, worries: worries },
-      ]);
-    } else {
-      alert("You can only re-vote once.");
-    }
+
     proceedToStep(4);
   };
+  const loadAllResponses = async () => {
+    if (requestId) {
+      await permissionResponseAPI
+        .findAll({
+          permissionRequestId: requestId,
+        })
+        .then((res) => {
+          console.log("All response data:", res.data);
+
+          setResponses(res.data);
+        })
+
+        .catch((error) => {
+          console.error("Error fetching response: ", error);
+        });
+    }
+  };
+  const loadVoteHistory = async () => {
+    console.log("Loading Vothisory, need user id: ", userId);
+    // fetch my id
+    // for each response, filter if user.id === userId
+    const myResponse = responses.find((response) => {
+      if (response.user.id === userId) return response.voteHistory;
+    });
+
+    console.log("extracted my vote history: ", myResponse.voteHistory);
+    // assign response.votHistory to voteHistory using setVoteHistory
+    setVoteHistory(myResponse.voteHistory || []);
+  };
+  useEffect(() => {
+    console.log("voteHistory: ", voteHistory);
+    loadVoteHistory();
+  }, [responses]);
+  useEffect(() => {
+    loadAllResponses();
+  }, []);
 
   return (
     <div className="flex flex-col justify-start p-4 space-y-2 text-left h-[90vh]">
@@ -113,9 +142,9 @@ const ReviewRulesWithExceptions = ({
       </div>
       <div className="py-8">
         <button
-          disabled={voteHistory.length === 2}
+          disabled={voteHistory.length >= 2}
           className={`mt-4 px-6 py-2 rounded-full w-full border border-1 ${
-            voteHistory.length === 2
+            voteHistory.length >= 2
               ? "bg-gray-300 text-gray-500 border-gray-300 cursor-not-allowed" // Disabled styles
               : decision === "agree" && excitements && worries
                 ? "bg-[#35AD66] text-white"
@@ -131,9 +160,9 @@ const ReviewRulesWithExceptions = ({
           )}
         </button>
         <button
-          disabled={voteHistory.length === 2}
+          disabled={voteHistory.length >= 2}
           className={`mt-4 px-6 py-2 rounded-full w-full border border-1 ${
-            voteHistory.length === 2
+            voteHistory.length >= 2
               ? "bg-gray-300 text-gray-500 border-gray-300 cursor-not-allowed" // Disabled styles
               : decision === "disagree" && excitements && worries
                 ? "bg-[#F47051] text-white border-[#F47051]"
@@ -148,9 +177,9 @@ const ReviewRulesWithExceptions = ({
         </button>
 
         <button
-          disabled={voteHistory.length === 2}
+          disabled={voteHistory.length >= 2}
           className={`mt-4 px-6 py-2 rounded-full w-full border border-1 ${
-            voteHistory.length === 2
+            voteHistory.length >= 2
               ? "bg-gray-300 text-gray-500 border-gray-300 cursor-not-allowed" // Disabled styles
               : decision === "abstention" && excitements && worries
                 ? "bg-[#92929D] text-white border-[#92929D]"
@@ -183,7 +212,7 @@ const ReviewRulesWithExceptions = ({
             )}
           </>
         )}
-        {voteHistory.length == 2 && (
+        {voteHistory.length >= 2 && (
           <button
             className="mt-4 px-6 py-2 bg-[#2F103A] text-white rounded-lg w-full"
             onClick={() => proceedToStep(4)}
@@ -224,6 +253,8 @@ ReviewRulesWithExceptions.propTypes = {
   setVoteHistory: PropTypes.func,
   spaceEventId: PropTypes.string,
   responseId: PropTypes.string,
+  requestId: PropTypes.string,
   daysLeft: PropTypes.number,
   voters: PropTypes.arrayOf(PropTypes.object),
+  userId: PropTypes.string,
 };

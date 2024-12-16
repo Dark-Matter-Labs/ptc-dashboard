@@ -9,14 +9,38 @@ export const DecisionSummary = ({
   t,
   requestId,
   proceedToStep,
-  voteHistory,
   eventData,
-  daysLeft,
-  voters,
+  userId,
 }) => {
   const navigate = useNavigate();
   const [responses, setResponses] = useState([]); // State to store API responses
   const [myLastDecision, setMyLastDecision] = useState(""); // State to store
+  const [voteHistory, setVoteHistory] = useState([]);
+  const [daysLeft, setDaysLeft] = useState(null);
+  const [voters, setVoters] = useState([]);
+  // Function to calculate days left
+  const calculateDaysLeft = (timeoutAt) => {
+    const currentDate = new Date();
+    const targetDate = new Date(timeoutAt);
+    const diffTime = targetDate - currentDate;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Convert ms to days
+    return diffDays;
+  };
+
+  // Extract voters' information from responses
+  const extractVoters = (responses) => {
+    return responses
+      .filter(
+        (res) =>
+          res.status === "approved" ||
+          res.status === "rejected" ||
+          res.status === "abstention"
+      )
+      .map((res) => ({
+        id: res.user.id,
+        image: res.user.image,
+      }));
+  };
   const loadAllResponses = async () => {
     if (requestId) {
       await permissionResponseAPI
@@ -24,8 +48,14 @@ export const DecisionSummary = ({
           permissionRequestId: requestId,
         })
         .then((res) => {
-          console.log("All response data: ", res.data);
+          console.log("All response data:", res.data);
+
           setResponses(res.data);
+          // Calculate days left and voted count after fetching responses
+          if (res.data.length > 0) {
+            setDaysLeft(calculateDaysLeft(res.data[0].timeoutAt)); // Assuming all responses share the same timeoutAt
+            setVoters(extractVoters(res.data));
+          }
         })
 
         .catch((error) => {
@@ -33,19 +63,31 @@ export const DecisionSummary = ({
         });
     }
   };
+  const loadVoteHistory = async () => {
+    if (responses) {
+      const myResponse = responses?.find((response) => {
+        if (response.user.id === userId) return response.voteHistory;
+      });
+
+      // console.log("extracted my vote history: ", myResponse.voteHistory);
+
+      setVoteHistory(myResponse?.voteHistory || []);
+    }
+  };
   useEffect(() => {
     console.log("requestId: ", requestId);
-    console.log("voteHistory: ", voteHistory);
-    console.log(
-      "last decision: ",
-      voteHistory[voteHistory.length - 1].decision
-    );
-    setMyLastDecision(voteHistory[voteHistory.length - 1].decision);
+
+    setMyLastDecision("agree");
     loadAllResponses();
   }, []);
+
+  useEffect(() => {
+    console.log("voteHistory: ", voteHistory);
+    loadVoteHistory();
+  }, [responses]);
   return (
-    <div className="h-screen">
-      <div className="p-4 space-y-4 text-left bg-[#F9F3F3] flex flex-col justify-between h-full gap-10">
+    <div className="h-[90vh]">
+      <div className="p-4  text-left bg-[#F9F3F3] flex flex-col justify-between h-full ">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <ClockIcon className="h-6 w-6 text-[#57515C]" />
@@ -97,9 +139,9 @@ export const DecisionSummary = ({
             Community dashboard
           </button>
           <button
-            disabled={voteHistory.length === 2}
+            disabled={voteHistory.length >= 2}
             className={`mt-4 px-6 py-2  rounded-lg w-full  ${
-              voteHistory.length === 2
+              voteHistory.length >= 2
                 ? "bg-gray-300 text-gray-500 border-gray-300 cursor-not-allowed"
                 : "bg-[#2F103A] text-white"
             }`}
@@ -117,9 +159,7 @@ DecisionSummary.propTypes = {
   t: PropTypes.func.isRequired,
   permissionResponseAPI: PropTypes.object.isRequired,
   proceedToStep: PropTypes.func.isRequired,
-  voteHistory: PropTypes.arrayOf(PropTypes.object).isRequired,
+  userId: PropTypes.string,
   requestId: PropTypes.string,
   eventData: PropTypes.object.isRequired,
-  daysLeft: PropTypes.number,
-  voters: PropTypes.arrayOf(PropTypes.object),
 };

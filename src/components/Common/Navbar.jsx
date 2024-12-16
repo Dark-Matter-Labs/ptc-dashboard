@@ -78,15 +78,26 @@ export default function Navbar({
         if (data.message === "Unauthorized") {
           handleLogin();
         } else if (data.email) {
-          const newUser = {
-            email: data.email,
-            firstname: data.firstName || "",
-            lastname: data.lastName || "",
-            picture: data.picture || "",
-            name: data.name || "",
-          };
-          setUser(newUser);
-          // console.log("Fetched user:", newUser);
+          // Proceed to fetch additional user information from /api/v1/user/me
+          fetch("/api/v1/user/me", {
+            credentials: "include",
+          })
+            .then((response) => response.json())
+            .then((userData) => {
+              const newUser = {
+                id: userData.id || "",
+                email: data.email,
+                firstname: data.firstName || "",
+                lastname: data.lastName || "",
+                picture: data.picture || "",
+                name: data.name || "",
+              };
+              setUser(newUser);
+              // console.log("Fetched user: (newUser)", newUser);
+            })
+            .catch((error) => {
+              console.error("Error fetching additional user info:", error);
+            });
         }
       })
       .catch((error) => {

@@ -7,10 +7,17 @@ import StepBrowseRuleBlocks from "./StepBrowseRuleBlocks";
 import StepCheckRuleBlocks from "./StepCheckRuleBlocks";
 import StepFinalReview from "./StepFinalReview";
 import Stepper from "../../../components//Common/Stepper";
-import * as Type from "../../../lib/PermissionEngine/type";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { navigateToBack } from "../../../lib/util";
+import {
+  ApiClient,
+  RuleAPI,
+  RuleBlockAPI,
+  SpaceEventAPI,
+  PermissionRequestAPI,
+  Type,
+} from "@dark-matter-labs/ptc-sdk";
 
 export default function CreateEvent({
   setNavTitle,
@@ -18,6 +25,13 @@ export default function CreateEvent({
   currentLanguage,
 }) {
   const { t } = useTranslation();
+
+  const apiClient = ApiClient.getInstance();
+  const ruleAPI = new RuleAPI(apiClient);
+  const ruleBlockAPI = new RuleBlockAPI(apiClient);
+  const spaceEventAPI = new SpaceEventAPI(apiClient);
+  const permissionRequestAPI = new PermissionRequestAPI(apiClient);
+
   const spaceRuleBlockExcludedTypes = [
     Type.RuleBlockType.spaceConsentMethod,
     Type.RuleBlockType.spaceConsentTimeout,
@@ -87,7 +101,7 @@ export default function CreateEvent({
     // id: null,
     // name: null, // to be collected from form
     // parentRuleId: null,
-
+    // details: null,
     spaceId: spaceId,
     ruleBlocks: [],
     target: Type.RuleTarget.spaceEvent,
@@ -327,8 +341,7 @@ export default function CreateEvent({
       if (ruleBlock.id && ruleBlock.id.startsWith("rule-block-") === false) {
         newRuleBlocks.push(ruleBlock);
       } else {
-        const newRuleBlock =
-          await permissionEngineAPI.createRuleBlock(ruleBlock);
+        const newRuleBlock = await ruleBlockAPI.create(ruleBlock);
         newRuleBlocks.push(newRuleBlock);
       }
     }
@@ -355,8 +368,10 @@ export default function CreateEvent({
       throw new Error(`RuleBlock without id is found`);
     }
 
-    const newEventRule = await permissionEngineAPI.createRule({
+    const newEventRule = await ruleAPI.create({
       name: eventRuleData.name,
+      details: eventRuleData.details,
+      topicIds: eventRuleData.topicIds,
       target: Type.RuleTarget.spaceEvent,
       ruleBlockIds: ruleBlocks.map((item) => item.id),
     });
@@ -402,7 +417,7 @@ export default function CreateEvent({
       throw new Error("There are non-string typed item in topicIds");
     }
 
-    const newEvent = await permissionEngineAPI.createSpaceEvent({
+    const newEvent = await spaceEventAPI.create({
       name,
       spaceId,
       ruleId,
@@ -429,7 +444,7 @@ export default function CreateEvent({
     }
 
     const newPermissionRequest =
-      await permissionEngineAPI.createEventPermissionRequest({
+      await permissionRequestAPI.spaceEventPermissionRequest({
         spaceEventId: id,
       });
 

@@ -148,6 +148,10 @@ const StepSetEventData = ({
         startsAt: eventDateTime,
         duration: durationAddedTime.diff(time, "minute") + "m",
       });
+      updateEventRuleData({
+        name: eventTitle,
+        details: description,
+      });
     }
   }, [spaceRule, eventTitle, description, eventDateTime]);
 

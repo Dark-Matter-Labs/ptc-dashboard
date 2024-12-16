@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { ClockIcon } from "@heroicons/react/solid";
 import { Textarea } from "@headlessui/react";
 import "../../assets/css/Drawer.css";
 import PropTypes from "prop-types";
@@ -14,6 +15,8 @@ export default function BottomDrawerReview({
   setExcitements,
   setWorries,
   proceedToStep,
+  daysLeft,
+  voters,
 }) {
   const { t } = useTranslation();
   const [title, setTitle] = useState(excitements);
@@ -135,10 +138,31 @@ export default function BottomDrawerReview({
       </div>
 
       {/* Content */}
-      <div className="flex-grow flex flex-col gap-6 mt-8">
-        {/* Header */}
-        <div className="text-[#1e1e1e] text-2xl font-semibold">
-          {t("review-event.cast-decision")}
+      <div className="flex-grow flex flex-col gap-6 mt-8 ">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <ClockIcon className="h-6 w-6 text-[#57515C]" />
+            {daysLeft !== null && <span>{daysLeft} days left</span>}
+          </div>
+          {voters.length >= 0 && (
+            <div className="flex items-center -space-x-2">
+              {/* Voter Images */}
+              {voters.map((voter) => (
+                <div key={voter.id} className="relative">
+                  <img
+                    src={voter.image}
+                    alt={`User ${voter.id}`}
+                    className="h-10 w-10 rounded-full border-2 border-white"
+                  />
+                </div>
+              ))}
+
+              {/* Vote Count */}
+              <div className="z-10 flex items-center justify-center bg-[#F9F3F3] text-black h-10 rounded-full border-2 border-[#F9F3F3] text-xs font-semibold px-4">
+                {voters.length} voted
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Decision Section */}
@@ -218,4 +242,6 @@ BottomDrawerReview.propTypes = {
   setWorries: PropTypes.func,
   excitements: PropTypes.string,
   worries: PropTypes.string,
+  daysLeft: PropTypes.number,
+  voters: PropTypes.arrayOf(PropTypes.object),
 };

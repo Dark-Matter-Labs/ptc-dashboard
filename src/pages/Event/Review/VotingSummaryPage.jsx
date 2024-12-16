@@ -1,59 +1,60 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
-const mockupdata = [
-  {
-    id: "1f3b3fa2-47d3-4234-929f-dd3e17f79fa1",
-    status: "pending",
-    excitements: null,
-    worries: null,
-  },
-  {
-    id: "2f3b3fa2-47d3-4234-929f-dd3e17f79fa1",
-    status: "pending",
-    excitements: null,
-    worries: null,
-  },
-  {
-    id: "3f3b3fa2-47d3-4234-929f-dd3e17f79fa1",
-    status: "approved",
-    user: {
-      image:
-        "https://lh3.googleusercontent.com/a/ACg8ocI_tzuQLoB6IUa5hx2xCYzkHIziXU1lP_6xCUF69VHapdItWQ=s96-c",
-    },
-    excitements: ["I love risotto, can't wait to try new recipes!"],
-    worries: ["Hope the ingredients provided are high quality."],
-  },
-  {
-    id: "4f3b3fa2-47d3-4234-929f-dd3e17f79fa1",
-    status: "rejected",
-    user: {
-      image: "https://ca.slack-edge.com/T0ACH7MPH-U07GRAN3HU6-a4cfea2b4a9c-512",
-    },
-    excitements: ["Sounds interesting, but..."],
-    worries: ["Not everyone likes risotto."],
-  },
-  {
-    id: "5f3b3fa2-47d3-4234-929f-dd3e17f79fa1",
-    status: "abstention",
-    user: {
-      image: "https://ca.slack-edge.com/T0ACH7MPH-U019L3XRPN3-dade83ee8705-512",
-    },
-    excitements: ["Could be fun, but unsure."],
-    worries: ["Not sure if the workshop is worth my time."],
-  },
-  {
-    id: "6f3b3fa2-47d3-4234-929f-dd3e17f79fa1",
-    status: "abstention",
-    user: {
-      image: "https://ca.slack-edge.com/T0ACH7MPH-U01AQMUSMJL-66d2ddb3fd76-512",
-    },
-    excitements: ["Learning to cook risotto might be useful."],
-    worries: ["I’m not very interested in cooking."],
-  },
-];
+import { CheckCircleIcon } from "@heroicons/react/solid";
+// const mockupdata = [
+//   {
+//     id: "1f3b3fa2-47d3-4234-929f-dd3e17f79fa1",
+//     status: "pending",
+//     excitements: null,
+//     worries: null,
+//   },
+//   {
+//     id: "2f3b3fa2-47d3-4234-929f-dd3e17f79fa1",
+//     status: "pending",
+//     excitements: null,
+//     worries: null,
+//   },
+//   {
+//     id: "3f3b3fa2-47d3-4234-929f-dd3e17f79fa1",
+//     status: "pending",
+//     user: {
+//       image:
+//         "https://lh3.googleusercontent.com/a/ACg8ocI_tzuQLoB6IUa5hx2xCYzkHIziXU1lP_6xCUF69VHapdItWQ=s96-c",
+//     },
+//     excitements: ["I love risotto, can't wait to try new recipes!"],
+//     worries: ["Hope the ingredients provided are high quality."],
+//   },
+//   {
+//     id: "4f3b3fa2-47d3-4234-929f-dd3e17f79fa1",
+//     status: "rejected",
+//     user: {
+//       image: "https://ca.slack-edge.com/T0ACH7MPH-U07GRAN3HU6-a4cfea2b4a9c-512",
+//     },
+//     excitements: ["Sounds interesting, but..."],
+//     worries: ["Not everyone likes risotto."],
+//   },
+//   {
+//     id: "5f3b3fa2-47d3-4234-929f-dd3e17f79fa1",
+//     status: "abstention",
+//     user: {
+//       image: "https://ca.slack-edge.com/T0ACH7MPH-U019L3XRPN3-dade83ee8705-512",
+//     },
+//     excitements: ["Could be fun, but unsure."],
+//     worries: ["Not sure if the workshop is worth my time."],
+//   },
+//   {
+//     id: "6f3b3fa2-47d3-4234-929f-dd3e17f79fa1",
+//     status: "abstention",
+//     user: {
+//       image: "https://ca.slack-edge.com/T0ACH7MPH-U01AQMUSMJL-66d2ddb3fd76-512",
+//     },
+//     excitements: ["Learning to cook risotto might be useful."],
+//     worries: ["I’m not very interested in cooking."],
+//   },
+// ];
 
-export const VotingSummaryPage = ({ data }) => {
-  data = mockupdata;
+export const VotingSummaryPage = ({ data, myLastDecision }) => {
+  // data = mockupdata;
   // Count the number of each vote type based on status
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -155,6 +156,11 @@ export const VotingSummaryPage = ({ data }) => {
           disagree: "Disagree",
           abstain: "Abstention",
         }[category];
+        const decision = {
+          agree: "agree",
+          disagree: "disagree",
+          abstain: "abstention",
+        }[category];
 
         return (
           <div key={category} className="mb-4">
@@ -163,14 +169,23 @@ export const VotingSummaryPage = ({ data }) => {
               onClick={() => handleCategoryClick(category)}
             >
               <div
-                className={`${bgColor} h-12 rounded-full text-black flex items-center font-semibold pl-4`}
-                style={{ width: `${getPercentage(count)}%` }}
+                className={`${count != 0 ? bgColor : "transparent"} h-12 rounded-full text-black flex items-center font-semibold pl-4`}
+                style={{
+                  width: count === 0 ? "0%" : `${getPercentage(count)}%`,
+                }}
               >
                 {label}
+                {/* Show icon if myLastDecision matches the category */}
+                {myLastDecision === decision && (
+                  <CheckCircleIcon className="h-6 w-6 text-[#2F103A] ml-2" />
+                )}
               </div>
-              <div className="pr-4">{count} votes</div>
+              <div className="px-2 min-w-16 ml-auto">
+                {count === 0 || count === 1
+                  ? `${count} vote`
+                  : `${count} votes`}
+              </div>
             </div>
-
             {selectedCategory === category && (
               <div className={`mt-4 p-4 border rounded-md ${PanelBgColor}`}>
                 <div className="flex gap-4">
@@ -243,4 +258,5 @@ VotingSummaryPage.propTypes = {
       status: PropTypes.string.isRequired,
     })
   ).isRequired,
+  myLastDecision: PropTypes.string,
 };

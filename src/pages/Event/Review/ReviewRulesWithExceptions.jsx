@@ -3,26 +3,24 @@ import { CheckCircleIcon } from "@heroicons/react/solid";
 import DisplayRulesWithExceptions from "../../Rule/DisplayRulesWithExceptions";
 import BottomDrawerReview from "../../../components/Common/BottomDrawerReview";
 import { useState } from "react";
-import { ApiClient, PermissionResponseAPI } from "@dark-matter-labs/ptc-sdk";
 
 const ReviewRulesWithExceptions = ({
   t,
   rule,
   permissionEngineAPI,
+  permissionResponseAPI,
   proceedToStep,
   voteHistory,
   setVoteHistory,
-  spaceEventId,
   responseId,
+  daysLeft,
+  voters,
 }) => {
   console.log("rule with exeptions: ", rule);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [decision, setDecision] = useState(""); //agree, disagree, abstention
   const [excitements, setExcitements] = useState("");
   const [worries, setWorries] = useState("");
-
-  const apiClient = new ApiClient();
-  const permissionResponseAPI = new PermissionResponseAPI(apiClient);
 
   const handleResponseSubmittion = async () => {
     try {
@@ -101,12 +99,11 @@ const ReviewRulesWithExceptions = ({
         <div className="text-2xl block mb-2 font-semibold mt-8">
           {t("review-event.review-the-exceptions")}
         </div>
-        <p>decision: {decision}</p>
+        {/* <p>decision: {decision}</p>
         <p>excitements: {excitements}</p>
         <p>worries: {worries}</p>
         <p>spaceEventId: {spaceEventId}</p>
-
-        <p>responseId: {responseId}</p>
+        <p>responseId: {responseId}</p> */}
 
         <DisplayRulesWithExceptions
           rule={rule}
@@ -204,6 +201,8 @@ const ReviewRulesWithExceptions = ({
             setDecision={setDecision}
             setWorries={setWorries}
             setExcitements={setExcitements}
+            daysLeft={daysLeft}
+            voters={voters}
           />
         ) : (
           ""
@@ -219,9 +218,12 @@ ReviewRulesWithExceptions.propTypes = {
   t: PropTypes.func,
   rule: PropTypes.object,
   permissionEngineAPI: PropTypes.object,
+  permissionResponseAPI: PropTypes.object,
   proceedToStep: PropTypes.func,
   voteHistory: PropTypes.arrayOf(PropTypes.object).isRequired,
   setVoteHistory: PropTypes.func,
   spaceEventId: PropTypes.string,
   responseId: PropTypes.string,
+  daysLeft: PropTypes.number,
+  voters: PropTypes.arrayOf(PropTypes.object),
 };

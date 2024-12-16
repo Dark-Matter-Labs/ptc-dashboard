@@ -156,7 +156,7 @@ export default function Navbar({
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   return (
-    <div className="w-full h-24 lg:h-20 flex items-center justify-between px-6 bg-white sticky top-0 z-10">
+    <div className="w-full h-24 lg:h-20 flex items-center justify-between px-6 bg-white sticky top-0 z-50">
       {/* Test notification handling */}
       <div className="w-full h-auto absolute left-0 flex justify-center items-center">
         {notifications

@@ -80,11 +80,6 @@ const StepCheckRuleBlocks = ({
   };
 
   useEffect(() => {
-    console.log(isAddCustomRuleBlockOpen);
-    // setIsAddCustomRuleBlockOpen(false);
-  }, [isAddCustomRuleBlockOpen]);
-
-  useEffect(() => {
     console.log("expanded Cards: ", expandedCards);
     console.log("agreements: ", agreements);
   }, [expandedCards, agreements]);

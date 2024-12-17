@@ -1,7 +1,7 @@
 import { SupportedEventAccessType } from "../../components/Common/SupportedEventAccessType";
 import { KeyValueRuleBlockContent } from "../../components/Common/KeyValueRuleBlockContent";
 import { SpaceAvailabilityRuleBlockContent } from "../../components/Common/SpaceAvailabilityRuleBlockContent";
-import * as Type from "../PermissionEngine/type";
+import { Type } from "@dark-matter-labs/ptc-sdk";
 import { accessToken } from "../mapbox";
 
 export const capitalizeFirstLetter = (str) => {
@@ -262,7 +262,6 @@ export const navigateTo = (option) => {
 };
 
 export const navigateToBack = (navigate) => {
-  logPrevPathname(window.location.pathname);
   let pathname = "/";
   const prevPathname = window.localStorage.getItem("prevPathname");
 

@@ -23,6 +23,14 @@
     "cancel-button": "취소",
     "send-request": "신청하기"
   },
+  "landing": {
+    "theme-choose-theme": "Choose a theme",
+    "theme-choose-interest": "관심이 있는 주제를 골라보세요",
+    "map-explore-space": "Explore spaces",
+    "map-discover-unique-spaces": "다양한 공간을 둘러보세요",
+    "map-theme-selection": "선택한 키워드입니다",
+    "map-space-keyword": "이 공간의 키워드"
+  },
   "space": {
     "follow-button": "팔로우",
     "availability": "이용 가능 여부",

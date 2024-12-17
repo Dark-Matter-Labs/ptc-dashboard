@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { MultiLocationsMapBox } from "../../components/Common/MultiLocationsMapBox";
 import { useEffect, useState } from "react";
 import { reverseGeocode } from "../../lib/util";
+import { useTranslation } from "react-i18next";
 
 export const LandingMap = ({
   mapSectionRef,
@@ -12,6 +13,7 @@ export const LandingMap = ({
   const [locations, setLocations] = useState([]);
   const [userLocation, setUserLocation] = useState([]);
   const [topics, setTopics] = useState([]);
+  const { t } = useTranslation();
 
   const loadUserLocation = async () => {
     return await new Promise((resolve, reject) => {
@@ -143,13 +145,13 @@ export const LandingMap = ({
       {/* Header Section */}
       <div className="flex flex-col justify-between items-center p-8">
         <div className="text-[#AF56EF] text-base uppercase mt-2">
-          Explore spaces
+        {t("landing.map-explore-spaces")}
         </div>
         <div className="text-[#431F51] text-3xl mt-1">
-          다양한 공간을 둘러보세요.
+        {t("landing.map-discover-unique-spaces")}
         </div>
         <div className="text-[#918C96] font-semibold mt-4">
-          선택한 키워드입니다.
+        {t("landing.map-theme-selection")}
         </div>
         {/* Selected Topics */}
         <div className="mt-4 flex flex-wrap justify-center gap-x-4 gap-y-2 w-full">

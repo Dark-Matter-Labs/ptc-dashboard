@@ -22,6 +22,14 @@
     "cancel-button": "Cancel",
     "send-request": "Send request"
   },
+  "landing": {
+    "theme-choose-theme": "Choose a theme",
+    "theme-choose-interest": "What are you interested in?",
+    "map-explore-space": "Explore spaces",
+    "map-discover-unique-spaces": "Discover unique and unconventional spaces",
+    "map-theme-selection": "Your themes",
+    "map-space-keyword": "Space themes"
+  },
   "space": {
     "follow-button": "follow",
     "availability": "Availability",

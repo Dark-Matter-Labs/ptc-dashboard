@@ -181,7 +181,7 @@ const StepChooseEventRule = ({
     // console.log("popularRules: ", popularRules);
     // Sort by created date (newest first)
     const sortedByDate = [...popularRules].sort(
-      (a, b) => new Date(b.createAt) - new Date(a.createAt)
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
     );
     setNewestRules(sortedByDate);
   }, [popularRules]);

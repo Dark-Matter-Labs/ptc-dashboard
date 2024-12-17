@@ -21,20 +21,71 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
   const [eventData, setEventData] = useState({});
   const [eventRuleTemplate, setEventRuleTemplate] = useState({});
   const [rule, setRule] = useState({});
-  const [voteHistory, setVoteHistory] = useState([]); //[{decision: ["agree"|"disagree"|"abstention"], excitements:"...", worries:"..."} , ...]
+
   const [currentStep, setCurrentStep] = useState(4); // Step tracking: 1 = proposal, 2 = review actions
   const [topics, setTopics] = useState([]);
   const [equipments, setEquipments] = useState([]);
   const [timeObj, setTimeObj] = useState({ date: null, time: null });
   const [requestId, setRequestId] = useState("");
   const [responseId, setResponseId] = useState("");
+  const [, setResponses] = useState(null);
+  const [daysLeft, setDaysLeft] = useState(null);
+  const [voters, setVoters] = useState([]);
+
   const apiClient = new ApiClient();
   const permissionResponseAPI = new PermissionResponseAPI(apiClient);
   const permissionRequestAPI = new PermissionRequestAPI(apiClient);
+
+  // Function to calculate days left
+  const calculateDaysLeft = (timeoutAt) => {
+    const currentDate = new Date();
+    const targetDate = new Date(timeoutAt);
+    const diffTime = targetDate - currentDate;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Convert ms to days
+    return diffDays;
+  };
+
+  // Extract voters' information from responses
+  const extractVoters = (responses) => {
+    return responses
+      .filter(
+        (res) =>
+          res.status === "approved" ||
+          res.status === "rejected" ||
+          res.status === "abstention"
+      )
+      .map((res) => ({
+        id: res.user.id,
+        image: res.user.image,
+      }));
+  };
+
+  const loadAllResposes = async () => {
+    await permissionResponseAPI
+      .findAll({
+        permissionRequestId: requestId,
+      })
+      .then((res) => {
+        console.log("All response data >> : ", res.data);
+        // setResponseId(res.data?.[0].id);
+        setResponses(res.data);
+
+        // Calculate days left and voted count after fetching responses
+        if (res.data.length > 0) {
+          setDaysLeft(calculateDaysLeft(res.data[0].timeoutAt)); // Assuming all responses share the same timeoutAt
+          setVoters(extractVoters(res.data));
+        }
+      })
+
+      .catch((error) => {
+        console.error("Error fetching response: ", error);
+      });
+  };
+
   const fetchEventById = async () => {
     try {
       const data = await permissionEngineAPI.fetchEventById(spaceEventId);
-      console.log("event: ", data);
+
       setEventData(data);
     } catch (error) {
       console.error("Error fetching event info:", error);
@@ -93,23 +144,12 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
 
     try {
       const data = await permissionEngineAPI.fetchRuleByRuleId(ruleId);
-      console.log("rule: ", data);
       setRule(data);
     } catch (error) {
       console.error("Error fetching event rule:", error);
     }
   };
 
-  // const interpretRuleAuthor = async (authorId) => {
-  //   if (!authorId) return;
-
-  //   try {
-  //     const data = await permissionEngineAPI.fetchPublicUserData(authorId);
-  //     console.log("author: ", data);
-  //   } catch (error) {
-  //     console.error("Error fetching event rule author:", error);
-  //   }
-  // };
   const loadRequestId = async () => {
     if (spaceEventId) {
       await permissionRequestAPI
@@ -118,7 +158,6 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
           statuses: ["assigned"],
         })
         .then((res) => {
-          console.log("request data: ", res.data);
           setRequestId(res.data?.[0].id);
         })
         .catch((error) => {
@@ -133,7 +172,6 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
           permissionRequestId: requestId,
         })
         .then((res) => {
-          console.log("response data: ", res.data);
           setResponseId(res.data?.[0].id);
         })
 
@@ -151,10 +189,11 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
 
   useEffect(() => {
     if (requestId) {
-      console.log("requestId (when updated):", requestId);
       loadResponseId(requestId);
+      loadAllResposes();
     }
   }, [requestId]);
+
   useEffect(() => {
     fetchEventById();
   }, []);
@@ -177,25 +216,12 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
     }
   }, [eventData]);
 
-  // useEffect(() => {
-  //   console.log("rule: ", rule);
-  //   // interpretRuleAuthor(rule.authorId);
-  // }, [rule]);
-
   const proceedToStep = (step) => setCurrentStep(step);
   return (
     <div>
-      {/* <p>vote length: {voteHistory.length} </p>
-      <p>requestId: {requestId}</p>
+      {/* <p>requestId: {requestId}</p>
       <p>responseId: {responseId}</p> */}
-      <div>
-        {voteHistory.map((vote, index) => (
-          <p key={index}>
-            {" "}
-            vote {index} :: {vote.decision} , {vote.excitements} ,{vote.worries}
-          </p>
-        ))}
-      </div>
+
       {user ? (
         <>
           {currentStep === 1 ? (
@@ -221,20 +247,23 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
               t={t}
               rule={rule}
               permissionEngineAPI={permissionEngineAPI}
+              permissionResponseAPI={permissionResponseAPI}
               proceedToStep={proceedToStep}
-              voteHistory={voteHistory}
-              setVoteHistory={setVoteHistory}
               spaceEventId={spaceEventId}
               responseId={responseId}
+              requestId={requestId}
+              daysLeft={daysLeft}
+              voters={voters}
+              userId={user.id}
             />
           ) : currentStep === 4 ? (
             <DecisionSummary
               t={t}
               eventData={eventData}
               proceedToStep={proceedToStep}
-              voteHistory={voteHistory}
               permissionResponseAPI={permissionResponseAPI}
               requestId={requestId}
+              userId={user.id}
             />
           ) : (
             <div>Step 5</div>

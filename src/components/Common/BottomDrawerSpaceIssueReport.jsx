@@ -228,11 +228,11 @@ export default function BottomDrawerSpaceIssueReport({
                     </div>
                   </div>
                 </div>
-                <div>
+                <div className="w-full text-xs flex items-end justify-end">
                   {images.length > 0
-                    ? images.map((image, index) => (
-                        <div key={index}>{image.name}</div>
-                      ))
+                    ? (
+                      <div>{images.length} images attached</div>
+                    )
                     : ""}
                 </div>
               </div>

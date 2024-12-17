@@ -158,7 +158,7 @@ const Landing = ({ permissionEngineAPI, currentLanguage }) => {
             우리 도시에서 꼭 해보고 싶은 멋진 아이디어가 있나요?
           </div>
           <div className=" text-2xl md:text-4xl  font-light mt-8 text-[#CDA5EF] uppercase ">
-            What would you love to create in your neighborhood?
+            What would you love to create in your neighbourhood?
           </div>
         </div>
         {/* Project logo, name and tagline */}

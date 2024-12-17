@@ -70,7 +70,9 @@ export default function DisplayEvents({ permissionEngineAPI }) {
 
     return { eventDate, eventTime: `${startTime} - ${endTime}` };
   };
-
+  const goToResult = (spaceEventID) => {
+    navigate(`/profile/event/${spaceEventID}/result`);
+  };
   // Helper function to parse duration and calculate end time
   const parseDuration = (duration) => {
     const durationRegex = /(\d+)([dwMyhms])/;
@@ -154,6 +156,7 @@ export default function DisplayEvents({ permissionEngineAPI }) {
                 }
                 return (
                   <div
+                    onClick={() => goToResult(event.id, event.name)}
                     key={key}
                     className="border p-4 shadow rounded-[1rem] bg-white"
                   >

@@ -87,7 +87,7 @@ export const DecisionSummary = ({
   }, [responses]);
   return (
     <div className="h-[90vh]">
-      <div className="p-4  text-left bg-[#F9F3F3] flex flex-col justify-between h-full ">
+      <div className="p-4 text-left bg-[#F9F3F3] flex flex-col justify-between h-full ">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <ClockIcon className="h-6 w-6 text-[#57515C]" />

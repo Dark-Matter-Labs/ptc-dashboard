@@ -61,6 +61,14 @@ export default function Space({ space, spaceOwner, currentLanguage }) {
       });
   };
 
+  const handleJoinCommunity = async () => {
+    if (user) {
+      navigateTo({ navigate, pathname: `/space/${space.id}/community/join` });
+    } else {
+      alert("Please log in");
+    }
+  };
+
   return (
     <section className="space">
       <div className="space-data">
@@ -167,7 +175,12 @@ export default function Space({ space, spaceOwner, currentLanguage }) {
           </div>
         </div>
         <div className="map-call-to-action">
-          <Button className="become-steward-button" onClick={() => (alert('TBD'))}>Become a Steward</Button>
+          <Button
+            className="become-steward-button"
+            onClick={handleJoinCommunity}
+          >
+            Become a Steward
+          </Button>
           <Button className="browse-rules-button" onClick={handleBrowseRule}>
             Browse Rules
           </Button>

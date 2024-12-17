@@ -1,0 +1,13 @@
+.markdown-content ol {
+  list-style-type: decimal;
+  margin-left: 1rem;
+}
+.markdown-content ul {
+  list-style-type: disc;
+  margin-left: 1rem;
+}
+
+.markdown-content li {
+  padding-left: 0.25rem;
+  margin-bottom: 0.5rem;
+}

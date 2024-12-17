@@ -13,6 +13,7 @@ import DisplayEvents from "./pages/Event/Display/DisplayEvents";
 import DisplayNotifications from "./pages/Notification/Display/DisplayNotifications";
 import ReviewEvent from "./pages/Event/Review/ReviewEvent";
 import DisplayAssginedEvents from "./pages/Event/Display/DisplayAssginedEvents";
+import SpaceJoinCommunity from "./pages/Space/Join/SpaceJoinCommunity";
 import { API } from "./lib/PermissionEngine";
 import Landing from "./pages/Landing/Landing";
 import { navigateTo } from "./lib/util";
@@ -54,9 +55,6 @@ function App() {
     }
   }, [location.pathname, t]); // Re-run when the route changes
 
-  useEffect(() => {
-    console.log("spaceId:", spaceId);
-  }, [spaceId]);
   return (
     <div>
       <UserProvider>
@@ -77,6 +75,16 @@ function App() {
               <Landing
                 permissionEngineAPI={permissionEngineAPI}
                 currentLanguage={currentLanguage}
+              />
+            }
+          />
+          <Route
+            path="/space/:spaceId/community/join"
+            element={
+              <SpaceJoinCommunity
+                setNavTitle={setNavTitle}
+                currentLanguage={currentLanguage}
+                setCloseButtonLink={setCloseButtonLink}
               />
             }
           />

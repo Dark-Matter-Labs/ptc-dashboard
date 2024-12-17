@@ -256,7 +256,7 @@ export const MultiLocationsMapBox = ({
                 })
               }
             >
-              더 보러가기
+              {t("landing.map-see-more-button")}
             </button>
           </div>
         </div>

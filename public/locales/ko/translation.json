@@ -29,7 +29,8 @@
     "map-explore-space": "Explore spaces",
     "map-discover-unique-spaces": "다양한 공간을 둘러보세요",
     "map-theme-selection": "선택한 키워드입니다",
-    "map-space-keyword": "이 공간의 키워드"
+    "map-space-keyword": "이 공간의 키워드",
+    "map-see-more-button": "자세히 보기"
   },
   "space": {
     "follow-button": "팔로우",

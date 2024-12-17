@@ -145,7 +145,7 @@ export const LandingMap = ({
       {/* Header Section */}
       <div className="flex flex-col justify-between items-center p-8">
         <div className="text-[#AF56EF] text-base uppercase mt-2">
-        {t("landing.map-explore-spaces")}
+        {t("landing.map-explore-space")}
         </div>
         <div className="text-[#431F51] text-3xl mt-1">
         {t("landing.map-discover-unique-spaces")}

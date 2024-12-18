@@ -43,6 +43,7 @@ export default function CreateEvent({
     Type.RuleBlockType.spaceAvailabilityUnit,
     Type.RuleBlockType.spaceMaxAvailabilityUnitCount,
     Type.RuleBlockType.spaceAvailabilityBuffer,
+    Type.RuleBlockType.spaceJoinCommunity,
   ];
   const eventRuleBlockPrivateTypes = [
     Type.RuleBlockType.spaceEventRequireEquipment,
@@ -448,7 +449,7 @@ export default function CreateEvent({
         spaceEventId: id,
       });
 
-    return newPermissionRequest;
+    return newPermissionRequest?.data?.permissionRequest;
   };
 
   /**
@@ -464,7 +465,9 @@ export default function CreateEvent({
     //API call
     try {
       const spaceEventRuleBlocks = await createEventRuleBlocks([
-        ...eventRuleData.ruleBlocks,
+        ...eventRuleData.ruleBlocks.filter((item) =>
+          item.type.startsWith("space_event:")
+        ),
         ...eventData.privateRuleBlocks,
       ]);
       const spaceEventRule = await createEventRule(spaceEventRuleBlocks);

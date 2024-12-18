@@ -2,9 +2,13 @@ import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { PlusIcon, MinusIcon } from "@heroicons/react/solid";
 import { useTranslation } from "react-i18next";
-import * as Type from "../../../lib/PermissionEngine/type";
 import ExclamationSm from "../../../assets/image/exclamation-sm.svg";
 import { parseRuleBlockContent } from "../../../lib/util";
+import {
+  Type,
+  ApiClient,
+  RuleAPI,
+} from "@dark-matter-labs/ptc-sdk";
 
 const StepBrowseRuleBlocks = ({
   setNavTitle,
@@ -25,6 +29,10 @@ const StepBrowseRuleBlocks = ({
   setAgreements,
 }) => {
   const { t } = useTranslation();
+
+  const apiClient = ApiClient.getInstance();
+  const ruleAPI = new RuleAPI(apiClient);
+
   const [expandedCards, setExpandedCards] = useState({ 0: false }); //{0: true, 2: false}
   const spaceRuleBlocks = spaceRule.ruleBlocks;
   const [eventRuleBlocks, setEventRuleBlocks] = useState([]);
@@ -42,12 +50,11 @@ const StepBrowseRuleBlocks = ({
     // fetch evnet rules
     try {
       if (eventRuleData.id) {
-        const data = await permissionEngineAPI.fetchRuleBlocksByRuleId(
-          eventRuleData.id
-        );
-        console.log("event rule blocks: ", data);
-        setEventRuleBlocks(data);
-        updateEventRuleData({ ruleBlocks: data });
+        const rule = await ruleAPI.findOneById(eventRuleData.id);
+        const { ruleBlocks } = rule;
+
+        setEventRuleBlocks(ruleBlocks);
+        updateEventRuleData({ ruleBlocks: ruleBlocks });
       } else {
         setEventRuleBlocks([]);
       }
@@ -117,7 +124,6 @@ const StepBrowseRuleBlocks = ({
     setAllRuleBlocks(combinedBlocks);
   };
 
-
   useEffect(() => {
     console.log("expanded Cards: ", expandedCards);
   }, [expandedCards]);
@@ -144,7 +150,11 @@ const StepBrowseRuleBlocks = ({
   useEffect(() => {
     console.log("parse space rule blocks");
     spaceRuleBlocks.forEach(async (ruleBlock) => {
-      const content = await parseRuleBlockContent(permissionEngineAPI, ruleBlock, t);
+      const content = await parseRuleBlockContent(
+        permissionEngineAPI,
+        ruleBlock,
+        t
+      );
       setRuleBlockContentByHash((prev) => ({
         ...prev,
         [ruleBlock.hash]: content,
@@ -157,7 +167,11 @@ const StepBrowseRuleBlocks = ({
   useEffect(() => {
     console.log("allRuleBlocks: ", allRuleBlocks);
     allRuleBlocks.forEach(async (ruleBlock) => {
-      const content = await parseRuleBlockContent(permissionEngineAPI, ruleBlock, t);
+      const content = await parseRuleBlockContent(
+        permissionEngineAPI,
+        ruleBlock,
+        t
+      );
 
       setRuleBlockContentById((prev) => ({
         ...prev,

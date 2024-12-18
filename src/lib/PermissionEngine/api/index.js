@@ -240,7 +240,7 @@ export class API {
   };
 
   fetchRuleBlocksByRuleId = async (ruleId) => {
-    const response = await this.get("rule/block/:ruleId", { ruleId });
+    const response = await this.get("rule/:ruleId", { ruleId });
 
     return response?.ruleBlocks ?? [];
   };

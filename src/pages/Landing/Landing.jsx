@@ -169,7 +169,7 @@ const Landing = ({ permissionEngineAPI, currentLanguage }) => {
             className="w-16 h-16 md:w-24 md:h-24"
           />
           <div className="text-[#8F79A2] font-semibold text-xl md:text-2xl mt-4">
-            커뮤니티 주도의 공간 허가 솔루션
+            Permissioning Engine
           </div>
           <div className="text-[#8F79A2] mt-4 text-base">
             Community-led Urban Governance Platform

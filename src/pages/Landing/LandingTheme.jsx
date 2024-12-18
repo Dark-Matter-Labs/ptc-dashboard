@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-// import { useTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 import { API } from "../../lib/PermissionEngine";
 
@@ -30,7 +30,7 @@ export const LandingTheme = ({
   setSelectedThemes,
   currentLanguage,
 }) => {
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
   const [topics, setTopics] = useState();
   const permissionEngineAPI = new API();
 
@@ -71,8 +71,8 @@ export const LandingTheme = ({
   return (
     <section ref={themeSectionRef} data-section="theme" className="">
       <div className="my-8 mx-auto max-w-max flex flex-col justify-center items-center">
-        <span className="uppercase text-xs text-[#CDA5EF]">choose a theme</span>
-        <h1 className="text-white text-3xl">관심 주제를 골라보세요.</h1>
+        <span className="uppercase text-xs text-[#CDA5EF]">{t("landing.theme-choose-theme")}</span>
+        <h1 className="text-white text-3xl">{t("landing.theme-choose-interest")}</h1>
       </div>
       <div className="bg-diamond-grid pt-[50px] mb-8 sm:pl-0 sm:pt-0 w-[100vw] sm:w-auto h-[40vh] sm:h-screen md:h-[60vh] overflow-scroll mx-0 md:mx-40">
         <div className="grid grid-cols-12 md:grid-cols-6 gap-20 md:gap-0">

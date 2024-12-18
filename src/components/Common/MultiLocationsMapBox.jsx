@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import { accessToken } from "../../lib/mapbox";
 import MapPinGreenImgSrc from "../../assets/image/map-pin-green.svg";
 import { navigateTo } from "../../lib/util";
+import { useTranslation } from "react-i18next";
 
 mapboxgl.accessToken = accessToken;
 
@@ -19,6 +20,7 @@ export const MultiLocationsMapBox = ({
   const defaultStyle = "mapbox://styles/mapbox/streets-v11";
 
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [viewLocation, setViewLocation] = useState({
     latitude: locations?.[0]?.latitude ?? 0,
@@ -230,7 +232,7 @@ export const MultiLocationsMapBox = ({
               {selectedLocation.topics && (
                 <div className="mt-4">
                   <div className="font-semibold text-gray-600">
-                    이 공간의 키워드
+                  {t("landing.map-space-keyword")}
                   </div>
                   <div className="text-xs text-gray-500 mt-1 flex flex-wrap gap-y-2 gap-2">
                     {selectedLocation.topics.map((topic, index) => (
@@ -254,7 +256,7 @@ export const MultiLocationsMapBox = ({
                 })
               }
             >
-              더 보러가기
+              {t("landing.map-see-more-button")}
             </button>
           </div>
         </div>

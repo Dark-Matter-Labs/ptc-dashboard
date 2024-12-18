@@ -21,6 +21,16 @@
     "cancel-button": "Cancel",
     "send-request": "Send request"
   },
+  "landing": {
+    "theme-choose-theme": "Choose a theme",
+    "theme-choose-interest": "What are you interested in?",
+    "map-explore-space": "Explore spaces",
+    "map-discover-unique-spaces": "Discover unique and unconventional spaces",
+    "map-theme-selection": "Your themes",
+    "map-space-keyword": "Space themes",
+    "map-see-more-button": "More details",
+    "heading1": "What’s your next big idea for your city?"
+  },
   "space": {
     "navigation-title": "Space dashboard",
     "follow-button": "follow",

@@ -174,11 +174,7 @@ const StepCheckRuleBlocks = ({
   useEffect(() => {
     console.log("parse space rule blocks");
     spaceRuleBlocks.forEach(async (ruleBlock) => {
-      const content = await parseRuleBlockContent(
-        permissionEngineAPI,
-        ruleBlock,
-        t
-      );
+      const content = await parseRuleBlockContent(ruleBlock, t);
       setRuleBlockContentByHash((prev) => ({
         ...prev,
         [ruleBlock.hash]: content,
@@ -220,9 +216,7 @@ const StepCheckRuleBlocks = ({
               console.log(key, ruleBlock);
               const agreement = agreements[key];
               if (agreement.agree == null) {
-                throw new Error(
-                  t("rule-block-response-error")
-                );
+                throw new Error(t("rule-block-response-error"));
               } else if (
                 agreement.agree === false &&
                 ruleBlock.type.startsWith("space:")
@@ -276,11 +270,7 @@ const StepCheckRuleBlocks = ({
   useEffect(() => {
     console.log("allRuleBlocks: ", allRuleBlocks);
     allRuleBlocks.forEach(async (ruleBlock) => {
-      const content = await parseRuleBlockContent(
-        permissionEngineAPI,
-        ruleBlock,
-        t
-      );
+      const content = await parseRuleBlockContent(ruleBlock, t);
 
       setRuleBlockContentById((prev) => ({
         ...prev,
@@ -470,7 +460,7 @@ const StepCheckRuleBlocks = ({
               src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC8AAAASCAYAAADLw4ffAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACTSURBVHgB7ZYxDoAgDEVbuYBH8Ah6AxnYPYo38SzODHoUvYEjAwnWwb2JCa1JX1K6dHiBwAeBQYxxQcTJOTd47y9QQsOc60spXc65B0Vw5VVi8lKYvBS/lsdned5xajN8gHLgqJ0D786f8BHKgTal1EJFkDNEJ7NRG6l8CGEHJdiFlcLkpTB5KbjyK9VF//kDFHEDbSci7pHSsJkAAAAASUVORK5CYII="
             />
             <div className="left-[97.58px] top-[24px] w-[174px] h-[45px] text-gray-400 text-left font-inter text-[12px] tracking-[0.1px] leading-none flex items-center justify-center">
-            {t("rules.new-rule-review-message")}
+              {t("rules.new-rule-review-message")}
             </div>
           </div>
         </div>

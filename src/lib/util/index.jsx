@@ -1,7 +1,7 @@
 import { SupportedEventAccessType } from "../../components/Common/SupportedEventAccessType";
 import { KeyValueRuleBlockContent } from "../../components/Common/KeyValueRuleBlockContent";
 import { SpaceAvailabilityRuleBlockContent } from "../../components/Common/SpaceAvailabilityRuleBlockContent";
-import { Type } from "@dark-matter-labs/ptc-sdk";
+import { ApiClient, TopicAPI, Type } from "@dark-matter-labs/ptc-sdk";
 import { accessToken } from "../mapbox";
 
 export const capitalizeFirstLetter = (str) => {
@@ -10,16 +10,18 @@ export const capitalizeFirstLetter = (str) => {
 };
 
 export const parseRuleBlockContent = async (
-  permissionEngineAPI,
   ruleBlock,
   t
 ) => {
+  const apiClient = ApiClient.getInstance();
+  const topicAPI = new TopicAPI(apiClient);
+
   const { type, content } = ruleBlock;
   let parsedContent = content;
 
   switch (type) {
     case Type.RuleBlockType.spaceExcludedTopic: {
-      const topic = await permissionEngineAPI.fetchTopicById(content);
+      const topic = await topicAPI.findOneById(content);
       parsedContent = (
         <div className="h-[79px] w-full px-[15px] py-[13px] bg-[#fafafb] rounded-lg flex-col justify-start items-start gap-2.5 inline-flex">
           <div className="h-[53px] flex-col justify-start items-start gap-2 flex">
@@ -270,4 +272,12 @@ export const navigateToBack = (navigate) => {
   }
 
   navigate(pathname);
+};
+
+export const calculateDaysLeft = (timeoutAt) => {
+  const currentDate = new Date();
+  const targetDate = new Date(timeoutAt);
+  const diffTime = targetDate - currentDate;
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Convert ms to days
+  return diffDays;
 };

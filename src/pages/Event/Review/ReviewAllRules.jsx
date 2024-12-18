@@ -3,15 +3,8 @@ import DisplayAllRules from "../../Rule/DisplayAllRules";
 const ReviewAllRules = ({
   t,
   rule,
-
-  permissionEngineAPI,
   proceedToStep,
 }) => {
-  console.log("rule: ", rule);
-  //   console.log("rule author: ", ruleAuthor);
-  console.log("permissionEngineAPI: ", permissionEngineAPI);
-  //   console.log("currentLanguage: ", currentLanguage);
-
   return (
     <div className="flex flex-col justify-start p-4 space-y-2 text-left h-[90vh]">
       <div className="flex-grow">
@@ -20,7 +13,6 @@ const ReviewAllRules = ({
         </div>
         <DisplayAllRules
           rule={rule}
-          permissionEngineAPI={permissionEngineAPI}
           proceedToStep={proceedToStep}
         ></DisplayAllRules>
       </div>

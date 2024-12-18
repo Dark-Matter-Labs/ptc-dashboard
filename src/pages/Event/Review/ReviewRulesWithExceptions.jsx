@@ -7,7 +7,6 @@ import { useState, useEffect } from "react";
 const ReviewRulesWithExceptions = ({
   t,
   rule,
-  permissionEngineAPI,
   permissionResponseAPI,
   proceedToStep,
   responseId,
@@ -128,15 +127,9 @@ const ReviewRulesWithExceptions = ({
         <div className="text-2xl block mb-2 font-semibold mt-8">
           {t("review-event.review-the-exceptions")}
         </div>
-        {/* <p>decision: {decision}</p>
-        <p>excitements: {excitements}</p>
-        <p>worries: {worries}</p>
-        <p>spaceEventId: {spaceEventId}</p>
-        <p>responseId: {responseId}</p> */}
 
         <DisplayRulesWithExceptions
           rule={rule}
-          permissionEngineAPI={permissionEngineAPI}
           proceedToStep={proceedToStep}
         ></DisplayRulesWithExceptions>
       </div>

@@ -5,10 +5,25 @@ import { useNavigate, useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { navigateTo } from "../../../lib/util";
+import {
+  ApiClient,
+  PermissionRequestAPI,
+  SpaceEventAPI,
+  SpacePermissionerAPI,
+  Type,
+  UserAPI,
+} from "@dark-matter-labs/ptc-sdk";
 
-export default function DisplayAssignedEvents({ permissionEngineAPI }) {
+export default function DisplayAssignedEvents() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  const apiClient = ApiClient.getInstance();
+  const permissionRequestAPI = new PermissionRequestAPI(apiClient);
+  const spaceEventAPI = new SpaceEventAPI(apiClient);
+  const spacePermissionerAPI = new SpacePermissionerAPI(apiClient);
+  const userAPI = new UserAPI(apiClient);
+
   const [assignedRequests, setAssignedRequests] = useState([]);
   const [isPermissioner, setIsPermissioner] = useState(false);
   const [me, setMe] = useState(null);
@@ -16,7 +31,7 @@ export default function DisplayAssignedEvents({ permissionEngineAPI }) {
   let { spaceId } = useParams();
 
   const fetchMe = async () => {
-    const me = await permissionEngineAPI.fetchMe();
+    const me = await userAPI.findSelf();
     setMe(me);
   };
 
@@ -26,23 +41,26 @@ export default function DisplayAssignedEvents({ permissionEngineAPI }) {
 
     try {
       // Fetch assigned events
-      const data = await permissionEngineAPI.fetchAssignedEvent(spaceId);
-      console.log(">>> Assigned event data: ", data);
+      const permissionRequests = await permissionRequestAPI.findAll({
+        spaceId,
+        statuses: [Type.PermissionRequestStatus.assigned],
+      });
+      console.log(">>> Assigned permissionRequests: ", permissionRequests);
 
       // Fetch details for each event concurrently
       const detailedData = await Promise.all(
-        data.map(async (event) => {
+        permissionRequests?.data?.map(async (permissionRequest) => {
           try {
-            const eventDetails = await permissionEngineAPI.fetchEventById(
-              event.spaceEventId
+            const spaceEvent = await spaceEventAPI.findOneById(
+              permissionRequest.spaceEventId
             );
-            return { ...event, name: eventDetails.name }; // Include response.name in the event object
+            return { ...permissionRequest, spaceEvent }; // Include response.name in the permissionRequest object
           } catch (err) {
             console.error(
-              `Error fetching details for event ${event.spaceEventId}:`,
+              `Error fetching details for permissionRequest ${permissionRequest.spaceEventId}:`,
               err
             );
-            return { ...event, name: "Unknown" }; // Fallback value if fetching details fails
+            return { ...permissionRequest, spaceEvent: { name: "Unknown" } }; // Fallback value if fetching details fails
           }
         })
       );
@@ -57,9 +75,9 @@ export default function DisplayAssignedEvents({ permissionEngineAPI }) {
   const validatePermission = async () => {
     try {
       const permissionData =
-        await permissionEngineAPI.fetchPermissioners(spaceId);
+        await spacePermissionerAPI.findAllBySpaceId(spaceId);
 
-      const isValid = permissionData.some(
+      const isValid = permissionData?.data?.some(
         (item) => item.userId === me.id && item.isActive
       );
       console.log("all permissioners: ", permissionData, "isValid: ", isValid);
@@ -107,17 +125,24 @@ export default function DisplayAssignedEvents({ permissionEngineAPI }) {
                   return (
                     <div
                       key={key}
-                      onClick={() =>
-                        navigateTo({
-                          navigate,
-                          pathname: `/event/review/${request.spaceEventId}`,
-                        })
-                      }
+                      onClick={() => {
+                        if (request.spaceEvent.organizerId === me.id) {
+                          navigateTo({
+                            navigate,
+                            pathname: `/profile/event/${request.spaceEventId}/result`,
+                          });
+                        } else {
+                          navigateTo({
+                            navigate,
+                            pathname: `/event/review/${request.spaceEventId}`,
+                          });
+                        }
+                      }}
                       className="border p-4 shadow rounded-[1rem] bg-white"
                     >
                       <div className="flex items-center justify-between">
                         <div className="font-semibold text-xl ">
-                          {request.name}
+                          {request?.spaceEvent?.name ?? "Unknown"}
                         </div>
                         <div
                           className={`${eventStatusColor} text-sm p-1 px-4 rounded-full`}

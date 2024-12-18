@@ -10,17 +10,7 @@ import { useTranslation } from "react-i18next";
 import { parseRuleBlockContent, capitalizeFirstLetter } from "../../lib/util";
 import { Type } from "@dark-matter-labs/ptc-sdk";
 
-export default function Rule({
-  rule,
-  ruleAuthor,
-  currentLanguage,
-  permissionEngineAPI,
-}) {
-  console.log("rule: ", rule);
-  console.log("rule author: ", ruleAuthor);
-  console.log("permissionEngineAPI: ", permissionEngineAPI);
-  console.log("currentLanguage: ", currentLanguage);
-
+export default function Rule({ rule, ruleAuthor, currentLanguage }) {
   const { t } = useTranslation();
   const [expandedCards, setExpandedCards] = useState({ 0: false }); //{0: true, 2: false}
   const [ruleBlocks, setRuleBlocks] = useState([]);
@@ -113,11 +103,7 @@ export default function Rule({
 
   useEffect(() => {
     ruleBlocks?.forEach(async (ruleBlock) => {
-      const content = await parseRuleBlockContent(
-        permissionEngineAPI,
-        ruleBlock,
-        t
-      );
+      const content = await parseRuleBlockContent(ruleBlock, t);
 
       setRuleBlockContentById((prev) => ({
         ...prev,

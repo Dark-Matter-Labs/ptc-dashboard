@@ -6,10 +6,7 @@ import * as Type from "../../lib/PermissionEngine/type";
 import { useTranslation } from "react-i18next";
 import { parseRuleBlockContent } from "../../lib/util";
 
-export default function DisplayRulesWithExceptions({
-  rule,
-  permissionEngineAPI,
-}) {
+export default function DisplayRulesWithExceptions({ rule }) {
   const { t } = useTranslation();
 
   const [expandedCards, setExpandedCards] = useState({ 0: false }); //{0: true, 2: false}
@@ -60,11 +57,7 @@ export default function DisplayRulesWithExceptions({
 
   useEffect(() => {
     ruleBlocks?.forEach(async (ruleBlock) => {
-      const content = await parseRuleBlockContent(
-        permissionEngineAPI,
-        ruleBlock,
-        t
-      );
+      const content = await parseRuleBlockContent(ruleBlock, t);
 
       setRuleBlockContentById((prev) => ({
         ...prev,

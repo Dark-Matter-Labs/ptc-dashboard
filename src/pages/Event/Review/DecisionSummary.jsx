@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import VotingSummaryPage from "./VotingSummaryPage";
 import { ClockIcon } from "@heroicons/react/solid";
 import { navigateTo } from "../../../lib/util";
+import { Type } from "@dark-matter-labs/ptc-sdk";
 
 export const DecisionSummary = ({
   permissionResponseAPI,
@@ -33,9 +34,9 @@ export const DecisionSummary = ({
     return responses
       .filter(
         (res) =>
-          res.status === "approved" ||
-          res.status === "rejected" ||
-          res.status === "abstention"
+          res.status === Type.PermissionResponseStatus.approved ||
+          res.status === Type.PermissionResponseStatus.rejected ||
+          res.status === Type.PermissionResponseStatus.abstention
       )
       .map((res) => ({
         id: res.user.id,
@@ -126,7 +127,7 @@ export const DecisionSummary = ({
           <div className="mt-12">
             <VotingSummaryPage
               className=" mt-8"
-              data={responses}
+              permissionResponses={responses}
               myLastDecision={myLastDecision}
             />
           </div>

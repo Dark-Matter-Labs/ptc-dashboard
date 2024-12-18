@@ -4,11 +4,7 @@ import { PlusIcon, MinusIcon } from "@heroicons/react/solid";
 import { useTranslation } from "react-i18next";
 import ExclamationSm from "../../../assets/image/exclamation-sm.svg";
 import { parseRuleBlockContent } from "../../../lib/util";
-import {
-  Type,
-  ApiClient,
-  RuleAPI,
-} from "@dark-matter-labs/ptc-sdk";
+import { Type, ApiClient, RuleAPI } from "@dark-matter-labs/ptc-sdk";
 
 const StepBrowseRuleBlocks = ({
   setNavTitle,
@@ -23,7 +19,6 @@ const StepBrowseRuleBlocks = ({
   getRuleBlockTypeDescriptionTranslationKey,
   updateEventRuleData,
   setNextStepButtonText,
-  permissionEngineAPI,
   setIsStepComplete,
   agreements,
   setAgreements,
@@ -150,11 +145,7 @@ const StepBrowseRuleBlocks = ({
   useEffect(() => {
     console.log("parse space rule blocks");
     spaceRuleBlocks.forEach(async (ruleBlock) => {
-      const content = await parseRuleBlockContent(
-        permissionEngineAPI,
-        ruleBlock,
-        t
-      );
+      const content = await parseRuleBlockContent(ruleBlock, t);
       setRuleBlockContentByHash((prev) => ({
         ...prev,
         [ruleBlock.hash]: content,
@@ -167,11 +158,7 @@ const StepBrowseRuleBlocks = ({
   useEffect(() => {
     console.log("allRuleBlocks: ", allRuleBlocks);
     allRuleBlocks.forEach(async (ruleBlock) => {
-      const content = await parseRuleBlockContent(
-        permissionEngineAPI,
-        ruleBlock,
-        t
-      );
+      const content = await parseRuleBlockContent(ruleBlock, t);
 
       setRuleBlockContentById((prev) => ({
         ...prev,

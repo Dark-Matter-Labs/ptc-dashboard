@@ -13,7 +13,7 @@ import DisplayEvents from "./pages/Event/Display/DisplayEvents";
 import DisplayNotifications from "./pages/Notification/Display/DisplayNotifications";
 import DisplayEventResult from "./pages/Event/Display/DisplayEventResult";
 import ReviewEvent from "./pages/Event/Review/ReviewEvent";
-import DisplayAssginedEvents from "./pages/Event/Display/DisplayAssginedEvents";
+import DisplayAssignedEvents from "./pages/Event/Display/DisplayAssginedEvents";
 import SpaceJoinCommunity from "./pages/Space/Join/SpaceJoinCommunity";
 import SpaceCommunityDashboard from "./pages/Space/Community/SpaceCommunityDashboard";
 import { API } from "./lib/PermissionEngine";
@@ -147,10 +147,7 @@ function App() {
           <Route
             path="/events/assigned/:spaceId"
             element={
-              <DisplayAssginedEvents
-                permissionEngineAPI={permissionEngineAPI}
-                currentLanguage={currentLanguage}
-              />
+              <DisplayAssignedEvents currentLanguage={currentLanguage} />
             }
           />
           <Route
@@ -176,12 +173,7 @@ function App() {
           />
           <Route
             path="/event/review/:spaceEventId"
-            element={
-              <ReviewEvent
-                currentLanguage={currentLanguage}
-                permissionEngineAPI={permissionEngineAPI}
-              />
-            }
+            element={<ReviewEvent currentLanguage={currentLanguage} />}
           />
           <Route
             path="/rule/:ruleId"

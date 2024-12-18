@@ -12,9 +12,12 @@ import {
   ApiClient,
   PermissionResponseAPI,
   PermissionRequestAPI,
+  SpaceEventAPI,
+  TopicAPI,
+  RuleAPI,
 } from "@dark-matter-labs/ptc-sdk";
 
-const ReviewEvent = ({ permissionEngineAPI }) => {
+const ReviewEvent = () => {
   const { user } = useUser();
   const { spaceEventId } = useParams();
   const { t } = useTranslation();
@@ -35,6 +38,9 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
   const apiClient = new ApiClient();
   const permissionResponseAPI = new PermissionResponseAPI(apiClient);
   const permissionRequestAPI = new PermissionRequestAPI(apiClient);
+  const spaceEventAPI = new SpaceEventAPI(apiClient);
+  const topicAPI = new TopicAPI(apiClient);
+  const ruleAPI = new RuleAPI(apiClient);
 
   // Function to calculate days left
   const calculateDaysLeft = (timeoutAt) => {
@@ -84,7 +90,7 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
 
   const fetchEventById = async () => {
     try {
-      const data = await permissionEngineAPI.fetchEventById(spaceEventId);
+      const data = await spaceEventAPI.findOneById(spaceEventId);
 
       setEventData(data);
     } catch (error) {
@@ -95,7 +101,7 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
   const interpretTopics = async (topics) => {
     try {
       const topicPromises = topics?.map((item) =>
-        permissionEngineAPI.fetchTopicById(item.id)
+        topicAPI.findOneById(item.id)
       );
       const topicData = await Promise.all(topicPromises);
       setTopics(topicData?.map((topic) => topic.name));
@@ -108,7 +114,7 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
     if (!ruleId) return;
 
     try {
-      const data = await permissionEngineAPI.fetchRuleByRuleId(ruleId);
+      const data = await ruleAPI.findOneById(ruleId);
       const equipmentList = data?.ruleBlocks
         ?.filter((rule) => !rule.isPublic)
         .map((rule) => ({
@@ -125,7 +131,7 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
     if (!ruleId) return;
 
     try {
-      const data = await permissionEngineAPI.fetchRuleByRuleId(ruleId);
+      const data = await ruleAPI.findOneById(ruleId);
       const hasException = data?.ruleBlocks?.some((rule) =>
         rule.type.includes("exception")
       );
@@ -143,7 +149,7 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
     if (!ruleId) return;
 
     try {
-      const data = await permissionEngineAPI.fetchRuleByRuleId(ruleId);
+      const data = await ruleAPI.findOneById(ruleId);
       setRule(data);
     } catch (error) {
       console.error("Error fetching event rule:", error);
@@ -219,9 +225,6 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
   const proceedToStep = (step) => setCurrentStep(step);
   return (
     <div>
-      {/* <p>requestId: {requestId}</p>
-      <p>responseId: {responseId}</p> */}
-
       {user ? (
         <>
           {currentStep === 1 ? (
@@ -236,17 +239,11 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
               eventRuleTemplate={eventRuleTemplate}
             />
           ) : currentStep === 2 ? (
-            <ReviewAllRules
-              t={t}
-              rule={rule}
-              permissionEngineAPI={permissionEngineAPI}
-              proceedToStep={proceedToStep}
-            />
+            <ReviewAllRules t={t} rule={rule} proceedToStep={proceedToStep} />
           ) : currentStep === 3 ? (
             <ReviewRulesWithExceptions
               t={t}
               rule={rule}
-              permissionEngineAPI={permissionEngineAPI}
               permissionResponseAPI={permissionResponseAPI}
               proceedToStep={proceedToStep}
               spaceEventId={spaceEventId}
@@ -277,7 +274,6 @@ const ReviewEvent = ({ permissionEngineAPI }) => {
 };
 
 ReviewEvent.propTypes = {
-  permissionEngineAPI: PropTypes.object.isRequired,
   currentLanguage: PropTypes.string,
 };
 

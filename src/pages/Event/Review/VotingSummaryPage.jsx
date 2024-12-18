@@ -1,78 +1,36 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { CheckCircleIcon } from "@heroicons/react/solid";
-// const mockupdata = [
-//   {
-//     id: "1f3b3fa2-47d3-4234-929f-dd3e17f79fa1",
-//     status: "pending",
-//     excitements: null,
-//     worries: null,
-//   },
-//   {
-//     id: "2f3b3fa2-47d3-4234-929f-dd3e17f79fa1",
-//     status: "pending",
-//     excitements: null,
-//     worries: null,
-//   },
-//   {
-//     id: "3f3b3fa2-47d3-4234-929f-dd3e17f79fa1",
-//     status: "pending",
-//     user: {
-//       image:
-//         "https://lh3.googleusercontent.com/a/ACg8ocI_tzuQLoB6IUa5hx2xCYzkHIziXU1lP_6xCUF69VHapdItWQ=s96-c",
-//     },
-//     excitements: ["I love risotto, can't wait to try new recipes!"],
-//     worries: ["Hope the ingredients provided are high quality."],
-//   },
-//   {
-//     id: "4f3b3fa2-47d3-4234-929f-dd3e17f79fa1",
-//     status: "rejected",
-//     user: {
-//       image: "https://ca.slack-edge.com/T0ACH7MPH-U07GRAN3HU6-a4cfea2b4a9c-512",
-//     },
-//     excitements: ["Sounds interesting, but..."],
-//     worries: ["Not everyone likes risotto."],
-//   },
-//   {
-//     id: "5f3b3fa2-47d3-4234-929f-dd3e17f79fa1",
-//     status: "abstention",
-//     user: {
-//       image: "https://ca.slack-edge.com/T0ACH7MPH-U019L3XRPN3-dade83ee8705-512",
-//     },
-//     excitements: ["Could be fun, but unsure."],
-//     worries: ["Not sure if the workshop is worth my time."],
-//   },
-//   {
-//     id: "6f3b3fa2-47d3-4234-929f-dd3e17f79fa1",
-//     status: "abstention",
-//     user: {
-//       image: "https://ca.slack-edge.com/T0ACH7MPH-U01AQMUSMJL-66d2ddb3fd76-512",
-//     },
-//     excitements: ["Learning to cook risotto might be useful."],
-//     worries: ["I’m not very interested in cooking."],
-//   },
-// ];
+import { Type } from "@dark-matter-labs/ptc-sdk";
 
-export const VotingSummaryPage = ({ data, myLastDecision }) => {
-  // data = mockupdata;
+export const VotingSummaryPage = ({ permissionResponses, myLastDecision }) => {
   // Count the number of each vote type based on status
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  // Filtered data based on status
-  const agreeVotes = data.filter((vote) => vote.status === "approved");
-  const disagreeVotes = data.filter((vote) => vote.status === "rejected");
-  const abstainVotes = data.filter((vote) => vote.status === "abstention");
+  // Filtered permissionResponses based on status
+  const agreeVotes = permissionResponses.filter((vote) =>
+    [
+      Type.PermissionResponseStatus.approved,
+      Type.PermissionResponseStatus.approvedWithCondition,
+    ].includes(vote.status)
+  );
+  const disagreeVotes = permissionResponses.filter(
+    (vote) => vote.status === Type.PermissionResponseStatus.rejected
+  );
+  const abstainVotes = permissionResponses.filter(
+    (vote) => vote.status === Type.PermissionResponseStatus.abstention
+  );
 
   // Count the number of each vote type based on status
   const agreeCount = agreeVotes.length;
   const disagreeCount = disagreeVotes.length;
   const abstentionCount = abstainVotes.length;
-  //   const pendingCount = data.filter((vote) => vote.status === "pending").length;
+  //   const pendingCount = permissionResponses.filter((vote) => vote.status === "pending").length;
 
   // Total votes for calculating percentages
   const totalVotes = agreeCount + disagreeCount + abstentionCount;
-  const totalMembers = data.length; // equals to agreeCount + disagreeCount + abstentionCount + pendingCount
+  const totalMembers = permissionResponses.length; // equals to agreeCount + disagreeCount + abstentionCount + pendingCount
 
   // Members who participated
   const membersParticipated = totalVotes;
@@ -108,7 +66,7 @@ export const VotingSummaryPage = ({ data, myLastDecision }) => {
     setSelectedUser((prev) => (prev === user ? null : user));
   };
 
-  // Map category to corresponding data
+  // Map category to corresponding permissionResponses
   const categoryDataMap = {
     agree: agreeVotes,
     disagree: disagreeVotes,
@@ -253,7 +211,7 @@ export const VotingSummaryPage = ({ data, myLastDecision }) => {
 export default VotingSummaryPage;
 
 VotingSummaryPage.propTypes = {
-  data: PropTypes.arrayOf(
+  permissionResponses: PropTypes.arrayOf(
     PropTypes.shape({
       status: PropTypes.string.isRequired,
     })

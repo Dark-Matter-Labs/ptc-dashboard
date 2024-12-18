@@ -1,13 +1,13 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import "../../assets/css/RuleDashboard.css";
+import "../../assets/css/BrowseRule.css";
 import Rule from "./Rule";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { useUser } from "../../useUser";
 import { navigateToBack } from "../../lib/util";
 
-export default function RuleDashboard({
+export default function BrowseRule({
   permissionEngineAPI,
   currentLanguage,
   setNavTitle,
@@ -25,6 +25,7 @@ export default function RuleDashboard({
       const fetchedRuleAuthor = await permissionEngineAPI.fetchPublicUserData(
         fetchedRule?.authorId
       );
+
       setRule(fetchedRule);
       setRuleAuthor(fetchedRuleAuthor);
     } catch (error) {
@@ -44,7 +45,7 @@ export default function RuleDashboard({
   useEffect(() => {
     console.log("ruleId", ruleId);
 
-    setNavTitle(t("rule-dashboard.navigation-title"));
+    setNavTitle(t("browse-rule.navigation-title"));
     loadRule();
   }, []);
 
@@ -64,7 +65,7 @@ export default function RuleDashboard({
   );
 }
 
-RuleDashboard.propTypes = {
+BrowseRule.propTypes = {
   ruleId: PropTypes.string,
   permissionEngineAPI: PropTypes.object,
   currentLanguage: PropTypes.string,

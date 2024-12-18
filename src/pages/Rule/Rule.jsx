@@ -5,10 +5,10 @@ import "../../assets/css/Rule.css";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { PlusIcon, MinusIcon } from "@heroicons/react/solid";
-import * as Type from "../../lib/PermissionEngine/type";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 import { parseRuleBlockContent, capitalizeFirstLetter } from "../../lib/util";
+import { Type } from "@dark-matter-labs/ptc-sdk";
 
 export default function Rule({
   rule,
@@ -26,6 +26,15 @@ export default function Rule({
   const [ruleBlocks, setRuleBlocks] = useState([]);
   const [ruleBlockContentById, setRuleBlockContentById] = useState({});
   const topics = rule?.topics ?? [];
+
+  const spaceRuleBlockExcludedTypes = [
+    Type.RuleBlockType.spaceConsentMethod,
+    Type.RuleBlockType.spaceConsentTimeout,
+    Type.RuleBlockType.spaceConsentQuorum,
+    Type.RuleBlockType.spacePostEventCheck,
+    Type.RuleBlockType.spacePrivateGuide,
+    Type.RuleBlockType.spaceJoinCommunity,
+  ];
 
   const spaceRuleBlockOrderPriority = [
     Type.RuleBlockType.spaceExcludedTopic,
@@ -82,6 +91,9 @@ export default function Rule({
   useEffect(() => {
     setRuleBlocks(
       rule?.ruleBlocks
+        .filter(
+          (item) => spaceRuleBlockExcludedTypes.includes(item.type) === false
+        )
         .map((item) => {
           if (forceStaticNamedSpaceRuleBlocks.includes(item.type)) {
             item.name = t(getRuleBlockTypeNameTranslationKey(item.type));
@@ -132,7 +144,7 @@ export default function Rule({
             {ruleAuthor?.name}
           </div>
           <div className="rule-desc">{rule?.details}</div>
-          <h3>{t("rule-dashboard.rule-keywords")}</h3>
+          <h3>{t("browse-rule.rule-keywords")}</h3>
           {topics?.map((topic) => (
             <Button key={topic.id} className="tag" id={topic.id}>
               {topic.translation?.[currentLanguage] ?? topic.name}
@@ -145,12 +157,12 @@ export default function Rule({
         <div className="metadata-snippet">
           <div className="registration-date">
             <CalendarIcon className="h-5 w-5 white mr-1 text-gray-400"></CalendarIcon>
-            <b>{t("rule-dashboard.registration-date")}</b>
+            <b>{t("browse-rule.registration-date")}</b>
             {dayjs(rule?.createdAt).format("YYYY-MM-DD")}
           </div>
           <div className="rule-author">
             <UsersIcon className="h-5 w-5 white mr-1 text-gray-400"></UsersIcon>
-            <b>{t("rule-dashboard.rule-author")}</b>
+            <b>{t("browse-rule.rule-author")}</b>
             {ruleAuthor?.name}
             <div className="tag">{capitalizeFirstLetter(ruleAuthor?.type)}</div>
           </div>

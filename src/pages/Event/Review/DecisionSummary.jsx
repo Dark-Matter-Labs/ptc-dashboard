@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import VotingSummaryPage from "./VotingSummaryPage";
 import { ClockIcon } from "@heroicons/react/solid";
+import { navigateTo } from "../../../lib/util";
 
 export const DecisionSummary = ({
   permissionResponseAPI,
@@ -85,6 +86,7 @@ export const DecisionSummary = ({
     console.log("voteHistory: ", voteHistory);
     loadVoteHistory();
   }, [responses]);
+
   return (
     <div className="h-[90vh]">
       <div className="p-4 text-left bg-[#F9F3F3] flex flex-col justify-between h-full ">
@@ -133,7 +135,12 @@ export const DecisionSummary = ({
         {/* Buttons */}
         <div className="my-4">
           <button
-            onClick={() => navigate("/community")}
+            onClick={() =>
+              navigateTo({
+                navigate,
+                pathname: `/space/${eventData?.spaceId}/community`,
+              })
+            }
             className="mt-4 px-6 py-2 border border-1 border-gray-400 text-black rounded-lg w-full"
           >
             Community dashboard

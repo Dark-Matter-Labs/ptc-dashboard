@@ -1,6 +1,5 @@
 {
   "navigation": {
-    "navigation-title": "Space dashboard",
     "find-space": "Find Space",
     "profile": "Profile",
     "notifications": "Notifications",
@@ -23,6 +22,7 @@
     "send-request": "Send request"
   },
   "space": {
+    "navigation-title": "Space dashboard",
     "follow-button": "follow",
     "availability": "Availability",
     "available": "Available to request events",
@@ -53,6 +53,14 @@
     "write-message-placeholder": "Write a message",
     "join-button": "Join Community",
     "next": "Next"
+  },
+  "space-community": {
+    "navigation-title": "Space community",
+    "browse-space-rule": "Browse {{spaceName}} Rules",
+    "leave-the-community": "Leave the community",
+    "community-policy": "Community policy",
+    "members": "Members",
+    "requests-and-issues": "Requests & Issues"
   },
   "profile": {
     "title": "Profile Page"
@@ -156,8 +164,8 @@
     "rule-block-response-error": "Please respond to all the rules",
     "proposal-summary": "Proposal"
   },
-  "rule-dashboard": {
-    "navigation-title": "Rule Dashboard",
+  "browse-rule": {
+    "navigation-title": "Browse Rule",
     "registration-date": "Registration date",
     "rule-author": "Rule Author",
     "rule-keywords": "Rule Keywords"

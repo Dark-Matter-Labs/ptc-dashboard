@@ -176,7 +176,7 @@ export default function CommunitySpace({ space, spaceOwner, currentLanguage }) {
             </div>
           </div>
           <div className="community-space-desc">{space?.details}</div>
-          <h3>{t("space.community-space-keywords")}</h3>
+          <h3>{t("space.space-keywords")}</h3>
           {topics?.map((topic) => (
             <Button key={topic.id} className="tag" id={topic.id}>
               {topic?.translation[currentLanguage] ?? topic?.name}

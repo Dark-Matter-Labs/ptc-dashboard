@@ -342,6 +342,10 @@ export default function CreateEvent({
       if (ruleBlock.id && ruleBlock.id.startsWith("rule-block-") === false) {
         newRuleBlocks.push(ruleBlock);
       } else {
+        if (ruleBlock.id && ruleBlock.id.startsWith("rule-block-") === true) {
+          delete ruleBlock.id;
+        }
+
         const newRuleBlock = await ruleBlockAPI.create(ruleBlock);
         newRuleBlocks.push(newRuleBlock);
       }

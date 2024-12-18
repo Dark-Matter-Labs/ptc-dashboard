@@ -11,7 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@dark-matter-labs/ptc-sdk": "^1.1.4",
+    "@dark-matter-labs/ptc-sdk": "^1.1.6",
     "@eslint/js": "^9.9.0",
     "@headlessui/react": "^2.1.8",
     "@heroicons/react": "^1.0.6",

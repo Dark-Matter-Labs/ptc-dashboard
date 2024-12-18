@@ -7,21 +7,31 @@ import {
 import { OfficeBuildingIcon, LinkIcon, UserIcon } from "@heroicons/react/solid";
 import { Button } from "@headlessui/react";
 import "../../assets/css/Space.css";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import * as Type from "../../lib/PermissionEngine/type";
 import { MapBox } from "../../components/Common/MapBox";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../useUser";
 import { navigateTo } from "../../lib/util";
+import {
+  ApiClient,
+  Type,
+  SpacePermissionerAPI,
+} from "@dark-matter-labs/ptc-sdk";
 
 export default function Space({ space, spaceOwner, currentLanguage }) {
   const { t } = useTranslation();
   const { user } = useUser();
   const addressRef = useRef(null);
   const navigate = useNavigate();
+
+  const apiClient = ApiClient.getInstance();
+  const spacePermissionerAPI = new SpacePermissionerAPI(apiClient);
+
+  const [isSpacePermissioner, setIsSpacePermissioner] = useState(false);
+
   const location = {
     longitude: space?.longitude,
     latitude: space?.latitude,
@@ -68,6 +78,29 @@ export default function Space({ space, spaceOwner, currentLanguage }) {
       alert("Please log in");
     }
   };
+
+  const handleCommunityDashboard = () => {
+    navigateTo({ navigate, pathname: `/space/${space.id}/community` });
+  };
+
+  const loadSelfSpacePermissioner = async () => {
+    if (space) {
+      await spacePermissionerAPI
+        .findSelf({
+          spaceId: space.id,
+        })
+        .then((res) => {
+          if (res?.data && res.data.length > 0) {
+            setIsSpacePermissioner(true);
+          }
+        })
+        .catch(console.error);
+    }
+  };
+
+  useEffect(() => {
+    loadSelfSpacePermissioner();
+  }, [space]);
 
   return (
     <section className="space">
@@ -175,12 +208,21 @@ export default function Space({ space, spaceOwner, currentLanguage }) {
           </div>
         </div>
         <div className="map-call-to-action">
-          <Button
-            className="become-steward-button"
-            onClick={handleJoinCommunity}
-          >
-            Become a Steward
-          </Button>
+          {isSpacePermissioner === false ? (
+            <Button
+              className="become-steward-button"
+              onClick={handleJoinCommunity}
+            >
+              Become a Steward
+            </Button>
+          ) : (
+            <Button
+              className="community-dashboard-button"
+              onClick={handleCommunityDashboard}
+            >
+              Community Dashboard
+            </Button>
+          )}
           <Button className="browse-rules-button" onClick={handleBrowseRule}>
             Browse Rules
           </Button>

@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useSpace } from "./useSpace";
 import i18n from "./i18n";
 import SpaceDashboard from "./pages/Space/SpaceDashboard";
-import RuleDashboard from "./pages/Rule/RuleDashboard";
+import BrowseRule from "./pages/Rule/BrowseRule";
 import Profile from "./pages/Profile/Profile";
 import Navbar from "./components/Common/Navbar";
 import CreateEvent from "./pages/Event/Create/CreateEvent";
@@ -14,6 +14,7 @@ import DisplayNotifications from "./pages/Notification/Display/DisplayNotificati
 import ReviewEvent from "./pages/Event/Review/ReviewEvent";
 import DisplayAssginedEvents from "./pages/Event/Display/DisplayAssginedEvents";
 import SpaceJoinCommunity from "./pages/Space/Join/SpaceJoinCommunity";
+import SpaceCommunityDashboard from "./pages/Space/Community/SpaceCommunityDashboard";
 import { API } from "./lib/PermissionEngine";
 import Landing from "./pages/Landing/Landing";
 import { navigateTo } from "./lib/util";
@@ -22,7 +23,7 @@ function App() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
-  const [navTitle, setNavTitle] = useState(t("navigation.navigation-title")); // state to track current step
+  const [navTitle, setNavTitle] = useState(t("space.navigation-title")); // state to track current step
   const location = useLocation();
   const [closeButtonLink, setCloseButtonLink] = useState("/");
   const permissionEngineAPI = new API();
@@ -82,6 +83,16 @@ function App() {
             path="/space/:spaceId/community/join"
             element={
               <SpaceJoinCommunity
+                setNavTitle={setNavTitle}
+                currentLanguage={currentLanguage}
+                setCloseButtonLink={setCloseButtonLink}
+              />
+            }
+          />
+          <Route
+            path="/space/:spaceId/community"
+            element={
+              <SpaceCommunityDashboard
                 setNavTitle={setNavTitle}
                 currentLanguage={currentLanguage}
                 setCloseButtonLink={setCloseButtonLink}
@@ -163,7 +174,7 @@ function App() {
           <Route
             path="/rule/:ruleId"
             element={
-              <RuleDashboard
+              <BrowseRule
                 setNavTitle={setNavTitle}
                 permissionEngineAPI={permissionEngineAPI}
                 currentLanguage={currentLanguage}

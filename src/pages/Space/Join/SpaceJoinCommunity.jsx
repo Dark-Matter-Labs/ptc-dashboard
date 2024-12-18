@@ -15,7 +15,7 @@ import BottomDrawerSpaceJoinCommunity from "../../../components/Common/BottomDra
 import { navigateTo, navigateToBack } from "../../../lib/util";
 import MarkdownRenderer from "../../../components/Common/MarkdownRenderer";
 
-const SpaceJoinCommunity = ({ setNavTitle }) => {
+const SpaceJoinCommunity = ({ setNavTitle, setCloseButtonLink }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const apiClient = ApiClient.getInstance();
@@ -47,6 +47,7 @@ const SpaceJoinCommunity = ({ setNavTitle }) => {
       console.log("the space: ", space);
 
       setSpace(space);
+      setCloseButtonLink(`/space/${space.id}`);
     } catch (error) {
       console.error(`Error fetching space`, error);
       navigateToBack(navigate);
@@ -207,6 +208,7 @@ SpaceJoinCommunity.propTypes = {
   setNavTitle: PropTypes.func.isRequired,
   space: PropTypes.object,
   currentLanguage: PropTypes.string,
+  setCloseButtonLink: PropTypes.func,
 };
 
 export default SpaceJoinCommunity;

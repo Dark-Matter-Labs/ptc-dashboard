@@ -187,8 +187,17 @@
   flex-direction: row;
   gap: 0.5rem;
 }
+
 .space-map .map-call-to-action .become-steward-button {
   background-color: black;
+  color: white;
+  border-radius: 0.5rem;
+  padding: 1rem 2rem;
+  margin-right: 0.25rem;
+}
+
+.space-map .map-call-to-action .community-dashboard-button {
+  background-color: #2F103A;
   color: white;
   border-radius: 0.5rem;
   padding: 1rem 2rem;

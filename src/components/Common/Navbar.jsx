@@ -43,6 +43,12 @@ export default function Navbar({
   const [notifications, setNotifications] = useState([]);
   const webSocket = useRef(null);
 
+  const dashboardNavTitles = [
+    t("space.navigation-title"),
+    t("space-join-community.navigation-title"),
+    t("space-community.navigation-title"),
+  ];
+
   const handleCloseButton = () => {
     window.location.href = closeButtonLink;
   };
@@ -188,7 +194,7 @@ export default function Navbar({
 
       {/* Dropdown Menu  */}
       <ul
-        className={`flex items-center ${navTitle == t("navigation.navigation-title") ? "order-1 lg:order-2" : "order-1"}`}
+        className={`flex items-center ${navTitle == t("space.navigation-title") ? "order-1 lg:order-2" : "order-1"}`}
       >
         <li>
           {user ? (
@@ -489,19 +495,19 @@ export default function Navbar({
       {/* Title */}
       <h1
         className={`text-2xl font-bold text-black ${
-          navTitle == t("navigation.navigation-title")
+          navTitle == t("space.navigation-title")
             ? "lg:order-1 order-2"
             : "order-2"
         }`}
       >
-        {dynamicTitle === t("navigation.navigation-title") ? (
+        {dynamicTitle === t("space.navigation-title") ? (
           <a href="/">{dynamicTitle}</a>
         ) : (
           <>{dynamicTitle}</> //deactive link to home
         )}
       </h1>
       {/* Close Button for smaller screens */}
-      {navTitle !== t("navigation.navigation-title") && (
+      {dashboardNavTitles.includes(navTitle) !== true && (
         <button onClick={handleCloseButton} className=" text-gray-700 order-3">
           <XIcon className="h-4 w-4 text-gray-600" aria-hidden="true" />
         </button>

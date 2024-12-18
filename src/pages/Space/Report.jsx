@@ -8,11 +8,11 @@ import "../../assets/css/Report.css";
 import { useState, useEffect } from "react";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { BellIcon } from "@heroicons/react/solid";
-import { MusicNoteIcon } from "@heroicons/react/solid";
-import { BookOpenIcon } from "@heroicons/react/solid";
-import { FireIcon } from "@heroicons/react/solid";
-import { SparklesIcon } from "@heroicons/react/solid";
-import { SunIcon } from "@heroicons/react/solid";
+// import { MusicNoteIcon } from "@heroicons/react/solid";
+// import { BookOpenIcon } from "@heroicons/react/solid";
+// import { FireIcon } from "@heroicons/react/solid";
+// import { SparklesIcon } from "@heroicons/react/solid";
+// import { SunIcon } from "@heroicons/react/solid";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 import { ApiClient, SpaceHistoryAPI } from "@dark-matter-labs/ptc-sdk";
@@ -97,7 +97,7 @@ export default function Report({ space }) {
           </Disclosure>
         </div>
       </div>
-      <div className="permission-statistics">
+      {/* <div className="permission-statistics">
         <div className="disclosure">
           <Disclosure>
             <DisclosureButton className="group header">
@@ -132,8 +132,8 @@ export default function Report({ space }) {
             </DisclosurePanel>
           </Disclosure>
         </div>
-      </div>
-      <div className="interest-category">
+      </div> */}
+      {/* <div className="interest-category">
         <div className="disclosure">
           <Disclosure>
             <DisclosureButton className="group header">
@@ -196,20 +196,17 @@ export default function Report({ space }) {
             </DisclosurePanel>
           </Disclosure>
         </div>
-
-        <div className="w-full h-0">
-          {isIssueReportBottonDrawerOpen ? (
-            <BottomDrawerSpaceIssueReport
-              space={space}
-              isIssueReportBottonDrawerOpen={isIssueReportBottonDrawerOpen}
-              setIsIssueReportBottonDrawerOpen={
-                setIsIssueReportBottonDrawerOpen
-              }
-            />
-          ) : (
-            ""
-          )}
-        </div>
+      </div> */}
+      <div className="w-full h-0">
+        {isIssueReportBottonDrawerOpen ? (
+          <BottomDrawerSpaceIssueReport
+            space={space}
+            isIssueReportBottonDrawerOpen={isIssueReportBottonDrawerOpen}
+            setIsIssueReportBottonDrawerOpen={setIsIssueReportBottonDrawerOpen}
+          />
+        ) : (
+          ""
+        )}
       </div>
     </section>
   );

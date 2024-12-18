@@ -5,6 +5,7 @@ import { LandingTheme } from "./LandingTheme";
 import { LandingMap } from "./LandingMap";
 import PropTypes from "prop-types";
 import { handleLogin } from "../../lib/util";
+import { useTranslation } from "react-i18next";
 
 const Landing = ({ permissionEngineAPI, currentLanguage }) => {
   const coverSectionRef = useRef(null);
@@ -14,6 +15,7 @@ const Landing = ({ permissionEngineAPI, currentLanguage }) => {
   const [currentSection, setCurrentSection] = useState("cover");
   const [selectedThemes, setSelectedThemes] = useState([]);
   const [, setMe] = useState(null);
+  const { t } = useTranslation();
 
   const fetchMe = async () => {
     try {
@@ -155,7 +157,7 @@ const Landing = ({ permissionEngineAPI, currentLanguage }) => {
         {/* Caresoul questions */}
         <div className="mt-16 z-10 text-center px-20 md:px-40 lg:px-80">
           <div className=" text-4xl font-light text-[#2F103A]">
-            우리 도시에서 꼭 해보고 싶은 멋진 아이디어가 있나요?
+            {t("landing.heading1")}
           </div>
           <div className=" text-2xl md:text-4xl  font-light mt-8 text-[#CDA5EF] uppercase ">
             What would you love to create in your neighbourhood?

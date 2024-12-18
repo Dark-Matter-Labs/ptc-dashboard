@@ -385,6 +385,12 @@ export class API {
     return response;
   };
 
+  fetchPermissioners = async (spaceId) => {
+    const response = await this.get("permissioner/:spaceId", { spaceId });
+    console.log("permissioner:", response.message);
+    return response?.data ?? [];
+  };
+
   fetchAssignedEvent = async (spaceId) => {
     const response = await this.get(
       `permission/request?spaceId=${spaceId}&statuses=assigned`
@@ -393,6 +399,7 @@ export class API {
   };
   fetchRequestIdByEventId = async (spaceEventId) => {
     const response = await this.get(`permission/request?spaceEventId=${spaceEventId}`);
+
     return response?.data ?? [];
   };
   fetchResponseIdByRequestId = async (requestId) => {

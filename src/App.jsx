@@ -11,6 +11,7 @@ import Navbar from "./components/Common/Navbar";
 import CreateEvent from "./pages/Event/Create/CreateEvent";
 import DisplayEvents from "./pages/Event/Display/DisplayEvents";
 import DisplayNotifications from "./pages/Notification/Display/DisplayNotifications";
+import DisplayEventResult from "./pages/Event/Display/DisplayEventResult";
 import ReviewEvent from "./pages/Event/Review/ReviewEvent";
 import DisplayAssginedEvents from "./pages/Event/Display/DisplayAssginedEvents";
 import SpaceJoinCommunity from "./pages/Space/Join/SpaceJoinCommunity";
@@ -125,6 +126,17 @@ function App() {
             path="/profile/events"
             element={
               <DisplayEvents
+                permissionEngineAPI={permissionEngineAPI}
+                currentLanguage={currentLanguage}
+                setCloseButtonLink={setCloseButtonLink}
+              />
+            }
+          />
+
+          <Route
+            path="/profile/event/:spaceEventId/result"
+            element={
+              <DisplayEventResult
                 permissionEngineAPI={permissionEngineAPI}
                 currentLanguage={currentLanguage}
                 setCloseButtonLink={setCloseButtonLink}

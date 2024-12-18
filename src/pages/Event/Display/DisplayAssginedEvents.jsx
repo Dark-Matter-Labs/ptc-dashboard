@@ -10,6 +10,7 @@ export default function DisplayAssignedEvents({ permissionEngineAPI }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [assignedRequests, setAssignedRequests] = useState([]);
+  const [isPermissioner, setIsPermissioner] = useState(false);
   const [me, setMe] = useState(null);
   const { user } = useUser();
   let { spaceId } = useParams();
@@ -53,16 +54,33 @@ export default function DisplayAssignedEvents({ permissionEngineAPI }) {
       navigate("/"); // Handle navigation in case of errors
     }
   };
+  const validatePermission = async () => {
+    try {
+      const permissionData =
+        await permissionEngineAPI.fetchPermissioners(spaceId);
+
+      const isValid = permissionData.some(
+        (item) => item.userId === me.id && item.isActive
+      );
+      console.log("all permissioners: ", permissionData, "isValid: ", isValid);
+      setIsPermissioner(isValid);
+    } catch (error) {
+      // user is not allowed to fetch permissioners
+      console.error("Error fetching permissioners:", error);
+      setIsPermissioner(false);
+    }
+  };
 
   useEffect(() => {
-    console.log("spaceId", spaceId);
-
     fetchMe();
   }, []);
 
   useEffect(() => {
     if (me) {
       fetchAssignedEvents();
+      // setIsPermissioner(false);
+      validatePermission();
+      console.log("me: ", me);
     }
   }, [me]);
 
@@ -71,60 +89,65 @@ export default function DisplayAssignedEvents({ permissionEngineAPI }) {
       <h1 className="text-2xl font-bold text-black">
         {t("events.assigned-events")}
       </h1>
+
       {user ? (
-        assignedRequests.length > 0 ? (
-          <div>
-            <p>
-              {t("events.you-have")}
-              {assignedRequests.length == 1
-                ? ` 1 ${t("events.event")}.`
-                : ` ${assignedRequests.length} ${t("events.events")}.`}
-            </p>
-            <div className="mt-8 flex flex-col gap-4 ">
-              {assignedRequests.map((request, key) => {
-                let eventStatusColor = "bg-yellow-300";
+        isPermissioner ? (
+          assignedRequests.length > 0 ? (
+            <div>
+              <p>
+                {t("events.you-have")}
+                {assignedRequests.length == 1
+                  ? ` 1 ${t("events.event")}.`
+                  : ` ${assignedRequests.length} ${t("events.events")}.`}
+              </p>
+              <div className="mt-8 flex flex-col gap-4 ">
+                {assignedRequests.map((request, key) => {
+                  let eventStatusColor = "bg-yellow-300";
 
-                return (
-                  <div
-                    key={key}
-                    onClick={() =>
-                      navigateTo({
-                        navigate,
-                        pathname: `/event/review/${request.spaceEventId}`,
-                      })
-                    }
-                    className="border p-4 shadow rounded-[1rem] bg-white"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="font-semibold text-xl ">
-                        {request.name}
+                  return (
+                    <div
+                      key={key}
+                      onClick={() =>
+                        navigateTo({
+                          navigate,
+                          pathname: `/event/review/${request.spaceEventId}`,
+                        })
+                      }
+                      className="border p-4 shadow rounded-[1rem] bg-white"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="font-semibold text-xl ">
+                          {request.name}
+                        </div>
+                        <div
+                          className={`${eventStatusColor} text-sm p-1 px-4 rounded-full`}
+                        >
+                          {t(`${request.status}`)}
+                        </div>
                       </div>
-                      <div
-                        className={`${eventStatusColor} text-sm p-1 px-4 rounded-full`}
-                      >
-                        {t(`${request.status}`)}
-                      </div>
-                    </div>
-                    <hr className="my-2" />
+                      <hr className="my-2" />
 
-                    <div className="flex items-center">
-                      <CalendarIcon className="size-4 text-gray-600 mr-2" />
-                      <span>{request.createdAt}</span>
+                      <div className="flex items-center">
+                        <CalendarIcon className="size-4 text-gray-600 mr-2" />
+                        <span>{request.createdAt}</span>
+                      </div>
+                      <div className="flex items-center mt-1">
+                        <ClockIcon className="size-4 text-gray-600 mr-2" />
+                        <span>{request.updatedAt}</span>
+                      </div>
                     </div>
-                    <div className="flex items-center mt-1">
-                      <ClockIcon className="size-4 text-gray-600 mr-2" />
-                      <span>{request.updatedAt}</span>
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          ) : (
+            <p>{t("events.no-events")}</p>
+          )
         ) : (
-          <p>{t("events.no-events")}</p>
+          <p> Please join the permissioning group.</p>
         )
       ) : (
-        // user is not logged in
+        // Please log in
         <p>{t("login-error")}</p>
       )}
     </div>

@@ -172,8 +172,7 @@ const Landing = ({ permissionEngineAPI, currentLanguage }) => {
             커뮤니티 주도의 공간 허가 솔루션
           </div>
           <div className="text-[#8F79A2] mt-4 text-base">
-            UNLOCKING CITIES&apos; GROWING UNDERUTILISED SPATIAL ASSETS FOR AN
-            EMERGENT CIVIC ECONOMY
+            Community-led Urban Governance Platform
           </div>
         </div>
         {/* Scroll button */}

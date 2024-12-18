@@ -230,7 +230,7 @@ export default function CommunitySpace({ space, spaceOwner, currentLanguage }) {
               </div>
             </div>
           </div>
-          {permissionRequests.length > 0
+          {isPendingRequestsOpen === true && permissionRequests.length > 0
             ? permissionRequests.map((item) => (
                 <div key={item.id}>{item.id}</div>
               ))

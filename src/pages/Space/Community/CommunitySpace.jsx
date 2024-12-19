@@ -7,19 +7,21 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../../useUser";
-import { navigateTo } from "../../../lib/util";
+import { calculateDaysLeft, navigateTo } from "../../../lib/util";
 import {
   ApiClient,
   Type,
   SpacePermissionerAPI,
   PermissionRequestAPI,
-  // SpaceHistoryAPI,
+  SpaceEventAPI,
+  PermissionResponseAPI,
   // SpaceAPI,
 } from "@dark-matter-labs/ptc-sdk";
 import { navigateToBack } from "../../../lib/util";
 import MenuDotsVertical from "../../../assets/image/menu-dots-vertical.svg";
 import CommunitySpaceSnippetMenu from "./CommunitySpaceSnippetMenu";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/outline";
+import { ClockIcon } from "@heroicons/react/solid";
 
 export default function CommunitySpace({ space, spaceOwner, currentLanguage }) {
   const { t } = useTranslation();
@@ -30,7 +32,9 @@ export default function CommunitySpace({ space, spaceOwner, currentLanguage }) {
   const spacePermissionerAPI = new SpacePermissionerAPI(apiClient);
   // const spaceAPI = new SpaceAPI(apiClient);
   // const spaceHistoryAPI = new SpaceHistoryAPI(apiClient);
+  const spaceEventAPI = new SpaceEventAPI(apiClient);
   const permissionRequestAPI = new PermissionRequestAPI(apiClient);
+  const permissionResponseAPI = new PermissionResponseAPI(apiClient);
 
   const [isSnippetMenuOpen, setIsSnippetMenuOpen] = useState(false);
   const [isPendingRequestsOpen, setIsPendingRequestsOpen] = useState(false);
@@ -109,15 +113,56 @@ export default function CommunitySpace({ space, spaceOwner, currentLanguage }) {
   };
 
   const loadPermissionRequests = async () => {
-    await permissionRequestAPI
-      .findAll({
-        spaceId: space.id,
-        statuses: [Type.PermissionRequestStatus.assigned],
-        sortBy: Type.TimeSortBy.timeAsc,
+    const permissionRequests = await permissionRequestAPI.findAll({
+      spaceId: space.id,
+      statuses: [Type.PermissionRequestStatus.assigned],
+      sortBy: Type.TimeSortBy.timeAsc,
+    });
+
+    const detailedData = await Promise.all(
+      permissionRequests?.data?.map(async (permissionRequest) => {
+        try {
+          const spaceEvent = await spaceEventAPI.findOneById(
+            permissionRequest.spaceEventId
+          );
+          const permissionResponse = await permissionResponseAPI.findAll({
+            permissionRequestId: permissionRequest.id,
+            page: 1,
+            limit: 1,
+          });
+          const votedPermissionResponses = await permissionResponseAPI.findAll({
+            permissionRequestId: permissionRequest.id,
+            statuses: [
+              Type.PermissionResponseStatus.approved,
+              Type.PermissionResponseStatus.approvedWithCondition,
+              Type.PermissionResponseStatus.rejected,
+              Type.PermissionResponseStatus.abstention,
+            ],
+            page: 1,
+            limit: 3,
+          });
+          console.log("votedPermissionResponses", votedPermissionResponses);
+          const daysLeft = calculateDaysLeft(
+            permissionResponse?.data?.[0]?.timeoutAt
+          );
+
+          return {
+            ...permissionRequest,
+            spaceEvent,
+            daysLeft,
+            votedPermissionResponses,
+          }; // Include response.name in the permissionRequest object
+        } catch (err) {
+          console.error(
+            `Error fetching details for permissionRequest ${permissionRequest.spaceEventId}:`,
+            err
+          );
+          return { ...permissionRequest, spaceEvent: { name: "Unknown" } }; // Fallback value if fetching details fails
+        }
       })
-      .then((res) => {
-        setPermissionRequests(res.data);
-      });
+    );
+
+    setPermissionRequests(detailedData);
   };
 
   useEffect(() => {
@@ -200,7 +245,7 @@ export default function CommunitySpace({ space, spaceOwner, currentLanguage }) {
         </div>
         <div className="requests">
           <div className="pending-status">
-            <div className="h-[45px] w-full p-4 bg-[#af56ef] rounded-[10px] border border-[#e3dee9] flex-col justify-center items-start gap-1.5 inline-flex">
+            <div className="h-[45px] mt-4 w-full p-4 bg-[#af56ef] rounded-[10px] border border-[#e3dee9] flex-col justify-center items-start gap-1.5 inline-flex">
               <div className="h-[24.75px] w-full flex-col justify-start items-start gap-[5px] flex">
                 <div className="w-full justify-start items-center gap-[35px] inline-flex">
                   <div className="h-5 w-full justify-between items-center gap-1 flex flex-row">
@@ -232,7 +277,58 @@ export default function CommunitySpace({ space, spaceOwner, currentLanguage }) {
           </div>
           {isPendingRequestsOpen === true && permissionRequests.length > 0
             ? permissionRequests.map((item) => (
-                <div key={item.id}>{item.id}</div>
+                <div
+                  key={item.id}
+                  onClick={() => {
+                    navigateTo({
+                      navigate,
+                      pathname: `/event/review/${item.spaceEventId}`,
+                    });
+                  }}
+                  className="w-full mt-4 h-[82px] p-4 bg-white rounded-2xl border border-[#e3dee9] flex-col justify-center items-start gap-1.5 inline-flex overflow-hidden"
+                >
+                  <div className="self-stretch justify-start items-center gap-[53px] inline-flex">
+                    <div className="h-5 justify-start items-center gap-1 flex">
+                      <div className="text-[#2f103a] text-sm font-semibold font-['Public Sans'] leading-tight tracking-tight">
+                        {item?.spaceEvent?.name ?? "Vote"}
+                      </div>
+                    </div>
+                    {/* <div className="justify-center items-center flex">
+                      <div className="w-[11px] h-[11px] relative  overflow-hidden" />
+                    </div> */}
+                  </div>
+                  <div className="self-stretch justify-start items-end gap-2 inline-flex">
+                    <div className="grow shrink basis-0 h-[18px] justify-start items-center gap-1 flex">
+                      <ClockIcon className="h-4 w-4 text-[#9889a6]" />
+                      <div className="text-[#9889a6] text-xs font-normal font-['Public Sans'] leading-[18px] tracking-tight">
+                        {item.daysLeft !== null && (
+                          <span>{item.daysLeft} days left</span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="justify-center items-center flex">
+                      {item.votedPermissionResponses?.data?.map(
+                        (permissionResponse) => (
+                          <img
+                            key={permissionResponse?.user?.id}
+                            className="w-6 h-6 rounded-[100px] border border-white"
+                            src={permissionResponse.user.image}
+                          />
+                        )
+                      )}
+
+                      {Number(item.votedPermissionResponses?.total) > 3 ? (
+                        <div className="w-6 h-6 p-1 bg-[#e3dee9] rounded-[100px] justify-center items-center gap-2.5 flex overflow-hidden">
+                          <div className="text-[#2f103a] text-[10px] font-semibold font-['Public Sans'] tracking-tight">
+                            +{item.votedPermissionResponses?.total - 3}
+                          </div>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                  </div>
+                </div>
               ))
             : ""}
         </div>

@@ -34,10 +34,10 @@ export const VotingSummaryPage = ({ permissionResponses, myLastDecision }) => {
 
   // Members who participated
   const membersParticipated = totalVotes;
-  const participationPercentage = (
-    (membersParticipated / totalMembers) *
-    100
-  ).toFixed(2);
+  const participationPercentage =
+    membersParticipated === 0
+      ? 0
+      : ((membersParticipated / totalMembers) * 100).toFixed(2);
 
   // Agreement needed for approval (50%)
   const agreementNeededPercentage = 50;

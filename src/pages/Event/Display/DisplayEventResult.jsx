@@ -11,7 +11,9 @@ import {
 import PropTypes from "prop-types";
 import VotingSummaryPage from "../Review/VotingSummaryPage";
 import { ClockIcon } from "@heroicons/react/solid";
-import { calculateDaysLeft } from "../../../lib/util";
+import { calculateDaysLeft, navigateTo } from "../../../lib/util";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@headlessui/react";
 
 const apiClient = new ApiClient();
 const permissionResponseAPI = new PermissionResponseAPI(apiClient);
@@ -22,6 +24,7 @@ const userAPI = new UserAPI(apiClient);
 const DisplayEventResult = () => {
   // Extract spaceEventId from the route parameters
   const { spaceEventId } = useParams();
+  const navigate = useNavigate();
 
   const [me, setMe] = useState(null);
   const [permissionRequest, setPermissionRequest] = useState(null);
@@ -43,11 +46,11 @@ const DisplayEventResult = () => {
           );
         } else {
           const fetchedPermissionRequest = res.data?.[0];
-          const { resolveStatus } = fetchedPermissionRequest;
+          const { status, resolveStatus } = fetchedPermissionRequest;
 
           setPermissionRequest(res.data?.[0]);
 
-          console.log('resolveStatus', resolveStatus)
+          console.log("resolveStatus", resolveStatus);
           if (resolveStatus) {
             let decision = null;
             switch (resolveStatus) {
@@ -83,9 +86,26 @@ const DisplayEventResult = () => {
               );
             }
           } else {
-            setStatusComment(
-              `You can review the decisions of other reviewers on this page. If needed, you may change your vote once before the voting deadline.`
-            );
+            if (status === Type.PermissionRequestStatus.reviewApproved) {
+              setStatusComment(
+                `The voting period has ended, and a decision has been made. Based on the results below, the event has been approved.`
+              );
+            } else if (
+              status ===
+              Type.PermissionRequestStatus.reviewApprovedWithCondition
+            ) {
+              setStatusComment(
+                `The voting period has ended, and a decision has been made. Based on the results below, the event has been approved with condition.`
+              );
+            } else if (status === Type.PermissionRequestStatus.reviewRejected) {
+              setStatusComment(
+                `The voting period has ended, and a decision has been made. Based on the results below, the event has been rejected.`
+              );
+            } else {
+              setStatusComment(
+                `You can review the decisions of other reviewers on this page. If needed, you may change your vote once before the voting deadline.`
+              );
+            }
           }
         }
       })
@@ -150,6 +170,31 @@ const DisplayEventResult = () => {
     const me = await userAPI.findSelf();
     setMe(me);
   };
+
+  const handleAccept = async () => {
+    try {
+      await permissionRequestAPI.accept(permissionRequest.id);
+      navigateTo({ navigate, pathname: `/profile/events` });
+    } catch (error) {
+      console.error(error);
+      alert(`Failed to accept review results`);
+    }
+  };
+
+  const handleDropRequest = async () => {
+    try {
+      await permissionRequestAPI.drop(permissionRequest.id, {
+        // TODO. collect user input for drop reason
+        resolveDetails: `reason:`,
+      });
+
+      navigateTo({ navigate, pathname: `/profile/events` });
+    } catch (error) {
+      console.error(error);
+      alert(`Failed to accept review results`);
+    }
+  };
+
   useEffect(() => {
     if (spaceEventId) {
       console.log("spaceEventId:", spaceEventId);
@@ -196,6 +241,14 @@ const DisplayEventResult = () => {
               permissionResponses={responses}
             />
           </div>
+        )}
+        {!permissionRequest?.resolveStatus ? (
+          <div>
+            <Button onClick={handleAccept}>Accept</Button>
+            <Button onClick={handleDropRequest}>Drop Request</Button>
+          </div>
+        ) : (
+          ""
         )}
       </div>
     </div>

@@ -15,6 +15,7 @@ import {
   SpaceEventAPI,
   TopicAPI,
   RuleAPI,
+  Type,
 } from "@dark-matter-labs/ptc-sdk";
 
 const ReviewEvent = () => {
@@ -161,10 +162,11 @@ const ReviewEvent = () => {
       await permissionRequestAPI
         .findAll({
           spaceEventId,
-          statuses: ["assigned"],
+          statuses: [Type.PermissionRequestStatus.assigned],
+          sortBy: Type.TimeSortBy.timeDesc,
         })
         .then((res) => {
-          setRequestId(res.data?.[0].id);
+          setRequestId(res.data?.[0]?.id);
         })
         .catch((error) => {
           console.error("Error fetching request: ", error);
@@ -180,7 +182,6 @@ const ReviewEvent = () => {
         .then((res) => {
           setResponseId(res.data?.[0].id);
         })
-
         .catch((error) => {
           console.error("Error fetching response: ", error);
         });
